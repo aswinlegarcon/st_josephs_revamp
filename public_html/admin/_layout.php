@@ -80,7 +80,10 @@ function panel_header(string $active, string $title): void
   </nav>
   <div class="sj-side-foot">
     <a href="/index.php" target="_blank">🌐 View website</a>
-    <a href="/admin/logout.php">🚪 Log out</a>
+    <form method="post" action="/admin/logout.php">
+      <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+      <button type="submit" class="sj-logout">🚪 Log out</button>
+    </form>
   </div>
 </aside>
 <main class="sj-main">

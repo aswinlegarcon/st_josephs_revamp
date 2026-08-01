@@ -1,11 +1,16 @@
 <?php
+// Logout — POST + CSRF only (no mutating GET; SECURITY.md SEC-05/15).
 require dirname(__DIR__) . '/_libs/load.php';
 sj_session_boot(true);
-$_SESSION = [];
-if (ini_get('session.use_cookies')) {
-    $p = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !hash_equals(csrf_token(), $_POST['csrf'] ?? '')) {
+    header('Location: /admin/');
+    exit;
 }
-session_destroy();
+
+if (is_admin()) {
+    sj_audit('logout');
+}
+sj_session_kill();
 header('Location: /admin/login.php');
 exit;

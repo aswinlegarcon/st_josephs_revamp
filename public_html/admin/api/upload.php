@@ -17,6 +17,7 @@ try {
     api_fail($ex->getMessage());
 }
 
+sj_audit('upload', 'image', (int)$img['id']);
 api_out([
     'image_id' => (int)$img['id'],
     'url'      => img_url($img, $preset),

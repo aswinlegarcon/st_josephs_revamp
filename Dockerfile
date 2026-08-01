@@ -6,6 +6,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install -j"$(nproc)" gd pdo_mysql exif \
     && rm -rf /var/lib/apt/lists/*
 
+# Make .htaccess actually apply in dev (Debian ships AllowOverride None and the
+# header/expires modules disabled). Prod hosts honour .htaccess already; this
+# just brings the dev container in line so S4/F1 rules can be tested locally.
+RUN a2enmod headers expires rewrite \
+    && sed -ri 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
 RUN { \
         echo 'upload_max_filesize=12M'; \
         echo 'post_max_size=13M'; \

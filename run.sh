@@ -23,7 +23,7 @@ esac
 [ -f config/config.php ] || { mkdir -p config; cp config/config.sample.php config/config.php; echo "==> Created config/config.php from sample."; }
 
 mkdir -p public_html/media
-chmod 777 public_html/media 2>/dev/null || true
+chmod 775 public_html/media 2>/dev/null || true  # PHP runs as the site user; 777 is never needed (SEC-22)
 
 echo "==> Building/starting containers (first run downloads images; takes a few minutes)…"
 docker compose up -d --build

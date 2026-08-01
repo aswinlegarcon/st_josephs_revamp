@@ -22,4 +22,5 @@ try {
     $pdo->rollBack();
     api_fail('Reorder failed', 500);
 }
+sj_audit('order.save', $entity);
 api_out();

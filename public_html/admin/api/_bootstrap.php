@@ -5,6 +5,7 @@ sj_session_boot(true);
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
+sj_admin_headers(); // XFO/nosniff/CSP/Referrer-Policy (SEC-13/14)
 
 function api_out(array $data = [], int $code = 200): void
 {

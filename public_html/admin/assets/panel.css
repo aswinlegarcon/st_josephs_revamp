@@ -28,8 +28,14 @@ body.sj-panel {
 .sj-side nav a:hover { background: rgba(255,255,255,.08); color: #fff; }
 .sj-side nav a.on { background: var(--blue); color: #fff; font-weight: 600; }
 .sj-side-foot { padding: 12px 16px 16px; border-top: 1px solid rgba(255,255,255,.12); display: flex; flex-direction: column; gap: 8px; }
-.sj-side-foot a { color: #c8d3e8; text-decoration: none; font-size: 13px; }
-.sj-side-foot a:hover { color: #fff; }
+.sj-side-foot a,
+.sj-side-foot .sj-logout { color: #c8d3e8; text-decoration: none; font-size: 13px; }
+.sj-side-foot a:hover,
+.sj-side-foot .sj-logout:hover { color: #fff; }
+/* logout is a POST form (SEC-05); its button must read exactly like the links */
+.sj-side-foot form { margin: 0; }
+.sj-side-foot .sj-logout { background: none; border: 0; padding: 0; margin: 0;
+  font-family: inherit; cursor: pointer; text-align: left; }
 
 /* ---------- main ---------- */
 .sj-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }

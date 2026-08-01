@@ -20,6 +20,7 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/sanitize.php';
 require_once __DIR__ . '/registry.php';
 require_once __DIR__ . '/edit.php';
+require_once __DIR__ . '/audit.php';
 require_once __DIR__ . '/media.php';
 require_once __DIR__ . '/repo.php';
 

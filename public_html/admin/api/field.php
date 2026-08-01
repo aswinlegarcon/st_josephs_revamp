@@ -24,4 +24,5 @@ if (!$st->rowCount()) {
         api_fail('Row not found', 404);
     }
 }
+sj_audit('field.save', $entity, $id, $field);
 api_out(['value' => $value]);

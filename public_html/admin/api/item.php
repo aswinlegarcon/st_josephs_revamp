@@ -79,7 +79,9 @@ switch ($action) {
         $names = array_keys($cols);
         $sql = "INSERT INTO `$table` (`" . implode('`,`', $names) . "`) VALUES (" . implode(',', array_fill(0, count($names), '?')) . ")";
         $pdo->prepare($sql)->execute(array_values($cols));
-        api_out(['id' => (int)$pdo->lastInsertId()]);
+        $newId = (int)$pdo->lastInsertId();
+        sj_audit('item.create', $entity, $newId);
+        api_out(['id' => $newId]);
     }
 
     case 'update': {
@@ -100,6 +102,7 @@ switch ($action) {
         }
         $vals[] = $id;
         $pdo->prepare("UPDATE `$table` SET " . implode(', ', $sets) . " WHERE id = ?")->execute($vals);
+        sj_audit('item.update', $entity, $id);
         api_out();
     }
 
@@ -109,6 +112,7 @@ switch ($action) {
         }
         $id = (int)($in['id'] ?? 0);
         $pdo->prepare("DELETE FROM `$table` WHERE id = ?")->execute([$id]);
+        sj_audit('item.delete', $entity, $id);
         api_out();
     }
 }

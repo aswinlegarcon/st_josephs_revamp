@@ -92,6 +92,25 @@ function e($v): string
     return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 }
 
+/**
+ * Hardening headers for admin pages and API endpoints (SECURITY.md SEC-13/14).
+ * PHP-emitted so it works regardless of Apache/LiteSpeed module availability.
+ */
+function sj_admin_headers(): void
+{
+    if (headers_sent()) {
+        return;
+    }
+    header('X-Frame-Options: DENY');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header(
+        "Content-Security-Policy: default-src 'self'; " .
+        "img-src 'self' data:; style-src 'self' 'unsafe-inline'; " .
+        "script-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    );
+}
+
 // ---------------------------------------------------------------------------
 // data-edit-* attribute emitters (grammar per DYNAMIC_MIGRATION_PLAN.md §5.3)
 // ---------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 <?php
 require dirname(__DIR__) . '/_libs/load.php';
 sj_session_boot(true);
+sj_admin_headers(); // XFO/CSP/nosniff (SEC-13/14)
 
 if (is_admin()) {
     header('Location: /admin/');
