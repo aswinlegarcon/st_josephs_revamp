@@ -6,6 +6,7 @@ config.local.php
 *.local.php
 .env
 .env.*
+!.env.example
 
 # ── Uploaded / generated media ──────────────────────────
 # Runtime user uploads + generated renditions are not source. Keep the

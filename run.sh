@@ -18,6 +18,10 @@ case "${1:-up}" in
     ;;
 esac
 
+# Local dev env + config (both gitignored; created from the committed samples).
+[ -f .env ] || { cp .env.example .env; echo "==> Created .env from .env.example (dev credentials)."; }
+[ -f config/config.php ] || { mkdir -p config; cp config/config.sample.php config/config.php; echo "==> Created config/config.php from sample."; }
+
 mkdir -p public_html/media
 chmod 777 public_html/media 2>/dev/null || true
 
