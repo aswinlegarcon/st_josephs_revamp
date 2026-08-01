@@ -19,28 +19,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st->execute([$username]);
         $user = $st->fetch();
 
-        if ($user && $user['locked_until'] !== null && strtotime($user['locked_until']) > time()) {
-            $error = 'Account temporarily locked. Try again in a few minutes.';
-        } elseif ($user && password_verify($password, $user['password_hash'])) {
+        $locked = $user && $user['locked_until'] !== null && strtotime($user['locked_until']) > time();
+
+        if (!$locked && $user && password_verify($password, $user['password_hash'])) {
             db()->prepare('UPDATE admin_users SET failed_logins = 0, locked_until = NULL, last_login_at = NOW() WHERE id = ?')
                 ->execute([$user['id']]);
             session_regenerate_id(true);
-            $_SESSION['admin_id']      = (int)$user['id'];
-            $_SESSION['admin_name']    = $user['display_name'];
-            $_SESSION['edit_mode']     = 0;
+            $_SESSION['admin_id']       = (int)$user['id'];
+            $_SESSION['admin_name']     = $user['display_name'];
+            $_SESSION['edit_mode']      = 0;
             $_SESSION['must_change_pw'] = (int)($user['must_change_password'] ?? 0);
+            $_SESSION['login_at']       = time();
+            $_SESSION['last_seen']      = time();
+            $_SESSION['last_regen']     = time();
             unset($_SESSION['csrf']);
             csrf_token(); // fresh token post-login
+            if (function_exists('sj_audit')) { sj_audit('login.ok'); } // S4
             header('Location: ' . (!empty($_SESSION['must_change_pw']) ? '/admin/password.php' : '/admin/'));
             exit;
         } else {
-            if ($user) {
+            // Every failure (unknown user, wrong password, OR locked) responds
+            // identically — no username enumeration, no "locked" oracle (SEC-06).
+            // Increment the counter only for a real, not-yet-locked account, and
+            // PERSIST it (never reset to 0 on lock) so lockouts actually hold.
+            if ($user && !$locked) {
                 $fails = (int)$user['failed_logins'] + 1;
                 $lock  = $fails >= 5 ? date('Y-m-d H:i:s', time() + 15 * 60) : null;
                 db()->prepare('UPDATE admin_users SET failed_logins = ?, locked_until = ? WHERE id = ?')
-                    ->execute([$fails >= 5 ? 0 : $fails, $lock, $user['id']]);
+                    ->execute([$fails, $lock, $user['id']]);
             }
-            sleep(1);
+            if (function_exists('sj_audit')) { sj_audit('login.fail', null, null, mb_substr($username, 0, 50)); } // S4
+            sleep(1); // uniform delay on all failure paths (also masks bcrypt timing)
             $error = 'Invalid username or password.';
         }
     }

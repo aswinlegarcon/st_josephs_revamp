@@ -2,6 +2,11 @@
 // Admin session helpers + the data-edit-* attribute emitters. All emitters return ''
 // for public visitors, so public output is byte-identical to a static render.
 
+// Session lifetime policy (SECURITY.md SEC-07).
+const SJ_SESSION_IDLE_MAX = 1800;   // 30 min of inactivity
+const SJ_SESSION_ABS_MAX  = 43200;  // 12 h hard cap
+const SJ_SESSION_REGEN    = 900;    // rotate the session id every 15 min
+
 function sj_session_boot(bool $force = false): void
 {
     static $booted = false;
@@ -12,16 +17,53 @@ function sj_session_boot(bool $force = false): void
     if (!$force && empty($_COOKIE['SJADMIN'])) {
         return; // public visitor without an admin cookie: zero session cost
     }
+    $cfg = sj_config();
+    if (!empty($cfg['session_save_path'])) {
+        session_save_path($cfg['session_save_path']); // private dir on prod (SEC-07/22)
+    }
+    // Secure cookies over real HTTPS, behind an HTTPS-terminating proxy, or when forced by config.
+    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+        || !empty($cfg['force_secure_cookies']);
     session_name('SJADMIN');
     session_set_cookie_params([
         'lifetime' => 0,
         'path'     => '/',
         'httponly' => true,
         'samesite' => 'Lax',
-        'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'secure'   => $secure,
     ]);
     session_start();
     $booted = true;
+
+    // Enforce idle + absolute timeouts and periodic id rotation for logged-in admins.
+    // On expiry the session is destroyed so is_admin() becomes false and each caller's
+    // existing behaviour fires (panel → login redirect, API → 401 JSON, public → visitor).
+    if (!empty($_SESSION['admin_id'])) {
+        $now   = time();
+        $last  = $_SESSION['last_seen'] ?? $now;
+        $start = $_SESSION['login_at']  ?? $now;
+        if (($now - $last) > SJ_SESSION_IDLE_MAX || ($now - $start) > SJ_SESSION_ABS_MAX) {
+            sj_session_kill();
+            return;
+        }
+        $_SESSION['last_seen'] = $now;
+        if (($now - ($_SESSION['last_regen'] ?? 0)) > SJ_SESSION_REGEN) {
+            session_regenerate_id(true);
+            $_SESSION['last_regen'] = $now;
+        }
+    }
+}
+
+/** Fully tear down the current session (data, file, cookie). */
+function sj_session_kill(): void
+{
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $p = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+    }
+    session_destroy();
 }
 
 function is_admin(): bool
