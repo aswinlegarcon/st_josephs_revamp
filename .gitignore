@@ -1,0 +1,45 @@
+# ── Secrets ─────────────────────────────────────────────
+# Real credentials NEVER go in git. The production config lives above the
+# webroot at /config/config.php (see SECURITY.md SEC-22 / PHASES.md S1).
+/config/config.php
+config.local.php
+*.local.php
+.env
+.env.*
+
+# ── Uploaded / generated media ──────────────────────────
+# Runtime user uploads + generated renditions are not source. Keep the
+# security .htaccess (disables PHP execution — SECURITY.md SEC-10).
+public_html/media/*
+!public_html/media/.htaccess
+
+# ── Dependencies (present only after Composer is added) ──
+# NOTE: vendor/ is intentionally committed for shared-hosting deploy
+# (no Composer on MilesWeb). Do NOT ignore it once it exists.
+/node_modules/
+
+# ── Backups & archives (SECURITY.md SEC-20) ─────────────
+/backups/
+*.bak
+*.old
+*.sql.gz
+*.dump
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# ── PHP / runtime ───────────────────────────────────────
+*.log
+php_errors.log
+sess_*
+.php-cs-fixer.cache
+
+# ── OS / editor ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

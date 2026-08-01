@@ -1,0 +1,157 @@
+
+
+*{font-family: "League Spartan", sans-serif;
+font-weight: 400;}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Top bar */
+.top-bar {
+    background: linear-gradient(to right, #2b4b8a, #1a355d);
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    padding: 5px 0;
+    text-align: center;
+}
+
+.sliding-text {
+    display: inline-block;
+    color: white;
+    font-size: 14px;
+    animation: slide 10s linear infinite;
+    text-decoration: none;
+}
+
+.sliding-text:hover {
+    text-decoration: none;
+    color: #FFD700; /* Fading into another color (Tomato) */
+    transition: color 0.3s;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(100%);
+    }
+    50% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@media (max-width: 700px) {
+    .sliding-text {
+        animation: slide 5s linear infinite;
+    }
+    @keyframes slide {
+        0% {
+            transform: translateX(50%);
+        }
+        50% {
+            transform: translateX(-50%);
+        }
+        100% {
+            transform: translateX(50%);
+        }
+    }
+}
+.navbar{
+    background: linear( #2b4b8a 20%, #ffffff 70%);
+    
+    border-bottom: 3px solid transparent;
+    border-image: linear-gradient(90deg, rgba(2,0,36,0) 0%, #2a4ac6 50%, rgba(0,212,255,0) 100%);
+    border-image-slice: 1;
+
+
+
+
+}
+
+.sticky {
+        position: fixed !important;
+        top: 0 !important;
+        width: 100% !important;
+        z-index: 1000 !important;
+        /* Other necessary styles */
+        background-color: white; /* Example background color */
+        /*-------K box-shadow: 15px 15px 35px rgba(0, 0, 0, 0.037); /*Example box shadow */
+}
+
+.nav-item a
+{
+    
+    font-size: 19px;
+    word-spacing: 10px;
+    color: black !important;
+}
+
+.nav-item a:hover
+{
+    color: #2b4b8a !important;
+}
+
+
+.navbar-brand .img-1
+{
+    width:95px; 
+    height:114px;
+}
+
+@media(max-width: 460px)
+{
+    
+    .navbar-brand .img-1
+    {
+        width: 85px;
+        height: 100px;
+    }
+    .logo1 img
+    {
+        width: 180px;
+        height: 40px;
+    }
+    .logo-text
+    {
+        font-size: 14px;
+    }
+    .navbar-nav
+    {
+        font-size: 17px;
+    }
+    .navbar-nav .dropdown-menu
+    {
+        font-size: 16px;
+    }
+}
+@media(max-width: 400px)
+{
+    .navbar-brand .img-1
+    {
+        width: 70px;
+        height: 85px;
+    }
+    .logo1 img
+    {
+        width: 150px;
+        height: 30px;
+    }
+    .logo-text
+    {
+        font-size: 11px;
+    }
+    .navbar-nav
+    {
+        font-size: 15px;
+    }
+    .navbar-nav .dropdown-menu
+    {
+        font-size: 14px;
+    }
+}
+
+

@@ -1,0 +1,410 @@
+.history {
+  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+}
+/* abt-carousel */
+.abt-carousel .carousel-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+}
+
+.abt-carousel .carousel-inner {
+  height: 600px !important;
+}
+
+.carousel-caption {
+  top: 20%;
+}
+
+.carousel-caption h5 {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #fff;
+  font-size: 100px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.carousel-caption p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  font-size: 18px;
+  top: 2rem;
+  text-align: center;
+}
+/* anomation */
+.abt-carousel-reveal {
+  transition: 1.5s;
+  transform: translateY(90px);
+  opacity: 0;
+}
+
+.abt-carousel-reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .carousel-item img {
+    width: 1500px !important;
+  }
+
+  .carousel-caption h5 {
+    font-size: 70px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 15px;
+    top: 2rem;
+  }
+
+  .slider-btn {
+    margin-top: 30px;
+  }
+
+  .slider-btn .btn {
+    padding: 0.5rem 2rem;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-item img {
+    height: 700px;
+    width: 1200px;
+  }
+
+  .carousel-caption {
+    top: 35%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 75px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 12px;
+    top: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .carousel-caption {
+    top: 35%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 65px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 12px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .carousel-caption {
+    top: 32%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 55px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 15px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 370px) {
+  .carousel-caption h5 {
+    font-size: 55px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    top: 0.5rem;
+  }
+}
+/* abt-carousel end */
+/* about-main start */
+.containers {
+  width: 80%;
+  margin: auto;
+}
+.about-section {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding: 20px;
+  background: linear-gradient(to left, #2b4b8a, #1a355d);
+  color: #fff;
+}
+.about-section:hover {
+  box-shadow: 0px 4px 10px #2b4b8a;
+}
+.about-section:nth-child(odd) .about-image {
+  order: 1;
+}
+.about-section:nth-child(odd) .about-content {
+  order: 2;
+}
+.about-section:nth-child(even) .about-image {
+  order: 2;
+}
+.about-section:nth-child(even) .about-content {
+  order: 1;
+}
+.about-image {
+  flex: 1 1 40%;
+  max-width: 40%;
+}
+.about-image img {
+  width: 97%;
+  height: 500px;
+  border-radius: 5px;
+}
+.about-content h3 {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #ffd700;
+}
+.about-content h2 {
+  font-family: "Fjalla One", sans-serif !important;
+}
+.about-content p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  text-align: justify;
+}
+.about-content {
+  flex: 1 1 60%;
+  max-width: 60%;
+  padding: 20px;
+}
+.about-content .download-btn {
+  color: #fff;
+  text-decoration: underline;
+}
+.about-content .download-btn:hover {
+  color: #ffd700;
+  text-decoration: underline;
+}
+.school-timings-heading h3 {
+  font-family: "Fjalla One", sans-serif !important;
+}
+.school-timings th,
+td {
+  font-family: "LeagueSpartan", sans-serif !important;
+}
+.about-section .about-content a {
+  font-family: "Fjalla One", sans-serif !important;
+}
+@media (max-width: 1000px) {
+  .about-image img {
+    height: 400px;
+  }
+}
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
+    text-align: center;
+  }
+  .about-image,
+  .about-content {
+    max-width: 100%;
+    padding: 0;
+  }
+  .about-section:nth-child(odd) .about-image {
+    order: 1;
+  }
+  .about-section:nth-child(odd) .about-content {
+    order: 2;
+    padding-top: 20px;
+  }
+  .about-section:nth-child(even) .about-image {
+    order: 1;
+  }
+  .about-section:nth-child(even) .about-content {
+    order: 2;
+    padding-top: 20px;
+  }
+}
+@media (max-width: 450px) {
+  .about-image img {
+    height: 300px;
+  }
+  .about-content h2 {
+    font-size: 22px;
+    text-align: center;
+  }
+  .about-content p {
+    font-size: 15px;
+    text-align: center;
+  }
+}
+/* animation */
+
+.ab-1 {
+  transition: 2s;
+  transform: translateX(-50px);
+  opacity: 0;
+}
+.ab-1.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* about main end */
+
+/* abt -mid */
+.abt-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Section Styles */
+.section {
+  position: relative;
+  width: 90%;
+  height: 550px;
+  overflow: hidden;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: 4px solid #2b4b8a;
+}
+
+.section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  transition: transform 0.2s linear;
+}
+
+.section:hover img {
+  text-decoration: none;
+  transform: scale(1.1);
+}
+
+.section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.5)
+  );
+  z-index: 2;
+  transition: background 0.3s ease;
+}
+
+.section:hover::after {
+  text-decoration: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.7)
+  );
+}
+
+.section-content {
+  position: relative;
+  z-index: 3;
+  padding: 20px;
+  max-width: 60%;
+  text-align: center;
+  color: white;
+}
+
+.section-content h2 {
+  font-family: "Fjalla One", sans-serif !important;
+  text-decoration: none;
+  font-size: 2.5rem;
+  font-weight: bolder;
+  margin-bottom: 10px;
+  color: #ffd700;
+  transition: transform 0.8s;
+}
+
+.section:hover .section-content h2 {
+  text-decoration: none;
+  transform: scaleX(1.01);
+}
+
+.section-content p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+.section-content .btn {
+  font-family: "LeagueSpartan", sans-serif !important;
+  background: none !important;
+  border: 1px solid white;
+}
+.section-content .btn:hover {
+  border: none;
+  color: black;
+  background: #ffd700 !important;
+}
+/* animation */
+.reveal-abt-card {
+  transition: 1s;
+  transform: translateY(50px);
+  opacity: 0;
+}
+
+.reveal-abt-card.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .section {
+    width: 90%;
+  }
+
+  .section-content h2 {
+    font-size: 2rem;
+  }
+
+  .section-content p {
+    font-size: 1rem;
+  }
+}
+@media (max-width: 500px) {
+  .section {
+    width: 90%;
+  }
+
+  .section-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .section-content p {
+    font-size: 1rem;
+    text-align: justify;
+  }
+}

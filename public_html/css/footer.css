@@ -1,0 +1,134 @@
+/* Footer Starts  */
+
+.footer {
+  background: linear-gradient(rgba(43, 75, 138, 0.8), rgba(26, 53, 93, 0.8)),
+    url("../photos/schname.jpg");
+  background-size: cover;
+  color: white;
+  padding: 30px 0;
+  width: 100%;
+}
+
+.footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* Or any other maximum width */
+  margin: 0 auto;
+}
+
+.footer-sections {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding-bottom: 30px;
+}
+
+.footer-column {
+  flex: 1;
+  text-align: center;
+}
+
+.footer-column h4 {
+  font-family: "Fjalla One", sans-serif !important;
+
+  margin-bottom: 15px;
+}
+
+.footer-column ul {
+  font-family: "LeagueSpartan", sans-serif !important;
+
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 10px;
+  flex: 0.1;
+}
+
+.footer-column ul li a {
+  font-weight: 400;
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-column ul li a:hover {
+  color: #ffd700;
+  text-decoration: underline;
+}
+
+.footer-column.social-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-media-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-media-icons a {
+  color: white;
+  font-size: 1.5em;
+  margin: 0 5px;
+  text-decoration: none;
+}
+.social-media-icons a:hover {
+  color: #ffd700;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-top: 1px solid #fff;
+  padding-top: 10px;
+}
+
+.footer-bottom .left-p {
+  margin: 0;
+  text-align: left;
+  flex: 0.1;
+}
+.footer-bottom .left {
+  margin: 0;
+  text-align: left;
+}
+
+.footer-bottom .right {
+  margin: 0;
+  text-align: right;
+  flex: 1;
+}
+.footer-bottom .left {
+  color: #fff;
+  text-decoration: underline;
+  transition: 0.3s;
+}
+.footer-bottom .left:hover {
+  text-decoration: underline;
+  color: #ffd700;
+}
+
+@media (max-width: 768px) {
+  .footer-sections {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+  }
+
+  .footer-bottom p {
+    text-align: center;
+    margin-top: 10px;
+  }
+}
+
+/* Footer Ends  */

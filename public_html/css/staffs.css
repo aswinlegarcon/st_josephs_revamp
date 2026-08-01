@@ -1,0 +1,301 @@
+.infrastructure {
+  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+}
+
+/* abt-carousel */
+.abt-carousel .carousel-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+}
+
+.abt-carousel .carousel-inner {
+  height: 600px !important;
+}
+
+.carousel-caption {
+  top: 20%;
+}
+
+.carousel-caption h5 {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #fff;
+  font-size: 100px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.carousel-caption p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  font-size: 18px;
+  top: 2rem;
+  text-align: center;
+}
+/* anomation */
+.abt-carousel-reveal {
+  transition: 1.5s;
+  transform: translateY(90px);
+  opacity: 0;
+}
+
+.abt-carousel-reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .abt-carousel .carousel-item img {
+    width: 1500px !important;
+  }
+
+  .carousel-caption h5 {
+    font-size: 70px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 15px;
+    top: 2rem;
+  }
+
+  .slider-btn {
+    margin-top: 30px;
+  }
+
+  .slider-btn .btn {
+    padding: 0.5rem 2rem;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 768px) {
+  .abt-carousel .carousel-item img {
+    height: 700px;
+    width: 1200px;
+  }
+
+  .carousel-caption {
+    top: 35%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 75px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 12px;
+    top: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .carousel-caption {
+    top: 35%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 65px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 12px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .carousel-caption {
+    top: 32%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 55px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 15px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 370px) {
+  .carousel-caption h5 {
+    font-size: 55px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    top: 0.5rem;
+  }
+}
+/* abt-carousel end */
+
+.infrastructure-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  padding: 20px;
+  background-color: #cccccc !important;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+.infrastructure-text {
+  padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  flex: 1 1 300px;
+}
+
+.infrastructure-text h4 {
+  font-family: "Fjalla One", sans-serif !important;
+  font-size: 60px;
+  font-weight: 700;
+}
+
+.infrastructure-text p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: justify;
+}
+
+.infrastructure-text-reveal {
+  transition: 1.5s;
+  transform: translateX(-20px);
+  opacity: 0;
+}
+
+.infrastructure-text-reveal.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.infrastructure-image {
+  max-width: 25%;
+  height: auto;
+  box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+  margin: 0 20px;
+  flex: 1 1 150px;
+}
+
+/* Media Queries for Responsiveness */
+
+@media (max-width: 1030px) {
+  .infrastructure-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .infrastructure-text h4 {
+    font-size: 40px;
+  }
+
+  .infrastructure-text p {
+    font-size: 20px;
+  }
+
+  .infrastructure-image {
+    max-width: 50%;
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .infrastructure-text h4 {
+    font-size: 32px;
+  }
+
+  .infrastructure-text p {
+    font-size: 18px;
+  }
+
+  .infrastructure-image {
+    max-width: 80%;
+  }
+}
+
+/* new template */
+
+.newtemp-body {
+  background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
+    url("../photos/staff1.jpg");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  border-bottom: 3px solid white;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px;
+}
+
+.about-section {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.about-image {
+  width: 50%;
+  object-fit: cover;
+}
+
+.about-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.about-content h2 {
+  font-family: "Fjalla One", sans-serif !important;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.about-content p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
+  }
+
+  .about-section:nth-child(2) .about-content {
+    order: 2;
+  }
+
+  .about-section:nth-child(2) .about-image {
+    order: 1;
+  }
+
+  .about-image {
+    width: 100%;
+  }
+}

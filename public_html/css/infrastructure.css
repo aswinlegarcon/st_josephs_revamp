@@ -1,0 +1,526 @@
+.infrastructure {
+  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+  scroll-behavior: smooth;
+}
+
+/* abt-carousel */
+.abt-carousel .carousel-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+}
+
+.abt-carousel .carousel-inner {
+  height: 550px !important;
+}
+
+.carousel-caption {
+  top: 20%;
+}
+
+.carousel-caption h5 {
+  font-family: "Fjalla One", sans-serif !important;
+  text-align: center;
+  color: #fff;
+  font-size: 100px;
+  font-weight: 700;
+}
+
+.carousel-caption p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  text-align: center;
+  font-size: 18px;
+  top: 2rem;
+}
+/* anomation */
+.abt-carousel-reveal {
+  transition: 1.5s;
+  transform: translateY(90px);
+  opacity: 0;
+}
+
+.abt-carousel-reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .abt-carousel .carousel-item img {
+    width: 1500px !important;
+  }
+
+  .carousel-caption h5 {
+    font-size: 70px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 15px;
+    top: 2rem;
+  }
+
+  .slider-btn {
+    margin-top: 30px;
+  }
+
+  .slider-btn .btn {
+    padding: 0.5rem 2rem;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 768px) {
+  .abt-carousel .carousel-item img {
+    height: 700px;
+    width: 1200px;
+  }
+
+  .carousel-caption {
+    top: 35%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 65px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 12px;
+    top: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .carousel-caption {
+    top: 35%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 60px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 12px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .carousel-caption {
+    top: 32%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 50px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    font-size: 15px;
+    top: 1rem;
+  }
+}
+
+@media (max-width: 370px) {
+  .carousel-caption h5 {
+    font-size: 45px;
+    font-weight: 700;
+  }
+
+  .carousel-caption p {
+    top: 0.5rem;
+  }
+}
+/* abt-carousel end */
+/* 
+
+.infrastructure-text {
+    box-sizing: border-box;
+    align-items: center;
+    margin: auto;
+    padding: 20px;
+    background-color:#CCCCCC!important ;
+}
+
+.infrastructure-text h4 {
+    text-align: center;
+    font-size: 60px;
+    font-weight: 700;
+}
+
+.infrastructure-text p {
+    text-align: center;
+    font-style: italic;
+    font-size: 30px;
+    font-weight: 500;
+}
+.infrastructure-text-reveal
+{
+    transition: 1.5s;
+    transform: translateX(-50px);
+    opacity: 0;
+}
+
+
+.infrastructure-text-reveal.active 
+{
+    opacity: 1;
+    transform: translateX(0);
+}
+@media(max-width:768px)
+{
+    .infrastructure-text h4{
+        font-size: 40px;
+    }
+    .infrastructure-text p{
+        font-size: 20px;
+    }
+} */
+/* new carousel for infra */
+/* new carousel for infra */
+.inside-nav-text {
+  font-family: "Fjalla One", sans-serif !important;
+  font-size: 20px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+.btn-group {
+  flex-wrap: wrap;
+  justify-content: left;
+}
+.btn-group .btn {
+  font-family: "LeagueSpartan", sans-serif !important;
+  background: linear-gradient(to left, #2b4b8a, #1a355d);
+  border: none;
+  color: #fff;
+  transition: 0.5s;
+}
+.btn-group .btn:hover {
+  background: firebrick;
+  border: none;
+  color: #fff;
+}
+.btn-group a {
+  margin: 5px;
+}
+.bg-1 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/smclass2.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-2 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/aud2.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-3 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/oaud1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-4 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/conh1.jpeg") no-repeat center center;
+  background-size: cover;
+}
+.bg-5 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/kgplay1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-6 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/clab1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-7 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/park1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-8 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/sproom1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-9 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/bus1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-10 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/chapel1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-11 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/elib1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-12 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/knowcent2.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-13 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/canteen1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-14 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/playg1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.bg-15 {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("../photos/miniaud1.jpg") no-repeat center center;
+  background-size: cover;
+}
+.infra-new {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 2px solid black;
+  padding: 40px;
+  transition: 1.5s;
+  width: 90%;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.infra-new-carousel {
+  order: 2; /* Initial order */
+  flex: 1 1 600px;
+  width: 100%;
+}
+
+.infra-new-carousel .carousel-inner {
+  width: 100%;
+  height: auto;
+  border-radius: 35px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+}
+
+.infra-new-carousel .carousel-image {
+  object-fit: contain !important;
+  width: 100%;
+  height: 500px; /* Adjust this value as needed */
+}
+
+.infra-new-text {
+  order: 1; /* Initial order */
+  flex: 1 1 50%;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: left;
+}
+
+.infra-new-text h4 {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #fff;
+  font-size: 42px;
+  font-weight: 600;
+}
+.infra-new-text p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  color: antiquewhite;
+  font-size: 22px;
+}
+.infra-new-text span {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #ffd700;
+  font-size: 22px;
+}
+
+/* animation */
+.infra-new-reveal {
+  transition: 1.5s;
+  transform: translateX(-50px);
+  opacity: 0;
+}
+
+.infra-new-reveal.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media(max-width: 1520px) {
+  .infra-new {
+    flex-direction: column;
+    align-items: center;
+  }
+  .infra-new-carousel {
+    order: 2!important; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+  }
+
+  .infra-new-text {
+    order: 1!important; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+    text-align: left;
+    margin-top: 20px;
+  }
+
+  .infra-new-carousel .carousel-inner {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .infra-new {
+    flex-direction: column;
+    align-items: center;
+  }
+  .infra-new:hover {
+    transform: none;
+  }
+  .infra-new-carousel {
+    order: 2; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+  }
+  .infra-new-text p {
+    text-align: justify;
+  }
+  .infra-new-text {
+    order: 1; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+    text-align: left;
+    margin-top: 20px;
+  }
+
+  .infra-new-carousel .carousel-inner {
+    height: auto;
+  }
+}
+
+/* infre new-1 */
+
+.infra-new1 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 2px solid black;
+  padding: 40px;
+  transition: 1.5s;
+  width: 90%;
+  margin: auto;
+  margin-top: 20px;
+}
+/* .infra-new1:hover{
+    transform: scale(1.02);
+} */
+.infra-new-carousel1 {
+  order: 1; /* Initial order */
+  flex: 1 1 600px;
+  width: 100%;
+}
+
+.infra-new-carousel1 .carousel-inner {
+  width: 100%;
+  height: auto;
+  border-radius: 35px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+}
+.infra-new-carousel1 .carousel-image {
+  object-fit: contain;
+  width: 100%;
+  height: 500px; /* Adjust this value as needed */
+}
+.infra-new-text1 {
+  order: 2; /* Initial order */
+  flex: 1 1 50%;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: left;
+}
+
+.infra-new-text1 h4 {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #fff;
+  font-size: 40px;
+  font-weight: 600;
+}
+.infra-new-text1 p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  color: antiquewhite;
+  font-size: 22px;
+}
+.infra-new-text1 span {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #ffd700;
+  font-size: 22px;
+}
+@media (max-width: 1465px) {
+  .infra-new1 {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .infra-new-carousel1 {
+    order: 2; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+  }
+
+  .infra-new-text1 {
+    order: 1; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+    text-align: left;
+    margin-top: 20px;
+  }
+
+  .infra-new-carousel1 .carousel-inner {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .infra-new1 {
+    flex-direction: column;
+    align-items: center;
+  }
+  .infra-new1:hover {
+    transform: none;
+  }
+  .infra-new-carousel1 {
+    order: 2; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+  }
+  .infra-new-text1 p {
+    text-align: justify;
+  }
+  .infra-new-text1 {
+    order: 1; /* Change order on small screens */
+    flex: 1 1 100%;
+    margin: 0;
+    text-align: left;
+    margin-top: 20px;
+  }
+
+  .infra-new-carousel1 .carousel-inner {
+    height: auto;
+  }
+}
+
+/* Customize carousel controls */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: #000 !important;
+  border-radius: 50% !important;
+  padding: 15px;
+}

@@ -1,0 +1,238 @@
+<?php
+// Per-section editing screens of the standalone admin panel.
+require __DIR__ . '/_layout.php';
+
+$s = (string)($_GET['s'] ?? '');
+$sections = panel_sections();
+if (!isset($sections[$s]) || $s === 'dashboard') {
+    header('Location: /admin/');
+    exit;
+}
+[$icon, $label] = $sections[$s];
+
+/** One list row with actions. $opts: entity,id,thumb,title,sub,active(bool|null),canMove */
+function panel_row(array $o): void
+{
+    ?>
+    <div class="sj-row<?= isset($o['active']) && !$o['active'] ? ' off' : '' ?>" data-row="<?= e($o['entity']) ?>:<?= (int)$o['id'] ?>">
+      <?php if (array_key_exists('thumb', $o)): ?>
+        <?php if ($o['thumb']): ?><img class="sj-row-thumb" src="<?= e($o['thumb']) ?>" alt="">
+        <?php else: ?><div class="sj-row-thumb noimg">no image</div><?php endif; ?>
+      <?php endif; ?>
+      <div class="sj-row-main">
+        <b><?= e($o['title']) ?></b>
+        <?php if (!empty($o['sub'])): ?><span><?= e($o['sub']) ?></span><?php endif; ?>
+      </div>
+      <?php if (isset($o['active']) && !$o['active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
+      <div class="sj-row-actions">
+        <button class="sj-ico" title="Edit" data-act="edit">✏️</button>
+        <?php if (!empty($o['canMove'])): ?>
+          <button class="sj-ico" title="Move up" data-act="move" data-dir="-1">↑</button>
+          <button class="sj-ico" title="Move down" data-act="move" data-dir="1">↓</button>
+        <?php endif; ?>
+        <?php if (isset($o['active'])): ?>
+          <button class="sj-ico" title="<?= $o['active'] ? 'Hide from site' : 'Show on site' ?>" data-act="toggle" data-active="<?= $o['active'] ? 1 : 0 ?>"><?= $o['active'] ? '👁️' : '🚫' ?></button>
+        <?php endif; ?>
+        <button class="sj-ico danger" title="Delete" data-act="del">🗑️</button>
+      </div>
+    </div>
+    <?php
+}
+
+panel_header($s, $icon . ' ' . $label);
+
+switch ($s) {
+
+/* ================= HERO CAROUSEL ================= */
+case 'hero':
+    $page = repo_page('index');
+    $slides = repo_hero_slides((int)$page['id'], true);
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">Slides of the big banner at the top of the Home page. Order here = order on the site.
+         Images are auto-cropped to the banner shape (16:7) — use photos at least 1600px wide for best quality.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$page['id']], 'Add hero slide') ?>>＋ Add hero slide</button>
+    </div>
+    <div class="sj-list" data-list="hero_slide">
+      <?php foreach ($slides as $sl) {
+          panel_row([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'title'  => $sl['caption_title'] ?: '(no caption)',
+              'sub'    => $sl['caption_text'],
+              'active' => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
+/* ================= PRINCIPAL ================= */
+case 'principal':
+    $p = repo_profile('principal');
+    ?>
+    <p class="sj-lead">This block appears on the Home page (and the same data powers the About page after
+       the full migration). Edit and press <b>Save changes</b>.</p>
+    <div class="sj-form-card" id="sj-principal" data-entity="profile" data-id="<?= (int)$p['id'] ?>">
+      <div class="sj-form-grid">
+        <div class="sj-form-side">
+          <label>Portrait photo</label>
+          <img id="sj-principal-thumb" class="sj-portrait" src="<?= e($p['image'] ? img_url($p['image'], 'portrait_4x5') : '') ?>" alt="">
+          <input type="hidden" id="sj-principal-img" value="<?= (int)($p['image_id'] ?? 0) ?>">
+          <button class="sj-btn sj-btn-ghost" data-act="pick-principal-photo" data-preset="portrait_4x5">📷 Change photo</button>
+        </div>
+        <div class="sj-form-fields">
+          <label>Role heading</label>
+          <input type="text" id="sj-principal-heading" value="<?= e($p['heading']) ?>">
+          <label>Name</label>
+          <input type="text" id="sj-principal-name" value="<?= e($p['person_name']) ?>">
+          <label>Welcome message</label>
+          <div class="sj-richwrap">
+            <div class="sj-richbar" data-for="sj-principal-msg"></div>
+            <div class="sj-rich" id="sj-principal-msg" contenteditable="true"><?= $p['message_html'] ?></div>
+          </div>
+          <p class="sj-hint">Write and format the text exactly as it should look on the website — select text and use
+             <b>B</b> for bold or <b>Gold</b> for the gold highlight. Formatting is stored properly in the background.</p>
+        </div>
+      </div>
+      <div class="sj-form-foot">
+        <button class="sj-btn sj-btn-primary" data-act="save-principal">💾 Save changes</button>
+        <span class="sj-savemsg" id="sj-principal-msg-state"></span>
+      </div>
+    </div>
+    <?php
+    break;
+
+/* ================= WHAT'S UNIQUE ================= */
+case 'unique':
+    $rows = repo_unique_features(true);
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">The feature blocks in the "What's Unique?" section of the Home page.
+         Blocks alternate image-left / image-right automatically.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('unique_feature', [], 'Add block') ?>>＋ Add block</button>
+    </div>
+    <div class="sj-list" data-list="unique_feature">
+      <?php foreach ($rows as $r) {
+          panel_row([
+              'entity' => 'unique_feature', 'id' => $r['id'],
+              'thumb'  => $r['image'] ? img_url($r['image'], 'feature_4x3') : null,
+              'title'  => $r['title'],
+              'sub'    => mb_substr(trim(strip_tags($r['body_html'])), 0, 90) . '…',
+              'active' => (bool)$r['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
+/* ================= NEWS TICKER ================= */
+case 'ticker':
+    $rows = repo_ticker(true);
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">The scrolling announcement bar. Each item is a short text that links to a video or page.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('ticker_item', [], 'Add announcement') ?>>＋ Add announcement</button>
+    </div>
+    <div class="sj-list" data-list="ticker_item">
+      <?php foreach ($rows as $r) {
+          panel_row([
+              'entity' => 'ticker_item', 'id' => $r['id'],
+              'title'  => $r['label'],
+              'sub'    => $r['url'],
+              'active' => (bool)$r['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
+/* ================= NEW UPDATES ================= */
+case 'updates':
+    $rows = repo_update_slides(true);
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">Slides of the "New Updates" video carousel. Images are auto-cropped to 16:9.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('update_slide', [], 'Add update slide') ?>>＋ Add update slide</button>
+    </div>
+    <div class="sj-list" data-list="update_slide">
+      <?php foreach ($rows as $r) {
+          panel_row([
+              'entity' => 'update_slide', 'id' => $r['id'],
+              'thumb'  => $r['image'] ? img_url($r['image'], 'update_16x9') : null,
+              'title'  => $r['title'],
+              'sub'    => $r['subtitle'],
+              'active' => (bool)$r['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
+/* ================= TOP MARKS ================= */
+case 'marks':
+    $years = db()->query('SELECT * FROM mark_years ORDER BY year DESC')->fetchAll();
+    $entSt = db()->prepare('SELECT * FROM mark_entries WHERE year_id = ? ORDER BY FIELD(standard,"12","11","10"), position, id');
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">Board-exam toppers. The website shows the <b>latest 3 visible years</b>.
+         Each year holds 10th / 11th / 12th standard entries.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('mark_year', [], 'Add year') ?>>＋ Add year</button>
+    </div>
+    <?php foreach ($years as $y):
+        $entSt->execute([$y['id']]);
+        $entries = $entSt->fetchAll();
+    ?>
+    <div class="sj-yearcard<?= $y['is_active'] ? '' : ' off' ?>" data-row="mark_year:<?= (int)$y['id'] ?>">
+      <div class="sj-yearhead">
+        <b>🗓️ <?= e($y['year']) ?></b>
+        <?php if (!$y['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
+        <div class="sj-row-actions">
+          <button class="sj-btn sj-btn-ghost sj-btn-sm" <?= panel_add_attr('mark_entry', ['year_id' => (int)$y['id']], 'Add topper — ' . $y['year']) ?>>＋ Add topper</button>
+          <button class="sj-ico" title="<?= $y['is_active'] ? 'Hide year' : 'Show year' ?>" data-act="toggle" data-active="<?= $y['is_active'] ? 1 : 0 ?>"><?= $y['is_active'] ? '👁️' : '🚫' ?></button>
+          <button class="sj-ico danger" title="Delete year (removes all its toppers)" data-act="del" data-confirm="Delete year <?= e($y['year']) ?> and ALL its toppers?">🗑️</button>
+        </div>
+      </div>
+      <?php if ($entries): ?>
+      <table class="sj-table">
+        <thead><tr><th>Std</th><th>Rank</th><th>Student</th><th>Marks</th><th></th></tr></thead>
+        <tbody data-list="mark_entry">
+        <?php foreach ($entries as $en): ?>
+          <tr data-row="mark_entry:<?= (int)$en['id'] ?>">
+            <td><span class="sj-chip"><?= e($en['standard']) ?>th</span></td>
+            <td><?= e($en['rank_label']) ?></td>
+            <td><b><?= e($en['student_name']) ?></b></td>
+            <td><?= (int)$en['marks_scored'] ?> / <?= (int)$en['marks_total'] ?></td>
+            <td class="sj-row-actions">
+              <button class="sj-ico" title="Edit" data-act="edit">✏️</button>
+              <button class="sj-ico" title="Move up" data-act="move" data-dir="-1">↑</button>
+              <button class="sj-ico" title="Move down" data-act="move" data-dir="1">↓</button>
+              <button class="sj-ico danger" title="Delete" data-act="del">🗑️</button>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+      <?php else: ?><p class="sj-hint" style="padding:0 18px 16px">No toppers yet — use “＋ Add topper”.</p><?php endif; ?>
+    </div>
+    <?php endforeach;
+    break;
+
+/* ================= MEDIA LIBRARY ================= */
+case 'media':
+    $presets = db()->query('SELECT preset_key, label FROM image_presets ORDER BY preset_key')->fetchAll();
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">Every image available to the website — the original photo collection plus your uploads.
+         Uploads are auto-cropped to the shape you pick and compressed automatically.</p>
+      <button class="sj-btn sj-btn-primary" id="sj-media-upload">⬆️ Upload image</button>
+    </div>
+    <input type="text" id="sj-media-search" class="sj-search" placeholder="Search images by file name…">
+    <div class="sj-grid" id="sj-media-grid"></div>
+    <button class="sj-btn sj-btn-ghost sj-more" id="sj-media-more">Load more</button>
+    <script>window.SJ_PRESETS = <?= json_encode($presets, JSON_UNESCAPED_SLASHES) ?>;</script>
+    <?php
+    break;
+}
+
+panel_footer();
