@@ -38,7 +38,7 @@ Never skip this because a change "looks small". A one-line echo or a new endpoin
 - **Registry:** any new editable field/entity must be registered; `admin_users` and `settings` are **never** registered.
 - **Includes/paths:** no request-derived string ever reaches `include`/`require`/a filesystem path/`header('Location')`.
 - **URLs:** every legacy URL keeps working (stubs/thin controllers). Don't break `tamilacademy.php`, `gal-annual.php`, `kg.php`, etc.
-- **Performance budget:** each converted page ≤ 12 SQL queries; cache `settings`/`pages` per request; no N+1 in loops (repos return image data pre-joined).
+- **Performance budget:** each converted page ≤ 12 SQL queries; cache `settings`/`pages` per request; no N+1 in loops (repos return image data pre-joined). Check with `config['debug']=true` → the `<!-- sj-queries: N -->` comment (`db_query_count()`). Baseline in `docs/perf-baseline.md`.
 - **Secrets:** real secrets live only in `config/config.php` **above the webroot** (gitignored). Never commit them; never hardcode credentials or API keys in client-served code.
 
 ## Theme tokens (match, don't invent)

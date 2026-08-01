@@ -33,3 +33,16 @@ function get_templates($name)
 // Public visitors pay no session cost; the session boots only when the admin
 // cookie is present (edit.php). Admin pages force-boot their own session.
 sj_session_boot(false);
+
+// Dev-only: append the per-request SQL query count to HTML responses so the
+// ≤12/page budget (CLAUDE.md) is visible. Skips JSON APIs and CLI.
+if (!empty(sj_config()['debug']) && PHP_SAPI !== 'cli') {
+    register_shutdown_function(function () {
+        foreach (headers_list() as $h) {
+            if (stripos($h, 'content-type: application/json') === 0) {
+                return; // never corrupt an API response
+            }
+        }
+        echo "\n<!-- sj-queries: " . db_query_count() . " -->";
+    });
+}
