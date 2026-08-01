@@ -7,6 +7,9 @@ if (!defined('SJ_PUBLIC_ROOT')) {
     define('SJ_PUBLIC_ROOT', dirname(__DIR__)); // …/public_html
 }
 
+// Composer autoloader first — makes SJ\* classes available to the libs below.
+require_once __DIR__ . '/../bootstrap.php';
+
 function sj_config(): array
 {
     static $cfg = null;

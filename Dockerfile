@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN a2enmod headers expires rewrite \
     && sed -ri 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
+# Composer for dev only (regenerate the autoloader with `composer dump-autoload`).
+# vendor/ is committed, so production never needs Composer.
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 RUN { \
         echo 'upload_max_filesize=12M'; \
         echo 'post_max_size=13M'; \

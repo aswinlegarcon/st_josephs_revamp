@@ -1,0 +1,19 @@
+{
+    "name": "stjosephs/website",
+    "description": "St. Joseph's MHSS website + CMS engine",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "ext-gd": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SJ\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

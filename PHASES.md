@@ -74,7 +74,7 @@ Rules for every phase: it is small (0.5–2 days), independently shippable, leav
 
 | Seq | ID | Name | Goal | Files touched | Depends | Acceptance | Risk |
 |---|---|---|---|---|---|---|---|
-| 6 | P1 | Composer skeleton | `composer.json`, autoload, `SJ\Core\{Db,Config}`; `_libs/db.php` + `config.php` become shims. | `composer.json`, `src/Core/*`, `public_html/bootstrap.php`, shims | S1 | All pages + admin work unchanged; `vendor/` committed; classes autoload. | L |
+| 6 | ✅ P1 | Composer skeleton | `composer.json`, autoload, `SJ\Core\{Db,Config}`; `_libs/db.php` + `config.php` become shims. | `composer.json`, `src/Core/*`, `public_html/bootstrap.php`, shims | S1 | All pages + admin work unchanged; `vendor/` committed; classes autoload. | L |
 | 7 | P2 | Port libraries | media/sanitize/registry/edit → `SJ\Media`, `SJ\Content`, `SJ\Admin\{Auth,Csrf}`, `src/helpers.php`; shims kept. | `src/Media/*`, `src/Content/*`, `src/Admin/*`, shims | P1 | Upload→renditions works; Home renders identically; admin login works. | M |
 | 8 | P3 | Admin API front controller | `admin/api/index.php?r=…` router → `SJ\Admin\Controllers\*`; old endpoints forward. | `admin/api/index.php`, `src/Admin/Controllers/*`, `admin/assets/panel.js` (base URL) | P2 | Every existing panel operation (field save, item CRUD, reorder, upload) works through the router; forwards return identical JSON. | M |
 | 9 | P4 | Public layout system | `views/layout.php` single document + `SJ\View\Layout::render()`; convert **Home only** as proof; parametrized partials for navbar/footer/preloader. | `views/layout.php`, `views/partials/*`, `views/pages/home.php`, `index.php` | P2 | Home output is valid single-document HTML (W3C validator: no nested doctypes), pixel-identical visually. | M |

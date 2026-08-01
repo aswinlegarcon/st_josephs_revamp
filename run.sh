@@ -34,6 +34,9 @@ for i in $(seq 1 90); do
   sleep 1
 done
 
+echo "==> Refreshing Composer autoloader (dev; vendor/ is committed)…"
+docker compose exec -T web composer dump-autoload -o --no-interaction 2>/dev/null || true
+
 echo "==> Seeding content (idempotent — safe to re-run)…"
 docker compose exec -T web php /var/www/database/seed.php
 
