@@ -25,7 +25,9 @@
     setTimeout(function () { t.remove(); }, isErr ? 3800 : 1800);
   }
   function api(path, payload) {
-    return fetch('/admin/api/' + path, {
+    // Route through the front controller: 'item.php' -> index.php?r=item
+    var route = path.replace(/\.php$/, '');
+    return fetch('/admin/api/index.php?r=' + route, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF },
       body: JSON.stringify(payload || {})
@@ -151,7 +153,7 @@
         var page = 0, q = '';
         function load(reset) {
           if (reset) { grid.innerHTML = ''; page = 0; }
-          fetch('/admin/api/images.php?q=' + encodeURIComponent(q) + '&page=' + page)
+          fetch('/admin/api/index.php?r=images&q=' + encodeURIComponent(q) + '&page=' + page)
             .then(function (r) { return r.json(); })
             .then(function (j) {
               if (!j.ok) throw new Error(j.error || 'load failed');
@@ -210,7 +212,7 @@
           fd.append('file', file.files[0]);
           fd.append('preset', chosenPreset || '');
           fd.append('alt', alt.value);
-          fetch('/admin/api/upload.php', { method: 'POST', headers: { 'X-CSRF-Token': CSRF }, body: fd })
+          fetch('/admin/api/index.php?r=upload', { method: 'POST', headers: { 'X-CSRF-Token': CSRF }, body: fd })
             .then(function (r) { return r.json(); })
             .then(function (j) {
               if (!j.ok) throw new Error(j.error || 'Upload failed');
@@ -431,7 +433,7 @@
     var mPage = 0, mQ = '';
     function loadMedia(reset) {
       if (reset) { mediaGrid.innerHTML = ''; mPage = 0; }
-      fetch('/admin/api/images.php?q=' + encodeURIComponent(mQ) + '&page=' + mPage)
+      fetch('/admin/api/index.php?r=images&q=' + encodeURIComponent(mQ) + '&page=' + mPage)
         .then(function (r) { return r.json(); })
         .then(function (j) {
           j.items.forEach(function (it) {
