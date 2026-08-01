@@ -4,8 +4,14 @@
 
 require dirname(__DIR__) . '/_libs/load.php';
 sj_session_boot(true);
+if (function_exists('sj_admin_headers')) { sj_admin_headers(); } // security headers (added in S4)
 if (!is_admin()) {
     header('Location: /admin/login.php');
+    exit;
+}
+// Force the password change before any admin screen is reachable (SEC-08).
+if (!empty($_SESSION['must_change_pw'])) {
+    header('Location: /admin/password.php');
     exit;
 }
 

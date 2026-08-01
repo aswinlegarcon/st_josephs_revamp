@@ -8,6 +8,9 @@ CREATE TABLE IF NOT EXISTS admin_users (
   username      VARCHAR(50)  NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   display_name  VARCHAR(100) NOT NULL DEFAULT 'Administrator',
+  role                 VARCHAR(20) NOT NULL DEFAULT 'owner',   -- multi-user readiness (SEC-08/09)
+  must_change_password TINYINT(1)  NOT NULL DEFAULT 0,         -- forced rotation on first login
+  password_changed_at  DATETIME NULL,
   failed_logins TINYINT UNSIGNED NOT NULL DEFAULT 0,
   locked_until  DATETIME NULL,
   last_login_at DATETIME NULL,

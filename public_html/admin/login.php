@@ -25,12 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             db()->prepare('UPDATE admin_users SET failed_logins = 0, locked_until = NULL, last_login_at = NOW() WHERE id = ?')
                 ->execute([$user['id']]);
             session_regenerate_id(true);
-            $_SESSION['admin_id']   = (int)$user['id'];
-            $_SESSION['admin_name'] = $user['display_name'];
-            $_SESSION['edit_mode']  = 0;
+            $_SESSION['admin_id']      = (int)$user['id'];
+            $_SESSION['admin_name']    = $user['display_name'];
+            $_SESSION['edit_mode']     = 0;
+            $_SESSION['must_change_pw'] = (int)($user['must_change_password'] ?? 0);
             unset($_SESSION['csrf']);
             csrf_token(); // fresh token post-login
-            header('Location: /admin/');
+            header('Location: ' . (!empty($_SESSION['must_change_pw']) ? '/admin/password.php' : '/admin/'));
             exit;
         } else {
             if ($user) {

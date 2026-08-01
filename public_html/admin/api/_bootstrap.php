@@ -22,6 +22,11 @@ if (!is_admin()) {
     api_fail('Not authenticated', 401);
 }
 
+// Block all content APIs until the forced password change is done (SEC-08).
+if (!empty($_SESSION['must_change_pw'])) {
+    api_fail('Password change required', 403);
+}
+
 // CSRF on every mutating request (all endpoints except GET images.php).
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';

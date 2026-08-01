@@ -55,9 +55,21 @@ function img_id_by_file(string $file): int
 /* ---------- 2. Admin account (admin / admin123) ---------- */
 $exists = $pdo->query("SELECT COUNT(*) FROM admin_users WHERE username = 'admin'")->fetchColumn();
 if (!$exists) {
-    $pdo->prepare('INSERT INTO admin_users (username, password_hash, display_name) VALUES (?,?,?)')
-        ->execute(['admin', password_hash('admin123', PASSWORD_DEFAULT), 'Administrator']);
-    $out[] = 'admin user created (admin / admin123)';
+    // Password source: SEED_ADMIN_PASS env → random (with --prod) → dev default.
+    // Whatever it is, must_change_password=1 forces a rotation on first login,
+    // so the seeded credential is never usable long-term (SECURITY.md SEC-08).
+    $envPass = getenv('SEED_ADMIN_PASS');
+    $prod    = in_array('--prod', $argv, true);
+    if ($envPass !== false && $envPass !== '') {
+        $pass = $envPass;
+    } elseif ($prod) {
+        $pass = bin2hex(random_bytes(9)); // 18 hex chars, shown once below
+    } else {
+        $pass = 'admin123';               // local dev only
+    }
+    $pdo->prepare('INSERT INTO admin_users (username, password_hash, display_name, must_change_password) VALUES (?,?,?,1)')
+        ->execute(['admin', password_hash($pass, PASSWORD_DEFAULT), 'Administrator']);
+    $out[] = "admin user created (admin / $pass) — MUST change password on first login";
 } else {
     $out[] = 'admin user already present';
 }
