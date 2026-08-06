@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libjpeg62-turbo-dev libpng-dev libwebp-dev libfreetype6-dev \
     && docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
     && docker-php-ext-install -j"$(nproc)" gd pdo_mysql exif \
+    && docker-php-ext-enable opcache \
     && rm -rf /var/lib/apt/lists/*
 
 # Make .htaccess actually apply in dev (Debian ships AllowOverride None and the
@@ -22,4 +23,8 @@ RUN { \
         echo 'memory_limit=512M'; \
         echo 'display_errors=Off'; \
         echo 'log_errors=On'; \
+        echo 'opcache.enable=1'; \
+        echo 'opcache.enable_cli=0'; \
+        echo 'opcache.validate_timestamps=1'; \
+        echo 'opcache.revalidate_freq=0'; \
     } > /usr/local/etc/php/conf.d/stjosephs.ini
