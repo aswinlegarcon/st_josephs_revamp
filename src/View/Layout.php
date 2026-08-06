@@ -13,8 +13,15 @@ namespace SJ\View;
  */
 final class Layout
 {
-    /** Pages this engine may render. Extend as pages migrate (R1a–c). */
-    private const PAGES = ['home'];
+    /** Pages this engine may render (hardcoded whitelist — SEC-11). Extend as pages migrate. */
+    private const PAGES = [
+        'home',                                                   // P4 (legacy shell)
+        'about', 'staffs', 'academics', 'achievements',          // R1a hub pages
+        'co-curriculum', 'sports', 'infrastructure', 'gallery',  // (BS5 shell)
+    ];
+
+    /** 'home' keeps its original P4 shell; every converted page uses the BS5 shell. */
+    private const LEGACY_SHELL = ['home'];
 
     public static function render(string $page, array $data = []): void
     {
@@ -30,6 +37,6 @@ final class Layout
         include $views . '/pages/' . $page . '.php';
         $content = \ob_get_clean();
 
-        include $views . '/layout.php';
+        include $views . '/' . (\in_array($page, self::LEGACY_SHELL, true) ? 'layout.php' : 'shell.php');
     }
 }

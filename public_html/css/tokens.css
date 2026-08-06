@@ -1,0 +1,26 @@
+/* Design tokens for the public site (PHASES.md R1a).
+   One source of truth for the brand colours and fonts. Loaded on every page. */
+:root {
+  /* Brand */
+  --sj-navy:      #2b4b8a;
+  --sj-navy-dark: #1a355d;
+  --sj-gold:      #ffd700;
+  --sj-gold-ink:  #8a6d00;   /* gold-MEANING text on white — WCAG-safe (never use --sj-gold on white) */
+  --sj-maroon:    firebrick;
+
+  /* Neutrals */
+  --sj-ink:       #26303f;
+  --sj-white:     #ffffff;
+
+  /* Signature gradients */
+  --sj-grad-brand: linear-gradient(to right, var(--sj-navy), var(--sj-navy-dark));
+
+  /* Fonts */
+  --sj-font-head:   "Fjalla One", sans-serif;
+  --sj-font-accent: "Dancing Script", cursive;
+  --sj-font-body:   "League Spartan", sans-serif;
+}
+
+/* Gold highlight used inside rich-text (replaces old inline gold styles).
+   Uses the ink-safe gold so it passes contrast on white. */
+.hl-gold { color: var(--sj-gold-ink); font-weight: 700; }
