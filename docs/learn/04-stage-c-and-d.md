@@ -1,0 +1,138 @@
+# 4 — What We Built: Stages C & D (the public-site revamp + speed)
+
+> Continues [`03-what-we-built.md`](03-what-we-built.md). Stages A & B made the site
+> **secure** and **organized**. Stages C & D make the public pages **clean** and **fast**.
+> Read docs #1–#3 first.
+
+---
+
+## Stage C — one clean, modern front-end
+
+**The problem.** Every page was built from little template files, and *each template carried
+its own complete web page* (`<!DOCTYPE>`, `<head>`, `<body>`…). When a page pulled in 11
+templates, the browser received **11 nested mini-documents** — invalid HTML that browsers
+only tolerate. Worse, the site loaded **four different versions of Bootstrap** (a popular
+CSS/JS toolkit — 4.3.1, 4.5.3, 5.0.2, 5.3.3) plus **jQuery**, all from the internet (a
+"CDN"). That's slow, fragile, and messy.
+
+**The goal of Stage C:** every page = **one** valid HTML document, using **one** version of
+Bootstrap (5.3.3), hosted by us (not a CDN), with shared colours in one place.
+
+### What is Bootstrap, and what's a "dialect"?
+
+**Bootstrap** is a ready-made kit of styles and interactive widgets (navigation bars,
+image carousels, dropdown menus, collapsible panels). You add special classes and
+attributes to your HTML and Bootstrap makes them work.
+
+Between Bootstrap **4** and **5**, the attribute names changed. A carousel that auto-plays
+was written `data-ride="carousel"` in v4; in v5 it's `data-bs-ride="carousel"` (they added
+`bs-`). Same idea, different spelling — we call this the **dialect**. Our whole site spoke
+the **v4 dialect**, so moving to v5 meant **translating every one of those attributes**:
+
+```html
+<!-- Bootstrap 4 (old) -->
+<div data-ride="carousel" data-interval="2000"> … </div>
+<a data-toggle="collapse" data-target="#panel"> … </a>
+
+<!-- Bootstrap 5 (new) -->
+<div data-bs-ride="carousel" data-bs-interval="2000"> … </div>
+<a data-bs-toggle="collapse" data-bs-target="#panel"> … </a>
+```
+
+We also renamed a few CSS classes that Bootstrap changed (e.g. `text-left` → `text-start`),
+and dropped **jQuery** entirely — Bootstrap 5 doesn't need it.
+
+### Phase R1a — the foundation + the 8 main pages
+
+1. **Self-hosted Bootstrap 5.3.3** — we downloaded Bootstrap once into
+   `public_html/assets/vendor/bootstrap-5.3.3/`. Now it loads from *our* server, one
+   version, no internet CDN.
+2. **`css/tokens.css`** — one file that defines the brand colours and fonts as **variables**
+   (`--sj-navy`, `--sj-gold`…). Change a colour in one place, it changes everywhere.
+3. **Clean "partials"** (`views/partials/`) — we rebuilt the shared pieces (navbar, footer,
+   preloader, scroll-to-top button, admissions banner) as **fragments**: just the piece,
+   with **no** `<!DOCTYPE>`/`<head>`/`<body>` wrapper. They also switched to the v5 dialect.
+4. **The shell** (`views/shell.php`) — the single outer document. It loads Bootstrap, Font
+   Awesome, the fonts, the tokens, and the page's own CSS **once**, then drops in: navbar →
+   the page's content → footer. This is what makes each page **one** clean document.
+5. **The 8 "hub" pages** (about, staffs, academics, achievements, co-curriculum, sports,
+   infrastructure, gallery) were converted: each `.php` file became a tiny **controller**
+   (like we did for Home in Stage B) that hands its content to the shell. The content moved
+   into `views/pages/<page>.php`, translated to the v5 dialect.
+
+**Bugs fixed along the way** (from the known-issues list):
+- The navbar's two dropdown links pointed at a page that doesn't exist (`curriculum.php`) —
+  fixed.
+- Several pages had **duplicate** `</body>` tags — gone, because each page is now one
+  document.
+- **Sports** reused the same `id="accordion"` for all 9 expandable cards (HTML ids must be
+  unique) — each now has its own id.
+- **Infrastructure** had an "off-by-one" bug: its quick-jump menu buttons each jumped to the
+  *wrong* facility, and the last facility was unreachable. Fixed — button *N* now jumps to
+  facility *N*. Its 15 image carousels also got unique ids.
+
+**How we verified it:** for every converted page we checked (in a real browser) that there's
+exactly **one** document, only our self-hosted Bootstrap loads (no CDN, no jQuery), and the
+interactive bits actually work — the mobile menu opens, dropdowns drop, carousels slide,
+the sports accordions expand — with **zero errors** in the browser console.
+
+> **Still pending in Stage C:** the two big page *families* — the 18 academy pages and 4
+> section pages (**R1b**), and the 11 gallery pages (**R1c**) — still use the old templates.
+> They keep working (nothing broke), and converting them is now a **mechanical repeat** of
+> the exact recipe proven on the 8 hub pages.
+
+---
+
+## Stage D — make it fast, make it deployable
+
+### Phase F1 — delivery basics (speed)
+
+Remember the F0 baseline: the live home page was **10 MB and took ~14 seconds**. Two quick,
+high-impact fixes:
+
+1. **Stop re-downloading unchanged files.** The old code tagged every stylesheet with
+   `?v=<current time>`, so the URL was different on *every* request — the browser could
+   never reuse its cached copy. We replaced it with **one version number**, `SJ_ASSET_VER`,
+   that we bump only when we deploy. Now the browser caches CSS/JS/images for a year and
+   re-fetches only after a real change.
+2. **Compress and cache** (in `public_html/.htaccess`):
+   - **gzip** shrinks text as it's sent. Real numbers we measured: the Bootstrap CSS went
+     from **227 KB to 31 KB** (86% smaller); a page's HTML from 17.6 KB to 5.9 KB.
+   - **Cache-Control** tells browsers to keep assets for a year (they're versioned, so this
+     is safe) but never cache the HTML (so content edits show up immediately).
+3. **OPcache on** — PHP compiles your code every request unless OPcache is enabled to
+   remember the compiled version. We turned it on (in the Dockerfile for dev; mPanel has it
+   in prod).
+
+### Phase X1 — deploy safely
+
+1. **`admin/health.php`** — a "is everything OK?" endpoint. Visit it (with a secret token)
+   and it returns a checklist: PHP version, required extensions, database reachable, tables
+   present, uploads folder writable, OPcache on, HTTPS. Green across the board = safe to
+   serve. (This check immediately earned its keep — it caught that a permissions change had
+   broken the uploads folder in dev, which we then fixed.)
+2. **`DEPLOY.md`** — the step-by-step runbook for putting the site on MilesWeb: what to set
+   up once (PHP 8.3, database, secrets kept *above* the web folder, HTTPS, file
+   permissions), how to ship each release (bump the version, upload only the right folders,
+   apply database migrations, run the health check), what to **never** upload (the database
+   folder, `.git`, secrets, planning docs), and how to roll back.
+
+---
+
+## Where the project stands
+
+| Stage | Status |
+|---|---|
+| A — Security (S1–S4, F0) | ✅ done |
+| B — Platform (P1–P4) | ✅ done |
+| **C — Front-end revamp** | **R1a ✅ (8 hub pages + foundation); R1b, R1c pending (33 family pages, mechanical)** |
+| **D — Speed & deploy** | **F1 ✅, X1 ✅** |
+| E–H (content in the DB, live editing, images, SEO, backups) | upcoming — see [`PHASES.md`](../../PHASES.md) |
+
+### Try it yourself
+1. `./run.sh`, open `http://localhost:8090/about.php` — view source: **one** `<!doctype>`,
+   Bootstrap loading from `/assets/vendor/...` (not the internet).
+2. Open `http://localhost:8090/sports.php`, click a "Read More" — the accordion expands
+   (that's Bootstrap 5 working after the dialect translation).
+3. Compare with `http://localhost:8090/tamilacademy.php` (not yet converted) — view source
+   and you'll still see the old nested-document style. That's R1b's job.

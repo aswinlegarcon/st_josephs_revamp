@@ -19,7 +19,8 @@ By the end you will understand:
 |---|------|-----------------|
 | 1 | [`01-fundamentals.md`](01-fundamentals.md) | The web, PHP A–Z, databases + SQL, PDO, sessions, Composer, Docker. **Start here.** |
 | 2 | [`02-security.md`](02-security.md) | What each attack is (in plain words) and exactly how we block it in our code. |
-| 3 | [`03-what-we-built.md`](03-what-we-built.md) | Every change we made, phase by phase, tied to real files in this repo. |
+| 3 | [`03-what-we-built.md`](03-what-we-built.md) | Stages A & B — security + the modern code structure, phase by phase. |
+| 4 | [`04-stage-c-and-d.md`](04-stage-c-and-d.md) | Stages C & D — the Bootstrap-5 front-end revamp + speed/deploy work. |
 
 ## How to study
 
