@@ -1,0 +1,80 @@
+# DEPLOY.md — Shipping to MilesWeb (mPanel)
+
+> Production is **MilesWeb shared hosting (mPanel)** — no SSH, no Docker, no Composer on
+> the server. Deploy = upload files. `vendor/` is committed so the server never runs
+> Composer. This runbook is the whole procedure. (PHASES.md X1.)
+
+## 0. One-time production setup
+
+1. **PHP version:** in mPanel, select **PHP 8.3**. Confirm extensions **gd**, **pdo_mysql**,
+   **exif** are enabled.
+2. **Database:** create the MySQL database + user in mPanel. Import `database/schema.sql`
+   via mPanel's DB tool (phpMyAdmin). This creates every table.
+3. **Secrets — `config/config.php` ABOVE the webroot:** the account home looks like
+   `~/ (home) → public_html/ (webroot)`. Create `~/config/config.php` (a **sibling** of
+   `public_html`, NOT inside it) by copying `config/config.sample.php` and filling in the
+   real DB credentials. Also set:
+   - `'force_secure_cookies' => true` (once SSL is on)
+   - `'session_save_path' => '/home/<account>/tmp/sessions'` (create it, `chmod 700`)
+   - `'health_token' => '<a long random string>'`
+   - `'debug' => false`
+   Verify the loader finds it: `dirname(public_html)` must contain `config/config.php`.
+   If mPanel does not allow a sibling dir above `public_html`, place it at the highest
+   non-web-served level available and confirm `/config/config.php` returns **404** over HTTP.
+4. **HTTPS:** enable the free SSL certificate in mPanel and force HTTPS redirect.
+5. **Seed content (optional, first ship only):** run the seeder **once** locally against a
+   dump, or paste the generated INSERTs — do **not** upload `database/seed.php` to run on
+   prod. The production admin password is set by the forced-change flow on first login.
+6. **Permissions:** directories `755`, PHP files `644`, `config/config.php` `600`,
+   `public_html/media/` `755` (prod PHP runs as the account user — **never 777**).
+
+## 1. Every release
+
+1. **Tag** the commit you're shipping.
+2. **Bump the asset version:** edit `SJ_ASSET_VER` in `public_html/_libs/load.php` (e.g. the
+   date). This makes browsers fetch the new CSS/JS past the 1-year cache.
+3. **Build the upload set** — ONLY these paths:
+   ```
+   public_html/    src/    views/    vendor/    config/config.sample.php
+   ```
+4. **Upload** via mPanel File Manager (or FTP), extracting over the previous release.
+5. **Apply migrations** (if any new `database/migrations/NNN_*.sql`): paste each into the
+   mPanel DB tool, in order. Migrations are **additive-only** — never destructive.
+6. **Smoke-check:** open `https://<site>/admin/health.php?token=<health_token>` → every
+   gating check `true` (`ok: true`). Then click through: home, one page per family, admin
+   login + one edit.
+
+## 2. NEVER upload to production
+
+`database/` · `.git/` · `docker-compose.yml` · `Dockerfile` · `run.sh` · `.env` /
+`.env.example` · the dev `config/config.php` · `*.md` docs (`PHASES.md`, `SECURITY.md`,
+`DEPLOY.md`, `docs/`) · the `Admin Panel UI.html` prototype · any `.sql`/dump/zip/backup.
+The root `public_html/.htaccess` already blocks most of these if they slip in, but keep them
+out of the upload set entirely.
+
+## 3. Data direction rule
+
+Content flows **dev → prod only for the very first ship**. After that, **production is the
+source of truth**. Pull nightly dumps down into dev for testing (X2); never push a dev
+database over prod (it would wipe real edits).
+
+## 4. Rollback
+
+Keep the previous release zip in a non-web folder on the host (e.g. `~/releases/`). To roll
+back: re-extract the previous zip over `public_html/`. Because migrations are additive-only,
+the older code still runs against the newer schema. Do **not** roll back the database.
+
+## 5. Health endpoint reference
+
+`/admin/health.php?token=<health_token>` (or while logged in as admin) returns JSON:
+
+| Check | Meaning |
+|---|---|
+| `php_version` | PHP ≥ 8.1 (target 8.3) |
+| `ext_gd` / `ext_pdo_mysql` / `ext_exif` | required extensions present |
+| `db_connect` / `schema` | database reachable + tables exist |
+| `media_writable` | uploads will work |
+| `opcache` | bytecode cache on (speed) |
+| `https` | informational — should be `true` in prod, is `false` on the dev http box |
+
+`ok: true` (HTTP 200) means safe to serve. Point **UptimeRobot** (X3) at this URL.

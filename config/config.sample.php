@@ -28,4 +28,5 @@ return [
     'force_secure_cookies' => false, // set true once the site is HTTPS-only
     'session_save_path'    => null,  // e.g. '/home/<account>/tmp/sessions' (chmod 700) in prod
     'debug'                => false, // true → emit a per-page SQL query count (dev only)
+    'health_token'         => '',    // set a random string; then /admin/health.php?token=... works (X1)
 ];

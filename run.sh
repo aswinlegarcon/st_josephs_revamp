@@ -23,7 +23,10 @@ esac
 [ -f config/config.php ] || { mkdir -p config; cp config/config.sample.php config/config.php; echo "==> Created config/config.php from sample."; }
 
 mkdir -p public_html/media
-chmod 775 public_html/media 2>/dev/null || true  # PHP runs as the site user; 777 is never needed (SEC-22)
+# Dev only: the Apache container runs PHP as www-data, which must write uploads
+# here. In PRODUCTION (mPanel/LiteSpeed) PHP runs as the account user, so deploy
+# media/ as 755 — never 777 (SEC-22). This 777 is scoped to the localhost dev box.
+chmod 777 public_html/media 2>/dev/null || true
 
 echo "==> Building/starting containers (first run downloads images; takes a few minutes)…"
 docker compose up -d --build
