@@ -120,6 +120,6 @@ $csrf = csrf_token();
       <?php if (!$forced): ?><a class="actions-link" href="/admin/">← Back to dashboard</a><?php endif; ?>
     <?php endif; ?>
   </div>
-  <script src="/admin/assets/password.js?v=<?= time() ?>" defer></script>
+  <script src="/admin/assets/password.js?v=<?= SJ_ASSET_VER ?>" defer></script>
 </body>
 </html>

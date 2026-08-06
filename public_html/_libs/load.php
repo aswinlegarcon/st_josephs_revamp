@@ -7,6 +7,13 @@ if (!defined('SJ_PUBLIC_ROOT')) {
     define('SJ_PUBLIC_ROOT', dirname(__DIR__)); // …/public_html
 }
 
+// Static-asset cache-busting version. Bump this ONE line per deploy instead of
+// the old `?v=time()` (which re-downloaded every asset on every request).
+// Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
+if (!defined('SJ_ASSET_VER')) {
+    define('SJ_ASSET_VER', '20260807');
+}
+
 // Composer autoloader first — makes SJ\* classes available to the libs below.
 require_once __DIR__ . '/../bootstrap.php';
 

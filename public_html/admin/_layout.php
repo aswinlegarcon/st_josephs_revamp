@@ -64,7 +64,7 @@ function panel_header(string $active, string $title): void
 <title><?= e($title) ?> — SJ Admin</title>
 <link rel="icon" href="/photos/logo-main.png" type="image/x-icon">
 <meta name="sj-csrf" content="<?= e(csrf_token()) ?>">
-<link rel="stylesheet" href="/admin/assets/panel.css?v=<?= time() ?>">
+<link rel="stylesheet" href="/admin/assets/panel.css?v=<?= SJ_ASSET_VER ?>">
 </head>
 <body class="sj-panel">
 <aside class="sj-side">
@@ -103,7 +103,7 @@ function panel_footer(): void
     ?>
   </div>
 </main>
-<script src="/admin/assets/panel.js?v=<?= time() ?>" defer></script>
+<script src="/admin/assets/panel.js?v=<?= SJ_ASSET_VER ?>" defer></script>
 </body>
 </html>
     <?php

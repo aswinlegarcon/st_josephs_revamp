@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title ?? "St.Joseph's MHSS, Ondipudur") ?></title>
     <link rel="icon" href="/photos/logo-main.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/index.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="/css/index.css?v=<?php echo SJ_ASSET_VER; ?>">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
