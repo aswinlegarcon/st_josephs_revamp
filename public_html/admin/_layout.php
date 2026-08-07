@@ -22,6 +22,7 @@ function panel_sections(): array
         'dashboard' => ['🏠', 'Dashboard'],
         'hero'      => ['🎠', 'Hero Carousel'],
         'principal' => ['👤', 'Principal'],
+        'aboutpage' => ['📖', 'About Page'],
         'unique'    => ['✨', "What's Unique"],
         'ticker'    => ['📣', 'News Ticker'],
         'updates'   => ['📺', 'New Updates'],

@@ -234,6 +234,50 @@ case 'media':
     <?php
     break;
 
+/* ================= ABOUT PAGE (C2) ================= */
+case 'aboutpage':
+    $aboutPage  = repo_page('about');
+    $aboutSlides = $aboutPage ? repo_hero_slides((int)$aboutPage['id'], true) : [];
+    ?>
+    <p class="sj-lead">Everything on the <b>About</b> page: the top photo carousel and the four content
+       blocks. The <b>Principal</b> block is shared with the Home page — edit it in its own
+       <a href="/admin/section.php?s=principal">Principal</a> section (one edit updates both pages).</p>
+
+    <h3 class="sj-form-legend">Top carousel</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Photos rotating at the top of the About page (auto-cropped to the banner shape).</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$aboutPage['id']], 'Add about slide') ?>>＋ Add slide</button>
+    </div>
+    <div class="sj-list" data-list="hero_slide">
+      <?php foreach ($aboutSlides as $sl) {
+          panel_row([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'title'  => $sl['caption_title'] ?: '(no caption)',
+              'sub'    => $sl['caption_text'],
+              'active' => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+
+    <h3 class="sj-form-legend">Content blocks</h3>
+    <div class="sj-list">
+      <?php foreach (['president' => 'President', 'history' => 'School History', 'rules' => 'Rules and Regulations'] as $roleKey => $label) {
+          $b = repo_profile($roleKey);
+          if (!$b) { continue; }
+          panel_row([
+              'entity' => 'profile', 'id' => $b['id'],
+              'thumb'  => $b['image'] ? img_url($b['image'], 'portrait_4x5') : null,
+              'title'  => $label,
+              'sub'    => $b['person_name'],
+          ]);
+      } ?>
+    </div>
+    <p class="sj-hint">The school-timings table and the diary download under "Rules and Regulations"
+       are fixed layout — text around them is editable here.</p>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is

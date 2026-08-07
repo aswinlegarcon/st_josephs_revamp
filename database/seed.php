@@ -176,6 +176,48 @@ foreach ($marks as $year => $entries) {
     }
 }
 
+/* ---------- About page (C2) ----------
+ * pages row + hero slides + the three about-only profile blocks. Text is the
+ * EXACT shipped copy (visual-freeze). The principal profile already exists
+ * (seeded above) and is SHARED between home and about by design. */
+$pdo->prepare('INSERT IGNORE INTO pages (slug, title, heading_html) VALUES (?,?,?)')->execute([
+    'about',
+    "St.Joseph's MHSS, Ondipudur",
+    '',
+]);
+$aboutPageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'about'")->fetchColumn();
+
+$cnt = $pdo->prepare('SELECT COUNT(*) FROM hero_slides WHERE page_id = ?');
+$cnt->execute([$aboutPageId]);
+if (!$cnt->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO hero_slides (page_id, image_id, caption_title, caption_text, position) VALUES (?,?,?,?,?)');
+    foreach ([['s-3.jpg', 0], ['father-c.jpg', 1], ['s-2.jpg', 2]] as [$img, $pos]) {
+        $st->execute([$aboutPageId, img_id_by_file($img), 'Our School', 'About our history and our pillars', $pos]);
+    }
+    $out[] = 'about hero_slides: seeded 3';
+}
+
+$insProfile = $pdo->prepare('INSERT IGNORE INTO profiles (role_key, heading, person_name, message_html, image_id) VALUES (?,?,?,?,?)');
+$insProfile->execute(['president', 'President', 'Rev.Dr.L.Thomas Aquinas',
+    '<p>Greetings in the name of Jesus Christ. The modern world is called ‘Computer World’ where the end of the earth is clearly seen from the place where you sit and see. The whole world has become a small village because of the arrival of the computer and the invention of the Internet.
+      The fusion of education and morality remains the secret of the Institution’s success. Though the Institution had a humble beginning,
+      within a period of a 29 years, it had grown in all spheres of technical education. I gladly invite all of you, dear guest viewers, to our website to learn more about the Institution and
+      together with you, we would like to thank the Almighty, the giver of all gifts, for all He had done to the Institution to excel in the field of technical education. We appreciate your interest in knowing about the Institution.</p>
+      <p>I also take this chance to invoke God’s abundant blessings on the Correspondent &amp; Principal, the members of the teaching and non teaching staff and all the students of the Institution. Wishing
+      \'St. Joseph\'s Matriculation Higher Secondary School\' all the best, prosperous growth and success to take the Technical Education to the frontiers of the world in the years that lie ahead.</p>',
+    img_id_by_file('bishop1.jpg')]);
+$insProfile->execute(['history', 'School History', '38 Years of Excellence',
+    '<p>St.Joseph\'s Matriculation Higher Secondary School was founded in the year 1986. R.C Mission of Coimbatore Diocese runs it. The Government since July 1986 recognized the school. It was upgraded as Higher Secondary School in October 1999. We have completed Silver Jubilee ERA.
+      A new star of education blazed across the horizon on 1st May 1986 when St.Joseph\'s English school was started by the R.C Diocese of Coimbatore with Rev.Fr.Mark Manthara as Correspondent and Rev.Sr.Alvarus Mary as the principal.
+      The Historic first step of the journey, towards excellence was taken up with 150 students and 3 teachers, was inaugurated by the Most Rev.Dr.M.Ambrose D.D.D.C.L the Bishop of Coimbatore. Today, the school has 2217 students and around 82 staff members.
+      We started to follow the Matriculation system a prestigious unit of Madras University and our first batch of X STD came out with flying colours in 1997.Many classrooms were made more secure through wooden cupboards, cameras installed in classrooms, railing on the first and second floor metal grid along the staircase.</p>',
+    img_id_by_file('schhistory.jpg')]);
+$insProfile->execute(['rules', 'Rules and Regulations', 'Important',
+    '<p>
+        Rules and Regulations of our School is “DISCIPLINE AND KNOWLEDGE”, where Discipline is systematic instruction intended to train a person, activity, exercise, or a regimen that develops or improves a skill.
+      </p>',
+    img_id_by_file('schdiary.jpg')]);
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the

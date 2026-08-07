@@ -6,6 +6,8 @@ $cards = [
         (int)db()->query('SELECT COUNT(*) FROM hero_slides')->fetchColumn() . ' slides'],
     ['principal', '👤', 'Principal',      'Photo, name and welcome message shown on Home & About.',
         '1 profile'],
+    ['aboutpage', '📖', 'About Page',     'Top carousel + President, History and Rules blocks.',
+        (int)db()->query('SELECT COUNT(*) FROM profiles')->fetchColumn() . ' blocks'],
     ['unique',    '✨', "What's Unique",  'The ESC / Language Academies feature blocks.',
         (int)db()->query('SELECT COUNT(*) FROM unique_features')->fetchColumn() . ' blocks'],
     ['ticker',    '📣', 'News Ticker',    'The scrolling announcement bar with links.',
