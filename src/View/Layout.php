@@ -18,6 +18,16 @@ final class Layout
         'home',                                                   // P4 (legacy shell)
         'about', 'staffs', 'academics', 'achievements',          // R1a hub pages
         'co-curriculum', 'sports', 'infrastructure', 'gallery',  // (BS5 shell)
+        // R1b — academy-family pages (18, shared academy.css/js)
+        'abacusacademy', 'artacademy', 'artandexpo', 'band', 'communicativeacademy',
+        'danceacademy', 'englishacademy', 'instrumentacademy', 'langacademy',
+        'martialacademy', 'mathsacademy', 'ncc', 'scienceacademy', 'socialacademy',
+        'sportsacademy', 'tamilacademy', 'vocalacademy', 'yogaacademy',
+        // R1b — section pages (4)
+        'kg', 'primary', 'highschl', 'highsec',
+        // R1c — gallery pages (11)
+        'gal-alumni', 'gal-annual', 'gal-children', 'gal-expo', 'gal-expressionz',
+        'gal-grad', 'gal-independence', 'gal-sciexpo', 'gal-spach', 'gal-sports', 'gal-teacher',
     ];
 
     /** 'home' keeps its original P4 shell; every converted page uses the BS5 shell. */

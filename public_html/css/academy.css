@@ -1,0 +1,117 @@
+/* Shared styles for the 18 academy-family pages (tamil / maths / science / ... /
+   band / ncc / artandexpo). Extracted VERBATIM from the original per-page inline
+   <style> — which was byte-identical across every one of those pages except the
+   per-page `.bg-1` hero image (that stays inline in each view). Loaded once and
+   cached; this only removes 18x duplication, the rendered result is unchanged. */
+
+.back-bar {
+  width: 100%;
+  background: linear-gradient(to left, #2b4b8a, #1a355d);
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+.back-bar .back-text h4 {
+  font-family: "Fjalla One", sans-serif !important;
+  text-align: center;
+  padding-left: 20px;
+  font-size: 55px;
+  font-weight: 600;
+  color: white;
+}
+.back-bar .back-text p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  text-align: center;
+  padding-left: 20px;
+  font-size: 25px;
+  color: white;
+  font-style: italic;
+}
+.back-bar-reveal {
+  transition: 2s;
+  transform: translateY(80px);
+  opacity: 0;
+}
+.back-bar-reveal.active {
+  transition: 2s;
+  transform: translateY(0);
+  opacity: 1;
+}
+@media (max-width: 600px) {
+  .back-bar .back-text h4 { font-size: 40px; }
+  .back-bar .back-text p { font-size: 15px; }
+}
+
+/* content */
+.infra-new {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  border: 2px solid #fff;
+  padding: 40px;
+  transition: 1.5s;
+}
+.infra-new-carousel {
+  order: 2;
+  flex: 1 1 600px;
+  width: 100%;
+}
+.infra-new-carousel .carousel-inner {
+  width: 100%;
+  height: auto;
+  border-radius: 35px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+}
+.infra-new-carousel .carousel-image {
+  object-fit: contain !important;
+  width: 100%;
+  height: 500px;
+}
+.infra-new-text {
+  order: 1;
+  flex: 1 1 50%;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: left;
+}
+.infra-new-text h4 {
+  font-family: "Fjalla One", sans-serif !important;
+  color: #fff;
+  font-size: 50px;
+  font-weight: 600;
+}
+.infra-new-text p {
+  font-family: "LeagueSpartan", sans-serif !important;
+  color: antiquewhite;
+  font-size: 22px;
+}
+.infra-new-reveal {
+  transition: 1.5s;
+  transform: translateX(-50px);
+  opacity: 0;
+}
+.infra-new-reveal.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+@media (max-width: 1320px) {
+  .infra-new { flex-direction: column; align-items: center; }
+  .infra-new-carousel { order: 2; flex: 1 1 100%; margin: 0; }
+  .infra-new-text { order: 1; flex: 1 1 100%; margin: 0; text-align: left; margin-top: 20px; }
+  .infra-new-carousel .carousel-inner { height: auto; }
+}
+@media (max-width: 768px) {
+  .infra-new { flex-direction: column; align-items: center; }
+  .infra-new:hover { transform: none; }
+  .infra-new-carousel { order: 2; flex: 1 1 100%; margin: 0; }
+  .infra-new-text { order: 1; flex: 1 1 100%; margin: 0; text-align: left; margin-top: 20px; }
+  .infra-new-carousel .carousel-inner { height: auto; }
+}
+
+/* Custom carousel controls (black circular prev/next icons) */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: #000 !important;
+  border-radius: 50% !important;
+  padding: 15px;
+}
