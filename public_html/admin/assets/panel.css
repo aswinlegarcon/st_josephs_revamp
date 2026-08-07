@@ -204,3 +204,13 @@ input:focus, select:focus, textarea:focus, .sj-rich:focus { outline: none; borde
 .sj-field small { display: block; color: var(--mut); font-size: 11.5px; margin-top: 4px; }
 .sj-form-actions { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 14px; }
 .sj-save-note { color: var(--green); font-weight: 600; font-size: 13px; }
+
+/* ---------- M2: drag reorder + manage-photos modal ---------- */
+.sj-row[draggable="true"] { cursor: grab; }
+.sj-row.sj-dragging { opacity: .45; }
+.sj-photogrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.sj-phototile { position: relative; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; aspect-ratio: 1/1; background: #eef1f7; cursor: grab; }
+.sj-phototile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sj-phototile.sj-dragging { opacity: .45; }
+.sj-photo-x { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(18,35,63,.75); color: #fff; font-size: 15px; line-height: 1; cursor: pointer; }
+.sj-photo-x:hover { background: firebrick; }

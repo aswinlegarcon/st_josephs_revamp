@@ -425,6 +425,133 @@
     initRichEditor(pMsg, document.querySelector('.sj-richbar[data-for="sj-principal-msg"]'));
   }
 
+  /* ---------------- M2: drag-reorder for list rows ----------------
+   * Every orderable list (.sj-list[data-list]) supports dragging rows in
+   * addition to the ↑/↓ buttons. Drop → one order API call → reload.
+   */
+  (function initRowDrag() {
+    var dragging = null;
+    document.addEventListener('dragstart', function (e) {
+      var row = e.target.closest ? e.target.closest('.sj-row[draggable="true"]') : null;
+      if (!row) return;
+      dragging = row;
+      row.classList.add('sj-dragging');
+      if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', ''); } catch (err) {} }
+    });
+    document.addEventListener('dragover', function (e) {
+      if (!dragging) return;
+      var over = e.target.closest ? e.target.closest('.sj-row[draggable="true"]') : null;
+      if (!over || over === dragging || over.parentNode !== dragging.parentNode) return;
+      e.preventDefault();
+      var rect = over.getBoundingClientRect();
+      var before = e.clientY < rect.top + rect.height / 2;
+      over.parentNode.insertBefore(dragging, before ? over : over.nextSibling);
+    });
+    document.addEventListener('dragend', function () {
+      if (!dragging) return;
+      var row = dragging;
+      dragging = null;
+      row.classList.remove('sj-dragging');
+      var list = row.closest('.sj-list[data-list]');
+      if (!list) return;
+      var entity = list.getAttribute('data-list');
+      var ids = Array.prototype.slice.call(list.querySelectorAll('[data-row^="' + entity + ':"]'))
+        .map(function (n) { return +n.getAttribute('data-row').split(':')[1]; });
+      api('order.php', { entity: entity, ids: ids })
+        .then(function () { toast('Order saved ✔'); })
+        .catch(function (err) { toast(err.message, true); location.reload(); });
+    });
+    // make rows of orderable lists draggable
+    document.querySelectorAll('.sj-list[data-list] .sj-row').forEach(function (r) {
+      r.setAttribute('draggable', 'true');
+    });
+  })();
+
+  /* ---------------- M2: "Manage photos" modal (image_links collections) ----
+   * Trigger: any element with data-panel-photos='{"owner_type","owner_id",
+   * "role","preset","label"}'. Grid of linked photos with drag reorder,
+   * add-from-library/upload (pickImage) and remove — all via the link API.
+   */
+  function openPhotos(cfg) {
+    var M = openModal(cfg.label || 'Manage photos');
+    var grid = el('div', 'sj-photogrid');
+    M.body.appendChild(grid);
+    var add = el('button', 'sj-btn sj-btn-primary', '＋ Add photo'); add.type = 'button';
+    var done = el('button', 'sj-btn sj-btn-ghost', 'Done'); done.type = 'button';
+    M.foot.appendChild(add); M.foot.appendChild(done);
+    done.addEventListener('click', function () { M.close(); if (cfg.onClose) cfg.onClose(); });
+
+    var base = { owner_type: cfg.owner_type, owner_id: +cfg.owner_id, role: cfg.role || 'carousel' };
+
+    function refresh() {
+      api('link.php', Object.assign({ action: 'list' }, base)).then(function (j) {
+        grid.innerHTML = '';
+        j.links.forEach(function (l) {
+          var t = el('div', 'sj-phototile');
+          t.setAttribute('draggable', 'true');
+          t.setAttribute('data-link', l.link_id);
+          t.innerHTML = '<img src="' + esc(l.thumb || '') + '" alt="">';
+          var rm = el('button', 'sj-photo-x', '×'); rm.type = 'button'; rm.title = 'Remove from this collection';
+          rm.addEventListener('click', function () {
+            api('link.php', Object.assign({ action: 'detach', link_id: l.link_id }, base))
+              .then(function () { toast('Removed'); refresh(); })
+              .catch(function (err) { toast(err.message, true); });
+          });
+          t.appendChild(rm);
+          grid.appendChild(t);
+        });
+        if (!j.links.length) grid.appendChild(el('p', 'sj-hint', 'No photos yet — press “＋ Add photo”.'));
+      }).catch(function (err) { toast(err.message, true); });
+    }
+
+    add.addEventListener('click', function () {
+      pickImage(cfg.preset || null).then(function (p) {
+        api('link.php', Object.assign({ action: 'attach', image_id: p.id }, base))
+          .then(function () { toast('Added ✔'); refresh(); })
+          .catch(function (err) { toast(err.message, true); });
+      }).catch(function () {});
+    });
+
+    // tile drag reorder within the grid
+    var dragTile = null;
+    grid.addEventListener('dragstart', function (e) {
+      var t = e.target.closest('.sj-phototile');
+      if (!t) return;
+      dragTile = t;
+      t.classList.add('sj-dragging');
+      if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', ''); } catch (err) {} }
+    });
+    grid.addEventListener('dragover', function (e) {
+      if (!dragTile) return;
+      var over = e.target.closest('.sj-phototile');
+      if (!over || over === dragTile) return;
+      e.preventDefault();
+      var rect = over.getBoundingClientRect();
+      var before = (e.clientX - rect.left) < rect.width / 2;
+      grid.insertBefore(dragTile, before ? over : over.nextSibling);
+    });
+    grid.addEventListener('dragend', function () {
+      if (!dragTile) return;
+      dragTile.classList.remove('sj-dragging');
+      dragTile = null;
+      var ids = Array.prototype.slice.call(grid.querySelectorAll('.sj-phototile'))
+        .map(function (n) { return +n.getAttribute('data-link'); });
+      api('link.php', Object.assign({ action: 'reorder', link_ids: ids }, base))
+        .then(function () { toast('Order saved ✔'); })
+        .catch(function (err) { toast(err.message, true); refresh(); });
+    });
+
+    refresh();
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-panel-photos]') : null;
+    if (!btn) return;
+    try {
+      openPhotos(JSON.parse(btn.getAttribute('data-panel-photos')));
+    } catch (err) { toast('Bad photos config', true); }
+  });
+
   /* ---------------- media library page ---------------- */
   var mediaGrid = document.getElementById('sj-media-grid');
   if (mediaGrid) {

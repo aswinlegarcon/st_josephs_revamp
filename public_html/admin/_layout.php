@@ -56,6 +56,16 @@ function panel_add_attr(string $entity, array $preset = [], string $label = 'Add
     return " data-panel-add='" . str_replace("'", '&#39;', json_encode($payload, JSON_UNESCAPED_SLASHES)) . "'";
 }
 
+/** data-panel-photos attribute: opens the M2 "Manage photos" modal (link API). */
+function panel_photos_attr(string $ownerType, int $ownerId, string $role, string $preset, string $label = 'Manage photos'): string
+{
+    if (!isset(\SJ\Content\Registry::ownerTypes()[$ownerType])) {
+        return ''; // never emit a button for a non-whitelisted owner
+    }
+    $payload = ['owner_type' => $ownerType, 'owner_id' => $ownerId, 'role' => $role, 'preset' => $preset, 'label' => $label];
+    return " data-panel-photos='" . str_replace("'", '&#39;', json_encode($payload, JSON_UNESCAPED_SLASHES)) . "'";
+}
+
 function panel_header(string $active, string $title): void
 {
     $sections = panel_sections();
