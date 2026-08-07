@@ -116,11 +116,32 @@ that carousels slide, the accordion expands, and the lightbox opens — with **z
 errors in the browser console. One page (`sportsacademy`) had a stray invisible
 character a converter had trimmed; we restored it so the page is byte-faithful.
 
-> **One page left:** the **home page** (`index.php`) still uses the old
-> mixed-Bootstrap templates for its many sections (the rotating banner, the "cards",
-> the news ticker, the testimonial, the contact form). Converting it means turning
-> each of those shared section-templates into clean fragments too — a focused
-> follow-up. Every *other* page on the site is now one clean Bootstrap-5 document.
+### Phase R1d — the home page (the last one)
+
+The home page was saved for last because it is the **busiest**: a rotating photo
+banner, the motto cards, animated counters, a news ticker, a second "New Updates"
+carousel, the toppers marquee, testimonials, and a working contact form — each one
+a separate old template with its own nested mini-document.
+
+We turned all eight of those section-templates into clean **fragments** (like the
+navbar in R1a), with one new idea: they are **parametrized** — the fragment no
+longer fetches its own data from the database; the page's controller fetches
+everything and *hands it in*. That keeps all database work in one visible place
+(and let us trim the home page from 15 queries down to exactly our 12-query budget).
+
+**The detective story.** The old home page loaded Bootstrap **three times**, and
+the *last* copy (inside the footer template) silently won every styling "tie" on
+the page — it's why the testimonial cards had 4px corners even though the page's
+own CSS asked for 10px. Bootstrap 5 doesn't have those old rules, so simply
+converting would have subtly changed corners, paddings and button sizes. The fix:
+a small file, `css/home-bs4-remnants.css`, containing **exactly the old Bootstrap-4
+fragments that final copy contributed**, loaded in **the same last position**. Same
+cascade, same pixels — verified by measuring 16 computed styles in a real browser
+against the original and getting identical numbers on every one.
+
+With home converted (and `highsec`'s two borrowed sections switched to the same
+clean fragments), **all 42 pages** are now single-document Bootstrap 5, and jQuery
+is gone from the entire site.
 
 ---
 
@@ -166,7 +187,7 @@ high-impact fixes:
 |---|---|
 | A — Security (S1–S4, F0) | ✅ done |
 | B — Platform (P1–P4) | ✅ done |
-| **C — Front-end revamp** | **✅ R1a (8 hub pages + foundation) + R1b (22 academy/section) + R1c (11 gallery) — 41 of 42 pages converted; only the home page (`index.php`) remains** |
+| **C — Front-end revamp** | **✅ COMPLETE — R1a (8 hub pages + foundation) + R1b (22 academy/section) + R1c (11 gallery) + R1d (home) = all 42 pages on single-document Bootstrap 5; zero CDN Bootstrap/jQuery site-wide** |
 | **D — Speed & deploy** | **F1 ✅, X1 ✅** |
 | E–H (content in the DB, live editing, images, SEO, backups) | upcoming — see [`PHASES.md`](../../PHASES.md) |
 
@@ -175,7 +196,7 @@ high-impact fixes:
    Bootstrap loading from `/assets/vendor/...` (not the internet).
 2. Open `http://localhost:8090/sports.php`, click a "Read More" — the accordion expands
    (that's Bootstrap 5 working after the dialect translation).
-3. Open `http://localhost:8090/tamilacademy.php` (now converted) — view source: one
-   `<!doctype>`, self-hosted Bootstrap, no jQuery. Then compare with
-   `http://localhost:8090/index.php` (the home page, **not** yet converted) — its source
-   still shows the old nested-document style and CDN Bootstrap. That's the last page left.
+3. Open `http://localhost:8090/index.php` (the home page, converted last in R1d) —
+   view source: **one** `<!doctype>` for the whole busy page, self-hosted Bootstrap,
+   no jQuery anywhere. Press the → arrow key: the hero banner advances (that's the
+   keyboard feature, rewritten from jQuery to plain Bootstrap 5).
