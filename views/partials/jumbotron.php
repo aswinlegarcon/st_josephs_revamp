@@ -1,13 +1,23 @@
 <?php // Admissions call-to-action band — clean fragment.
-// Bootstrap 5 removed the .jumbotron component, so its padding is defined here. ?>
+// STYLING (visual-freeze): verbatim reproduction of the original
+// _templates/jumbotron.php. BS5 removed the .jumbotron component, so ONLY its
+// BS4 padding box-model is re-created here as compensation. Do NOT "tidy" the
+// font names: the original uses "LeagueSpartan" (no space) for <p> and the
+// button, which does NOT match the loaded "League Spartan" font and therefore
+// falls back to sans-serif — that fallback is the intended production look. ?>
 <style>
-  .jumbotron { background: linear-gradient(to top, #f0f0f0, #d9d9d9) !important;
-    margin-bottom: 0 !important; padding: 4rem 2rem !important; }   /* padding replaces BS4 .jumbotron */
+  /* Compensation only: re-create BS4's .jumbotron / .jumbotron-fluid padding
+     (BS5 dropped the component). Everything else below is the original CSS. */
+  .jumbotron { padding: 2rem 1rem; }
+  @media (min-width: 576px) { .jumbotron { padding: 4rem 2rem; } }
+  .jumbotron-fluid { padding-right: 0; padding-left: 0; }
+
+  .jumbotron { background: linear-gradient(to top, #f0f0f0, #d9d9d9) !important; margin-bottom: 0 !important; }
   .jumbotron .container h1 { font-family: "Fjalla One", sans-serif !important; color: black !important; font-weight: 700; }
-  .jumbotron .container p { font-family: "League Spartan", sans-serif !important; color: firebrick !important;
+  .jumbotron .container p { font-family: "LeagueSpartan", sans-serif !important; color: firebrick !important;
     font-weight: 500; font-style: italic; }
-  .jumbotron .container .btn { font-family: "League Spartan", sans-serif !important; border: none !important;
-    color: #fff; background: linear-gradient(to left, #2b4b8a, #1a355d) !important; }
+  .jumbotron .container .btn { font-family: "LeagueSpartan", sans-serif !important; border: none !important;
+    background: linear-gradient(to left, #2b4b8a, #1a355d) !important; }
   .jumbotron .container .btn:hover { background: firebrick !important; }
   @media (max-width: 900px) { .jumbotron .container h1 { font-size: 45px; } }
   @media (max-width: 768px) { .jumbotron .container h1 { font-size: 35px; } }
