@@ -21,6 +21,7 @@ By the end you will understand:
 | 2 | [`02-security.md`](02-security.md) | What each attack is (in plain words) and exactly how we block it in our code. |
 | 3 | [`03-what-we-built.md`](03-what-we-built.md) | Stages A & B — security + the modern code structure, phase by phase. |
 | 4 | [`04-stage-c-and-d.md`](04-stage-c-and-d.md) | Stages C & D — the Bootstrap-5 front-end revamp + speed/deploy work. |
+| 5 | [`05-stage-e.md`](05-stage-e.md) | Stage E — content moves into the database; the admin panel learns to edit it. |
 
 ## How to study
 
