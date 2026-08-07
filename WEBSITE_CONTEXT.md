@@ -49,16 +49,18 @@ public_html/
 
 ## 2. Page Assembly Mechanism
 
-> **Migration status (R1a–R1c done):** 41 of the 42 pages have been converted to a
+> **Migration status (R1a–R1d done):** ALL 42 pages are converted to a
 > **single-document Bootstrap-5 layout** — a thin controller (`require _libs/load.php` →
 > `SJ\View\Layout::render('<page>', [...])`) renders `views/pages/<page>.php` inside the
 > universal `views/shell.php` (one self-hosted Bootstrap 5.3.3, one Font Awesome, fonts,
 > `tokens.css`, then the page's CSS; chrome via clean `views/partials/*`). The academy family
-> shares `css/academy.css` + `js/academy.js`. **The `get_templates()` nesting described below
-> now applies ONLY to the home page (`index.php`)** and the shared content-section templates it
-> still uses (`carousel`, `card`, `update-scroll`, `new-updates`, `marks-scroll`, `testimonial`,
-> `contact`, `groups`); `highsec` also still pulls `groups` + `marks-scroll` this way. Home
-> unification is the remaining Stage-C item.
+> shares `css/academy.css` + `js/academy.js`. R1d converted the 8 shared content-section
+> templates into clean **parametrized partials** (`views/partials/{carousel,card,update-scroll,
+> new-updates,marks-scroll,testimonial,contact,groups}.php` — controllers pass the data; no
+> view queries) and moved home onto the shell; home also links `css/home-bs4-remnants.css`
+> **last in its body** (verbatim BS4.3.1 fragments reproducing the baseline's final-stylesheet
+> cascade slot — see the file header before touching it). **The `get_templates()` mechanism
+> described below is now legacy** — nothing renders through it; `_templates/*` are deleted in R2.
 
 - [`_libs/load.php`](public_html/_libs/load.php) defines **one** function: `get_templates($name)` → `include $_SERVER['DOCUMENT_ROOT']."/_templates/$name.php"`. Every page starts with `<?php include "_libs/load.php" ?>` and calls e.g. `<?php get_templates('navbar'); ?>`.
 - **No parameterization.** Templates take no arguments; all content (topper marks, testimonials, ticker items…) is hard-coded inside the template file itself. To change such content you edit the template.

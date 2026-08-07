@@ -326,5 +326,5 @@ function reveal() {
 }
   </script>
 
-    <?php  get_templates('groups');?>
-    <?php get_templates('marks-scroll');?>
+    <?php include dirname(__DIR__) . '/partials/groups.php'; ?>
+    <?php include dirname(__DIR__) . '/partials/marks-scroll.php'; ?>

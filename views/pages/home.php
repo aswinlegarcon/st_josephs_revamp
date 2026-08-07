@@ -1,14 +1,13 @@
 <?php
-// Home page body — rendered inside views/layout.php by SJ\View\Layout::render('home').
-// Shared fragments still come via get_templates() (their nested <head>/<body> are
-// consolidated in R1a). Variables come from public_html/index.php (the controller):
-//   $sj_page, $sj_principal, $sj_features.
+// Home page body — rendered inside views/shell.php by SJ\View\Layout::render('home').
+// R1d: single-document BS5. Chrome (preloader/navbar/scroll-up/footer) comes from
+// the shell; the content sections below use clean partials (no nested documents).
+// Variables come from public_html/index.php (the controller): $sj_page,
+// $sj_principal, $sj_features, $sj_home_page, $sj_hero_slides, $sj_ticker,
+// $sj_updates, $sj_marks_years.
+$__pp = dirname(__DIR__) . '/partials';
 ?>
-
-<?php  get_templates('preloader');?>
-<?php  get_templates('navbar');?>
-<?php  get_templates('scroll-up');?>
-<?php  get_templates('carousel');?>
+<?php include $__pp . '/carousel.php'; ?>
 
 
 <!-- about-strrt -->
@@ -33,7 +32,7 @@
 <?php endif; ?>
 </div>
 <!-- about end -->
-<?php  get_templates('card');?>
+<?php include $__pp . '/card.php'; ?>
 
 
 <div class="fun-facts overlay" data-stellar-background-ratio="0.5">
@@ -90,13 +89,19 @@
 </div>
 </section>
     <!-- template end -->
-    <?php  get_templates('update-scroll');?>
-    <?php  get_templates('new-updates');?>
-    <?php get_templates('marks-scroll');?>
-    <?php  get_templates('testimonial');?>
-    <?php  get_templates('contact');?>
+    <?php include $__pp . '/update-scroll.php'; ?>
+    <?php include $__pp . '/new-updates.php'; ?>
+    <?php include $__pp . '/marks-scroll.php'; ?>
+    <?php include $__pp . '/testimonial.php'; ?>
+    <?php include $__pp . '/contact.php'; ?>
 
-    <?php  get_templates('footer');?>
+<?php /* CASCADE-CRITICAL (visual-freeze): on the baseline the LAST stylesheet
+   was the footer template's Bootstrap 4.3.1, loaded in the body flow AFTER
+   every section's inline <style>. home-bs4-remnants.css reproduces exactly
+   the BS4 fragments that final slot contributed, so it must be linked HERE —
+   after the section partials — not in the <head>. Do not move it. */ ?>
+<link rel="stylesheet" href="/css/home-bs4-remnants.css?v=<?php echo SJ_ASSET_VER; ?>">
+
 <script>
 
 window.addEventListener('scroll', function() {
@@ -159,5 +164,3 @@ window.addEventListener('scroll', function() {
         reveal();
         incrementCounters();
 </script>
-
-

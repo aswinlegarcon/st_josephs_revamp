@@ -1,0 +1,104 @@
+/* home-bs4-remnants.css — HOME PAGE ONLY. Loaded LAST in the page's style list.
+ *
+ * WHY THIS FILE EXISTS (visual-freeze rule, CLAUDE.md):
+ * On the pre-revamp home page the FINAL stylesheet in the cascade was the
+ * footer template's Bootstrap 4.3.1. Being last, it (a) supplied BS4-only
+ * rules that Bootstrap 5 dropped (.card-deck, .sr-only-era bits) and
+ * (b) WON every same-specificity tie against the page's own CSS — e.g. it
+ * forced the EXPLORE buttons (.btn over card.css's .btn-dark) to 1rem/.25rem
+ * and the testimonial cards (.card over the inline .card) to 4px radius +
+ * 1px rgba border. These are VERBATIM Bootstrap 4.3.1 fragments placed in
+ * the same cascade slot so the rendered result stays pixel-identical.
+ * DO NOT tidy, merge, or "fix" values here.
+ */
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.btn-lg {
+  padding: .5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: .3rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: .25rem;
+}
+
+.card-body {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
+}
+
+.card-img-top {
+  width: 100%;
+  border-top-left-radius: calc(.25rem - 1px);
+  border-top-right-radius: calc(.25rem - 1px);
+}
+
+.card-deck {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 576px) {
+  .card-deck {
+    display: flex;
+    flex-flow: row wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px)  { .container { max-width: 540px; } }
+@media (min-width: 768px)  { .container { max-width: 720px; } }
+@media (min-width: 992px)  { .container { max-width: 960px; } }
+@media (min-width: 1200px) { .container { max-width: 1140px; } }
+/* BS4 had no xxl tier — cap BS5's 1400px/1320px step back to the BS4 value.
+   (footer.css's `.footer .container` is more specific and still wins.) */
+@media (min-width: 1400px) { .container { max-width: 1140px; } }
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}

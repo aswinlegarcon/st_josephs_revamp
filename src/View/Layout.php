@@ -7,15 +7,15 @@ namespace SJ\View;
  * views/layout.php. Page names come ONLY from a hardcoded whitelist — request
  * data can never select a template path (SECURITY.md SEC-11).
  *
- * P4 introduces the engine + thin-controller pattern; the full single-document
- * consolidation (stripping the shared fragments' nested <head>/<body>) lands in
- * R1a alongside the Bootstrap unification.
+ * P4 introduced the engine + thin-controller pattern; R1a–R1d completed the
+ * single-document consolidation — every page (home included) renders inside
+ * the universal BS5 shell (views/shell.php).
  */
 final class Layout
 {
     /** Pages this engine may render (hardcoded whitelist — SEC-11). Extend as pages migrate. */
     private const PAGES = [
-        'home',                                                   // P4 (legacy shell)
+        'home',                                                   // P4, moved to BS5 shell in R1d
         'about', 'staffs', 'academics', 'achievements',          // R1a hub pages
         'co-curriculum', 'sports', 'infrastructure', 'gallery',  // (BS5 shell)
         // R1b — academy-family pages (18, shared academy.css/js)
@@ -29,9 +29,6 @@ final class Layout
         'gal-alumni', 'gal-annual', 'gal-children', 'gal-expo', 'gal-expressionz',
         'gal-grad', 'gal-independence', 'gal-sciexpo', 'gal-spach', 'gal-sports', 'gal-teacher',
     ];
-
-    /** 'home' keeps its original P4 shell; every converted page uses the BS5 shell. */
-    private const LEGACY_SHELL = ['home'];
 
     public static function render(string $page, array $data = []): void
     {
@@ -47,6 +44,6 @@ final class Layout
         include $views . '/pages/' . $page . '.php';
         $content = \ob_get_clean();
 
-        include $views . '/' . (\in_array($page, self::LEGACY_SHELL, true) ? 'layout.php' : 'shell.php');
+        include $views . '/shell.php';
     }
 }

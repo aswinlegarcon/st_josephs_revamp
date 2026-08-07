@@ -62,13 +62,40 @@ function repo_hero_slides(int $pageId, bool $includeInactive = false): array
 
 function repo_profile(string $roleKey): ?array
 {
-    $st = db()->prepare('SELECT * FROM profiles WHERE role_key = ?');
+    // Profile + its image in ONE query (query budget). The img_* aliases are
+    // folded back into the same 'image' sub-array repo_attach_images builds.
+    $st = db()->prepare(
+        'SELECT p.*,
+                i.id AS img_id, i.legacy_path AS img_legacy_path,
+                i.original_name AS img_original_name, i.alt_text AS img_alt_text,
+                i.mime AS img_mime, i.width AS img_width, i.height AS img_height,
+                i.preset_key AS img_preset_key, i.crop_rect AS img_crop_rect,
+                i.version AS img_version, i.created_at AS img_created_at,
+                i.updated_at AS img_updated_at
+           FROM profiles p LEFT JOIN images i ON i.id = p.image_id
+          WHERE p.role_key = ?'
+    );
     $st->execute([$roleKey]);
     $row = $st->fetch();
     if (!$row) {
         return null;
     }
-    return repo_attach_images([$row])[0];
+    $image = null;
+    if ($row['img_id'] !== null) {
+        $image = [];
+        foreach ($row as $k => $v) {
+            if (strncmp($k, 'img_', 4) === 0) {
+                $image[substr($k, 4)] = $v;
+            }
+        }
+    }
+    foreach (array_keys($row) as $k) {
+        if (strncmp($k, 'img_', 4) === 0) {
+            unset($row[$k]);
+        }
+    }
+    $row['image'] = $image;
+    return $row;
 }
 
 function repo_unique_features(bool $includeInactive = false): array
@@ -97,12 +124,20 @@ function repo_marks_board(?int $limit = null, bool $includeInactive = false): ar
          . ' ORDER BY year DESC LIMIT ' . max(1, $limit);
     $years = db()->query($sql)->fetchAll();
     $years = array_reverse($years); // display oldest → newest, as today
-    $st = db()->prepare('SELECT * FROM mark_entries WHERE year_id = ? ORDER BY FIELD(standard, "12","11","10"), position, id');
+
+    // One batched query for every year's entries (query budget: no N+1 loops).
+    $byYear = [];
+    if ($years) {
+        $in = implode(',', array_fill(0, count($years), '?'));
+        $st = db()->prepare("SELECT * FROM mark_entries WHERE year_id IN ($in) ORDER BY FIELD(standard, \"12\",\"11\",\"10\"), position, id");
+        $st->execute(array_map(static fn ($y) => $y['id'], $years));
+        foreach ($st->fetchAll() as $en) {
+            $byYear[(int)$en['year_id']][] = $en;
+        }
+    }
     foreach ($years as &$y) {
-        $st->execute([$y['id']]);
-        $entries = $st->fetchAll();
         $grouped = [];
-        foreach ($entries as $en) {
+        foreach ($byYear[(int)$y['id']] ?? [] as $en) {
             $grouped[$en['standard']][] = $en;
         }
         // fixed display order 12 → 11 → 10, skipping empty standards
