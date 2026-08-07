@@ -23,8 +23,8 @@ final class Layout
         'danceacademy', 'englishacademy', 'instrumentacademy', 'langacademy',
         'martialacademy', 'mathsacademy', 'ncc', 'scienceacademy', 'socialacademy',
         'sportsacademy', 'tamilacademy', 'vocalacademy', 'yogaacademy',
-        // R1b — section pages (4)
-        'kg', 'primary', 'highschl', 'highsec',
+        // C4 — the four section pages share views/pages/section.php
+        'section',
         // R1c — gallery pages (11)
         'gal-alumni', 'gal-annual', 'gal-children', 'gal-expo', 'gal-expressionz',
         'gal-grad', 'gal-independence', 'gal-sciexpo', 'gal-spach', 'gal-sports', 'gal-teacher',

@@ -97,6 +97,44 @@ function repo_testimonials(bool $includeInactive = false): array
     return db()->query($sql)->fetchAll();
 }
 
+/** One school section by slug, with its grade-card image (C4). */
+function repo_section(string $slug): ?array
+{
+    $st = db()->prepare(
+        'SELECT s.*, ' . SJ_IMG_SELECT . ' FROM school_sections s LEFT JOIN images i ON i.id = s.card_image_id WHERE s.slug = ?'
+    );
+    $st->execute([$slug]);
+    $row = $st->fetch();
+    return $row ? repo_fold_image($row) : null;
+}
+
+/** All school sections in display order (academics grade cards — C8). */
+function repo_sections(): array
+{
+    return array_map('repo_fold_image', db()->query(
+        'SELECT s.*, ' . SJ_IMG_SELECT . ' FROM school_sections s LEFT JOIN images i ON i.id = s.card_image_id ORDER BY s.position, s.id'
+    )->fetchAll());
+}
+
+/** Timeline entries of one section, ordered (C4). */
+function repo_timeline(int $sectionId): array
+{
+    $st = db()->prepare('SELECT * FROM timeline_entries WHERE section_id = ? ORDER BY position, id');
+    $st->execute([$sectionId]);
+    return $st->fetchAll();
+}
+
+/** Event blocks of one section, with images, ordered — one query (C4). */
+function repo_section_events(int $sectionId): array
+{
+    $st = db()->prepare(
+        'SELECT ev.*, ' . SJ_IMG_SELECT . ' FROM section_events ev LEFT JOIN images i ON i.id = ev.image_id
+          WHERE ev.section_id = ? ORDER BY ev.position, ev.id'
+    );
+    $st->execute([$sectionId]);
+    return array_map('repo_fold_image', $st->fetchAll());
+}
+
 /** Images linked to one owner collection (image_links), ordered — one query (M1). */
 function repo_linked_images(string $ownerType, int $ownerId, string $role = 'carousel'): array
 {

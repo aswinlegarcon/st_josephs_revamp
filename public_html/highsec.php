@@ -1,12 +1,28 @@
 <?php
-// Higher Secondary — thin controller (single-document BS5 layout).
+// highsec — thin controller (shared section template, DB-driven since C4).
 require __DIR__ . '/_libs/load.php';
 
-\SJ\View\Layout::render('highsec', [
+$sj_page        = repo_page('highsec');
+$sj_hero_slides = $sj_page ? repo_hero_slides((int)$sj_page['id'], is_edit()) : [];
+$sj_section     = repo_section('highsec');
+if (!$sj_section) {
+    http_response_code(503);
+    exit('Section content not seeded.');
+}
+
+\SJ\View\Layout::render('section', [
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'highsec',
     'styles'         => ['highsec'],
     'showJumbotron'  => true,
-    // R1d: the marks-scroll partial is parametrized (was a self-querying template).
-    'sj_marks_years' => repo_marks_board(null, is_edit()),
+    'sj_slug'        => 'highsec',
+    'sj_page'        => $sj_page,
+    'sj_hero_slides' => $sj_hero_slides,
+    'sj_section'     => $sj_section,
+    'sj_carousel'    => repo_linked_images('section', (int)$sj_section['id'], 'carousel'),
+    'sj_timeline'    => repo_timeline((int)$sj_section['id']),
+    'sj_events'      => repo_section_events((int)$sj_section['id']),
+    // highsec extras: groups cards + toppers marquee (shared partials)
+    'sj_show_groups_marks' => true,
+    'sj_marks_years'       => repo_marks_board(null, is_edit()),
 ]);

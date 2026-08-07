@@ -342,6 +342,90 @@ case 'testimonials':
     <?php
     break;
 
+/* ================= SCHOOL SECTIONS (C4) ================= */
+case 'sections':
+    $allSections = repo_sections();
+    $secSlugs = array_column($allSections, 'slug');
+    $cur = (string)($_GET['sec'] ?? 'kg');
+    if (!in_array($cur, $secSlugs, true)) { $cur = $secSlugs[0] ?? 'kg'; }
+    $S = repo_section($cur);
+    $secPage   = repo_page($cur);
+    $secSlides = $secPage ? repo_hero_slides((int)$secPage['id'], true) : [];
+    ?>
+    <div class="sj-tabs">
+      <?php foreach ($allSections as $sRow): ?>
+      <a class="sj-btn <?= $sRow['slug'] === $cur ? 'sj-btn-primary' : 'sj-btn-ghost' ?>"
+         href="/admin/section.php?s=sections&sec=<?= e($sRow['slug']) ?>"><?= e($sRow['name']) ?></a>
+      <?php endforeach; ?>
+    </div>
+
+    <h3 class="sj-form-legend">Top carousel</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Photos rotating at the top of the <?= e($S['name']) ?> page.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$secPage['id']], 'Add slide') ?>>＋ Add slide</button>
+    </div>
+    <div class="sj-list" data-list="hero_slide">
+      <?php foreach ($secSlides as $sl) {
+          panel_row([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'title'  => $sl['caption_title'] ?: '(no caption)',
+              'sub'    => $sl['caption_text'],
+              'active' => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+
+    <h3 class="sj-form-legend">Intro & grade card</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">The intro text beside the photo carousel, plus the grade card shown on the
+         Academics page. The carousel photos have their own manager.</p>
+      <button class="sj-btn sj-btn-ghost" <?= panel_photos_attr('section', (int)$S['id'], 'carousel', 'content_slide', $S['name'] . ' — carousel photos') ?>>🖼️ Manage carousel photos</button>
+    </div>
+    <div class="sj-list">
+      <?php panel_row([
+          'entity' => 'school_section', 'id' => (int)$S['id'],
+          'thumb'  => $S['image'] ? img_url($S['image'], 'card_4x3') : null,
+          'title'  => $S['intro_heading'],
+          'sub'    => 'Intro, timeline label, events heading, grade card',
+      ]); ?>
+    </div>
+
+    <h3 class="sj-form-legend">Timeline (<?= e($S['timeline_heading']) ?>)</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">One row per month; put each event on its own line in the editor.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('timeline_entry', ['section_id' => (int)$S['id']], 'Add timeline month') ?>>＋ Add month</button>
+    </div>
+    <div class="sj-list" data-list="timeline_entry">
+      <?php foreach (repo_timeline((int)$S['id']) as $t) {
+          panel_row([
+              'entity' => 'timeline_entry', 'id' => $t['id'],
+              'title'  => $t['month_label'],
+              'sub'    => mb_substr(str_replace("\n", ' · ', $t['events_text']), 0, 90),
+              'canMove' => true,
+          ]);
+      } ?>
+    </div>
+
+    <h3 class="sj-form-legend">Event blocks</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">The photo + text blocks at the bottom of the page (photos alternate left/right automatically).</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('section_event', ['section_id' => (int)$S['id']], 'Add event block') ?>>＋ Add event</button>
+    </div>
+    <div class="sj-list" data-list="section_event">
+      <?php foreach (repo_section_events((int)$S['id']) as $ev) {
+          panel_row([
+              'entity' => 'section_event', 'id' => $ev['id'],
+              'thumb'  => $ev['image'] ? img_url($ev['image'], 'feature_4x3') : null,
+              'title'  => $ev['title'],
+              'sub'    => mb_substr(trim(strip_tags($ev['body_html'])), 0, 90),
+              'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is

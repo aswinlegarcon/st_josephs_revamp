@@ -12,6 +12,8 @@ $cards = [
         '3 blocks'],
     ['testimonials', '💬', 'Testimonials', 'The student testimonial cards on the Home page.',
         (int)db()->query('SELECT COUNT(*) FROM testimonials')->fetchColumn() . ' cards'],
+    ['sections',  '🏫', 'School Sections', 'KG, Primary, High School & Higher Secondary pages — intros, timelines, events.',
+        (int)db()->query('SELECT COUNT(*) FROM timeline_entries')->fetchColumn() . ' timeline months'],
     ['unique',    '✨', "What's Unique",  'The ESC / Language Academies feature blocks.',
         (int)db()->query('SELECT COUNT(*) FROM unique_features')->fetchColumn() . ' blocks'],
     ['ticker',    '📣', 'News Ticker',    'The scrolling announcement bar with links.',

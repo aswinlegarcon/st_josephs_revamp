@@ -78,6 +78,37 @@ final class Registry
                     'is_active'  => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
+            'school_section' => [
+                'table' => 'school_sections', 'orderable' => true, 'creatable' => false, 'deletable' => false,
+                'fields' => [
+                    'name'             => ['type' => 'text', 'max' => 80,  'label' => 'Section name'],
+                    'intro_heading'    => ['type' => 'text', 'max' => 80,  'label' => 'Intro heading'],
+                    'intro_html'       => ['type' => 'html', 'max' => 65000, 'label' => 'Intro text'],
+                    'timeline_heading' => ['type' => 'text', 'max' => 60,  'label' => 'Timeline label'],
+                    'events_heading'   => ['type' => 'text', 'max' => 60,  'label' => 'Events heading prefix'],
+                    'card_title'       => ['type' => 'text', 'max' => 80,  'label' => 'Grade-card title (Academics page)'],
+                    'card_range'       => ['type' => 'text', 'max' => 40,  'label' => 'Grade-card range'],
+                    'card_image_id'    => ['type' => 'image', 'preset' => 'card_4x3', 'label' => 'Grade-card image'],
+                ],
+            ],
+            'timeline_entry' => [
+                'table' => 'timeline_entries', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'parent' => 'section_id',
+                'fields' => [
+                    'month_label' => ['type' => 'text', 'max' => 20,   'label' => 'Month'],
+                    'time_label'  => ['type' => 'text', 'max' => 30,   'label' => 'Time tag'],
+                    'events_text' => ['type' => 'text', 'max' => 5000, 'label' => 'Events (one per line)', 'multiline' => true],
+                ],
+            ],
+            'section_event' => [
+                'table' => 'section_events', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'parent' => 'section_id',
+                'fields' => [
+                    'title'     => ['type' => 'text', 'max' => 120,   'label' => 'Event title'],
+                    'body_html' => ['type' => 'html', 'max' => 65000, 'label' => 'Description'],
+                    'image_id'  => ['type' => 'image', 'preset' => 'feature_4x3', 'label' => 'Photo', 'nullable' => true],
+                ],
+            ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [

@@ -25,6 +25,7 @@ function panel_sections(): array
         'aboutpage' => ['📖', 'About Page'],
         'staffspage'   => ['🧑‍🏫', 'Staffs Page'],
         'testimonials' => ['💬', 'Testimonials'],
+        'sections'     => ['🏫', 'School Sections'],
         'unique'    => ['✨', "What's Unique"],
         'ticker'    => ['📣', 'News Ticker'],
         'updates'   => ['📺', 'New Updates'],
@@ -50,6 +51,7 @@ function panel_add_attr(string $entity, array $preset = [], string $label = 'Add
             'options'  => $def['values'] ?? null,
             'preset'   => $def['preset'] ?? null,
             'required' => !empty($def['required']),
+            'multiline' => !empty($def['multiline']),
         ];
     }
     $payload = ['entity' => $entity, 'preset' => $preset, 'label' => $label, 'fields' => $fields];

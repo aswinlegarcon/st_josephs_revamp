@@ -239,6 +239,7 @@ CREATE TABLE IF NOT EXISTS school_sections (
   intro_heading    VARCHAR(80) NOT NULL,
   intro_html       MEDIUMTEXT  NOT NULL,
   timeline_heading VARCHAR(60) NOT NULL DEFAULT 'Timeline - 2024',
+  events_heading   VARCHAR(60) NOT NULL DEFAULT 'Exams and Events of',
   card_title       VARCHAR(80) NOT NULL,
   card_range       VARCHAR(40) NOT NULL,
   card_image_id    INT UNSIGNED NULL,

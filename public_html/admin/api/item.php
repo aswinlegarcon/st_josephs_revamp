@@ -30,12 +30,13 @@ switch ($action) {
                 }
             }
             $fields[] = [
-                'name'     => $name,
-                'label'    => $def['label'] ?? ucfirst(str_replace('_', ' ', $name)),
-                'type'     => $def['type'],
-                'options'  => $def['values'] ?? null,
-                'preset'   => $def['preset'] ?? null,
-                'required' => !empty($def['required']),
+                'name'      => $name,
+                'label'     => $def['label'] ?? ucfirst(str_replace('_', ' ', $name)),
+                'type'      => $def['type'],
+                'options'   => $def['values'] ?? null,
+                'preset'    => $def['preset'] ?? null,
+                'required'  => !empty($def['required']),
+                'multiline' => !empty($def['multiline']),
             ];
         }
         api_out(['id' => (int)$row['id'], 'values' => $values, 'fields' => $fields, 'thumbs' => $thumbs]);

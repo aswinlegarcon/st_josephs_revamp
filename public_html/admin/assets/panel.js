@@ -277,6 +277,12 @@
       holder.appendChild(img); holder.appendChild(btn);
       wrapper.appendChild(holder);
       getter = function () { return chosenId; };
+    } else if (f.multiline) {
+      var ta = document.createElement('textarea');
+      ta.rows = 5;
+      ta.value = value == null ? '' : value;
+      wrapper.appendChild(ta);
+      getter = function () { return ta.value; };
     } else {
       var input = document.createElement('input');
       input.type = f.type === 'int' ? 'number' : 'text';
