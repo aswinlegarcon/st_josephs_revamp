@@ -49,6 +49,17 @@ public_html/
 
 ## 2. Page Assembly Mechanism
 
+> **Migration status (R1a–R1c done):** 41 of the 42 pages have been converted to a
+> **single-document Bootstrap-5 layout** — a thin controller (`require _libs/load.php` →
+> `SJ\View\Layout::render('<page>', [...])`) renders `views/pages/<page>.php` inside the
+> universal `views/shell.php` (one self-hosted Bootstrap 5.3.3, one Font Awesome, fonts,
+> `tokens.css`, then the page's CSS; chrome via clean `views/partials/*`). The academy family
+> shares `css/academy.css` + `js/academy.js`. **The `get_templates()` nesting described below
+> now applies ONLY to the home page (`index.php`)** and the shared content-section templates it
+> still uses (`carousel`, `card`, `update-scroll`, `new-updates`, `marks-scroll`, `testimonial`,
+> `contact`, `groups`); `highsec` also still pulls `groups` + `marks-scroll` this way. Home
+> unification is the remaining Stage-C item.
+
 - [`_libs/load.php`](public_html/_libs/load.php) defines **one** function: `get_templates($name)` → `include $_SERVER['DOCUMENT_ROOT']."/_templates/$name.php"`. Every page starts with `<?php include "_libs/load.php" ?>` and calls e.g. `<?php get_templates('navbar'); ?>`.
 - **No parameterization.** Templates take no arguments; all content (topper marks, testimonials, ticker items…) is hard-coded inside the template file itself. To change such content you edit the template.
 - A JSON config system (`get_config()` reading `schoolconfig.json`) exists in load.php but is **entirely commented out** — dead code.
@@ -571,6 +582,23 @@ Everything else (carousels, collapses, dropdowns) is Bootstrap CDN behaviour; ea
 ---
 
 ## 10. Appendix: Known Issues (verified against source)
+
+> **Status after R1a–R1c (single-document BS5 migration):**
+> - **Fixed** (functional bugs corrected during conversion, appearance unchanged): **#4**
+>   (removed the missing `infrastructure.js` ref + the double BS bundle), **#5** (dead
+>   `curriculum.php` navbar link → `#`), **#6** (infrastructure anchor off-by-one → `#bg-1..15`),
+>   **#10** (nested/duplicate documents — every converted page is now one document; only home
+>   remains nested), **#11 in part** (carousel/accordion ids now unique on all converted pages;
+>   sports `accordion-1..9`, infrastructure's carousels all unique).
+> - **Intentionally preserved** (content-level quirks kept byte-verbatim under the visual-freeze
+>   rule — do NOT "fix" during migration; slate them for the CMS/content phase): **#1, #2**
+>   (`.jpeg` vs `.jpg` image paths), **#3** (`gal-sciexpo` mislabeled orphan / `gal-spach`
+>   classes), **#7** (gallery year-toggle id/label mismatches), **#8** (gal-alumni lightbox
+>   default), **#9** (`schname.JPG` case), **#12** (contact email mismatch — home), **#14**
+>   (visible-text typos), **#15** (mixed image-path styles), and gallery's duplicate `id="image-3"`
+>   tiles (the #11 remainder).
+> - `.top-bar`/`.sliding-text` dead CSS (**#13**) was dropped from the new navbar partial; the
+>   unused standalone `navbar.css`/`new-updates.css`/`testimonial.css` files still exist.
 
 1. **Broken Art-Expo images (.jpg vs .jpeg):** `artandexpo.php` background `../photos/artexpo0.jpg` and carousel slides `artexpo1/2/3.jpg`, plus the co-curriculum card `photos/artexpo0.jpg`, all 404 — the actual files are `artexpo0–3.jpeg`.
 2. **Broken Abacus banner background:** `abacusacademy.php` uses `../photos/abacaca1.jpg`; the file is `abacaca1.jpeg`. (The co-curriculum card correctly uses `.jpeg`.)

@@ -76,10 +76,51 @@ exactly **one** document, only our self-hosted Bootstrap loads (no CDN, no jQuer
 interactive bits actually work — the mobile menu opens, dropdowns drop, carousels slide,
 the sports accordions expand — with **zero errors** in the browser console.
 
-> **Still pending in Stage C:** the two big page *families* — the 18 academy pages and 4
-> section pages (**R1b**), and the 11 gallery pages (**R1c**) — still use the old templates.
-> They keep working (nothing broke), and converting them is now a **mechanical repeat** of
-> the exact recipe proven on the 8 hub pages.
+### Phase R1b — the academy + section pages (22 pages)
+
+With the recipe proven on the 8 hub pages, we applied it to the two remaining
+"template-shaped" families.
+
+**The 18 academy pages** (Tamil, Maths, Science, … plus Band, NCC, Art-and-Expo)
+were *identical* to each other apart from four things: the hero image, the title,
+the three carousel photos, and the paragraph text. In the old code the same ~180
+lines of CSS were **copy-pasted into all 18 files**. We extracted that shared block
+**once** into `css/academy.css` (+ a shared `js/academy.js` for the scroll
+animation) and let each page keep only its one unique line — the background image.
+That's a real optimisation (the browser downloads and caches the shared file once
+instead of re-reading it inside 18 pages) and, because the CSS is byte-for-byte the
+same, **nothing looks different**. We also removed `academics.css` from these pages
+after checking it styled nothing they actually use.
+
+**The 4 section pages** (KG, Primary, High School, Higher-Secondary) are richer —
+each has *two* carousels, a collapsible "timeline" accordion, and the admissions
+banner. Those needed a couple more dialect translations (the accordion's
+`data-toggle`/`data-target`/`data-parent` → `data-bs-*`), but the principle was the
+same: keep every word, date, and photo exactly as it was, only modernise the
+plumbing.
+
+### Phase R1c — the gallery pages (11 pages)
+
+The `gal-*` gallery pages were the easiest: they were *already* Bootstrap 5 with a
+hand-written photo "lightbox" (click a photo → it opens big). So there was no
+dialect to translate at all — we just moved each page into the shell and deleted
+the duplicate Bootstrap/Popper downloads it no longer needed. We deliberately
+**kept the quirks** the freeze rule protects — e.g. one gallery page (`gal-sciexpo`)
+reuses another's CSS class names; we left that exactly as shipped.
+
+**How we proved fidelity on all 33 pages.** For every page we compared the new
+version against the original (git commit `6bd0d11`) three ways: (1) the **visible
+text** must be identical; (2) the counts of `<br>`, `<span>`, `<p>`, carousel
+slides, and images must match (so nothing was dropped); (3) a live browser check
+that carousels slide, the accordion expands, and the lightbox opens — with **zero**
+errors in the browser console. One page (`sportsacademy`) had a stray invisible
+character a converter had trimmed; we restored it so the page is byte-faithful.
+
+> **One page left:** the **home page** (`index.php`) still uses the old
+> mixed-Bootstrap templates for its many sections (the rotating banner, the "cards",
+> the news ticker, the testimonial, the contact form). Converting it means turning
+> each of those shared section-templates into clean fragments too — a focused
+> follow-up. Every *other* page on the site is now one clean Bootstrap-5 document.
 
 ---
 
@@ -125,7 +166,7 @@ high-impact fixes:
 |---|---|
 | A — Security (S1–S4, F0) | ✅ done |
 | B — Platform (P1–P4) | ✅ done |
-| **C — Front-end revamp** | **R1a ✅ (8 hub pages + foundation); R1b, R1c pending (33 family pages, mechanical)** |
+| **C — Front-end revamp** | **✅ R1a (8 hub pages + foundation) + R1b (22 academy/section) + R1c (11 gallery) — 41 of 42 pages converted; only the home page (`index.php`) remains** |
 | **D — Speed & deploy** | **F1 ✅, X1 ✅** |
 | E–H (content in the DB, live editing, images, SEO, backups) | upcoming — see [`PHASES.md`](../../PHASES.md) |
 
@@ -134,5 +175,7 @@ high-impact fixes:
    Bootstrap loading from `/assets/vendor/...` (not the internet).
 2. Open `http://localhost:8090/sports.php`, click a "Read More" — the accordion expands
    (that's Bootstrap 5 working after the dialect translation).
-3. Compare with `http://localhost:8090/tamilacademy.php` (not yet converted) — view source
-   and you'll still see the old nested-document style. That's R1b's job.
+3. Open `http://localhost:8090/tamilacademy.php` (now converted) — view source: one
+   `<!doctype>`, self-hosted Bootstrap, no jQuery. Then compare with
+   `http://localhost:8090/index.php` (the home page, **not** yet converted) — its source
+   still shows the old nested-document style and CDN Bootstrap. That's the last page left.
