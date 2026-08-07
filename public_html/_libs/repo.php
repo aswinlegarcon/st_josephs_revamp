@@ -97,6 +97,19 @@ function repo_testimonials(bool $includeInactive = false): array
     return db()->query($sql)->fetchAll();
 }
 
+/** Images linked to one owner collection (image_links), ordered — one query (M1). */
+function repo_linked_images(string $ownerType, int $ownerId, string $role = 'carousel'): array
+{
+    $st = db()->prepare(
+        'SELECT l.id AS link_id, l.position, ' . SJ_IMG_SELECT . '
+           FROM image_links l JOIN images i ON i.id = l.image_id
+          WHERE l.owner_type = ? AND l.owner_id = ? AND l.role = ?
+          ORDER BY l.position, l.id'
+    );
+    $st->execute([$ownerType, $ownerId, $role]);
+    return array_map(static fn (array $r) => repo_fold_image($r)['image'] + ['link_id' => (int)$r['link_id']], $st->fetchAll());
+}
+
 function repo_profile(string $roleKey): ?array
 {
     // Profile + its image in ONE query (query budget).

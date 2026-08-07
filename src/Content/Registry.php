@@ -111,4 +111,22 @@ final class Registry
     {
         return self::all()[$entity] ?? null;
     }
+
+    /**
+     * image_links owner whitelist (M1): owner_type => owning table.
+     * The link API resolves the owner table ONLY through this map — request
+     * payloads can never name a table (SEC-01/09/11). Values match
+     * DYNAMIC_MIGRATION_PLAN §4.1 and the C4–C9 seeds.
+     */
+    public static function ownerTypes(): array
+    {
+        return [
+            'page'       => 'pages',
+            'section'    => 'school_sections',
+            'academy'    => 'academies',
+            'facility'   => 'facilities',
+            'album'      => 'gallery_albums',
+            'album_year' => 'album_years',
+        ];
+    }
 }

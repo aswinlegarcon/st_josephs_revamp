@@ -11,6 +11,7 @@ $routes = [
     'upload'   => 'upload.php',   // POST  multipart
     'images'   => 'images.php',   // GET   ?q=&page=
     'settings' => 'settings.php', // POST  {values:{key:value,…}} — whitelisted keys only (C1)
+    'link'     => 'link.php',     // POST  {action:list|attach|detach|reorder, owner_type,…} (M1)
 ];
 
 $r = (string)($_GET['r'] ?? '');
