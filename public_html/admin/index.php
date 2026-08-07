@@ -17,6 +17,8 @@ $cards = [
         (int)db()->query('SELECT COUNT(*) FROM mark_entries')->fetchColumn() . ' toppers'],
     ['media',     '🖼️', 'Media Library',  'All site images — browse, search and upload.',
         (int)db()->query('SELECT COUNT(*) FROM images')->fetchColumn() . ' images'],
+    ['settings',  '⚙️', 'Site Settings',  'Contact details, school timings, admissions band, social links.',
+        (int)db()->query('SELECT COUNT(*) FROM settings')->fetchColumn() . ' settings'],
 ];
 
 panel_header('dashboard', 'Dashboard');

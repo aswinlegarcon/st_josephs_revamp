@@ -18,6 +18,9 @@
    - `'session_save_path' => '/home/<account>/tmp/sessions'` (create it, `chmod 700`)
    - `'health_token' => '<a long random string>'`
    - `'debug' => false`
+   - `'recaptcha_secret' => '<Google reCAPTCHA v2 SECRET key>'` (enables server-side robot checks on the contact form — C1)
+   - `'contact' => ['mail_to' => '<school office email>']` (contact-form enquiries are relayed here via `mail()`; they are also always stored in the `contact_submissions` table)
+   Also **rotate/delete the old EmailJS public key** in the EmailJS dashboard — it shipped in the old client code (SEC-23) and is dead weight now.
    Verify the loader finds it: `dirname(public_html)` must contain `config/config.php`.
    If mPanel does not allow a sibling dir above `public_html`, place it at the highest
    non-web-served level available and confirm `/config/config.php` returns **404** over HTTP.

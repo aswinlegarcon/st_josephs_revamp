@@ -176,9 +176,37 @@ foreach ($marks as $year => $entries) {
     }
 }
 
+/* ---------- Site settings (C1) ----------
+ * Values are the EXACT strings shipped in the static pages (visual-freeze):
+ * seeding them keeps the rendered output byte-identical while making the
+ * strings editable in the admin panel. INSERT IGNORE = admin edits win. */
+$settings = [
+    'contact_email'         => 'cbec_susaiappar@yahoo.co.in',
+    'contact_phone'         => '0422-2271367',
+    'contact_address_line1' => "St.Joseph's, Ondipudur, Coimbatore-16",
+    'contact_address_line2' => 'TamilNadu',
+    'facebook_url'          => 'https://www.facebook.com/stjosephsschoolondipudur',
+    'youtube_url'           => 'https://youtube.com/@sjproductions1427',
+    'timing_morning'        => '8.30 AM to 12.00 PM',
+    'timing_lunch'          => '12.00 PM to 12.30 PM',
+    'timing_afternoon'      => '12.30 PM to 3.20 PM',
+    'jumbotron_heading'     => "Explore a holistic education at St.Joseph's",
+    'jumbotron_sub'         => 'Click Here for Admissions',
+    'jumbotron_btn'         => 'Learn more',
+    'footer_copyright'      => "© 2024 St.Joseph's MHSS, Ondipudur. All Rights Reserved.",
+    'marks_years_shown'     => '3',
+];
+$insSet = $pdo->prepare('INSERT IGNORE INTO settings (skey, svalue) VALUES (?,?)');
+$newSet = 0;
+foreach ($settings as $k => $v) {
+    $insSet->execute([$k, $v]);
+    $newSet += $insSet->rowCount();
+}
+$out[] = "settings: +$newSet newly seeded";
+
 /* ---------- Summary ---------- */
 $counts = [];
-foreach (['images', 'pages', 'hero_slides', 'profiles', 'unique_features', 'ticker_items', 'update_slides', 'mark_years', 'mark_entries', 'admin_users'] as $t) {
+foreach (['images', 'pages', 'hero_slides', 'profiles', 'unique_features', 'ticker_items', 'update_slides', 'mark_years', 'mark_entries', 'settings', 'admin_users'] as $t) {
     $counts[] = "$t=" . $pdo->query("SELECT COUNT(*) FROM $t")->fetchColumn();
 }
 echo "Seed OK\n  " . implode("\n  ", $out) . "\nTotals: " . implode(' · ', $counts) . "\n";

@@ -1,20 +1,17 @@
 <?php // "Make an Enquiry" contact section — clean fragment (no nested document).
-// Markup + third-party scripts (EmailJS, reCAPTCHA, ionicons) kept VERBATIM
-// from _templates/contact.php; contact.css loads via the shell's $styles.
-// KNOWN QUIRKS PRESERVED under the visual-freeze rule (fixed in C1, not here):
-// the mailto: address differs from the displayed address (bug 12), and the
-// client-side EmailJS send is unhardened (SEC-23 lands in C1). ?>
-<script type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-    </script>
+// C1: contact strings come from `settings` (fallbacks = the exact original
+// values, so rendering is byte-identical before seeding). The mailto: now uses
+// the SAME setting as the displayed address — bug 12 fixed by construction.
+// SEC-23: the client-side EmailJS SDK + public key are REMOVED — the form
+// posts to /api/contact.php (rate-limited, honeypot, server-side reCAPTCHA).
+// reCAPTCHA widget kept. Visual output is unchanged.
+$sj_c_email = repo_setting('contact_email', 'cbec_susaiappar@yahoo.co.in');
+$sj_c_phone = repo_setting('contact_phone', '0422-2271367');
+$sj_c_addr1 = repo_setting('contact_address_line1', "St.Joseph's, Ondipudur, Coimbatore-16");
+$sj_c_addr2 = repo_setting('contact_address_line2', 'TamilNadu');
+$sj_c_fb    = repo_setting('facebook_url', 'https://www.facebook.com/stjosephsschoolondipudur');
+?>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script type="text/javascript">
-      (function(){
-          emailjs.init({
-            publicKey: "psMv9kF5kawkjc1ve",
-          });
-      })();
-</script>
 
 <script src="/js/contact.js"></script>
 
@@ -55,6 +52,8 @@
                     <textarea name="description" id="message" placeholder="Write Your Message Here..."></textarea>
                 </div>
             </div>
+            <?php /* SEC-23 honeypot — invisible to people (display:none), bots fill it. */ ?>
+            <input type="text" id="website" name="website" value="" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
             <div class="g-recaptcha" style="transform: scale(0.77); transform-origin: 0 0;" data-sitekey="6LdF1RsqAAAAAGNSgy7EX8V9KWajLCwo_poN9_PL"></div><br>
             <div class="row100">
                 <div class="inputBox">
@@ -74,25 +73,25 @@
             <span>
               <ion-icon name="location"></ion-icon>
             </span>
-            <p class="info">St.Joseph's, Ondipudur, Coimbatore-16<br>TamilNadu </p>
+            <p class="info"><?= e($sj_c_addr1) ?><br><?= e($sj_c_addr2) ?> </p>
           </div>
           <div>
             <span>
               <ion-icon name="mail"></ion-icon>
             </span>
-            <a class="mail" href="mailto:aswinkirubanantham@gmail.com">cbec_susaiappar@yahoo.co.in</a>
+            <a class="mail" href="mailto:<?= e($sj_c_email) ?>"><?= e($sj_c_email) ?></a>
           </div>
           <div>
             <span>
               <ion-icon name="call"></ion-icon>
             </span>
-            <a href="tel: 0422 2271367"> + 0422-2271367</a>
+            <a href="tel: <?= e(str_replace('-', ' ', $sj_c_phone)) ?>"> + <?= e($sj_c_phone) ?></a>
           </div>
 
 
           <!-- social media links -->
           <ul class="sci">
-            <li><a href="https://www.facebook.com/stjosephsschoolondipudur">
+            <li><a href="<?= e($sj_c_fb) ?>">
                 <ion-icon name="logo-facebook"></ion-icon>
               </a></li>
 

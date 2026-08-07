@@ -29,4 +29,13 @@ return [
     'session_save_path'    => null,  // e.g. '/home/<account>/tmp/sessions' (chmod 700) in prod
     'debug'                => false, // true → emit a per-page SQL query count (dev only)
     'health_token'         => '',    // set a random string; then /admin/health.php?token=... works (X1)
+
+    // Contact form (C1, SEC-23). The old client-side EmailJS key was public in
+    // the page source — ROTATE/DELETE it in the EmailJS dashboard. The form now
+    // posts to /api/contact.php which stores every enquiry and relays it by
+    // email when mail_to is set (PHP mail() — available on MilesWeb).
+    'recaptcha_secret'     => '',    // Google reCAPTCHA v2 SECRET key (prod) — enables server-side verification
+    'contact' => [
+        'mail_to' => '',             // e.g. the school office address; empty = store enquiries only
+    ],
 ];

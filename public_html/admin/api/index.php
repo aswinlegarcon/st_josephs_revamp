@@ -5,11 +5,12 @@
 // (auth + forced-password gate + CSRF + JSON), so the guard order is preserved.
 
 $routes = [
-    'field'  => 'field.php',   // POST  {entity,id,field,value}
-    'item'   => 'item.php',    // POST  {action:get|create|update|delete,…}
-    'order'  => 'order.php',   // POST  {entity,ids[]}
-    'upload' => 'upload.php',  // POST  multipart
-    'images' => 'images.php',  // GET   ?q=&page=
+    'field'    => 'field.php',    // POST  {entity,id,field,value}
+    'item'     => 'item.php',     // POST  {action:get|create|update|delete,…}
+    'order'    => 'order.php',    // POST  {entity,ids[]}
+    'upload'   => 'upload.php',   // POST  multipart
+    'images'   => 'images.php',   // GET   ?q=&page=
+    'settings' => 'settings.php', // POST  {values:{key:value,…}} — whitelisted keys only (C1)
 ];
 
 $r = (string)($_GET['r'] ?? '');

@@ -195,3 +195,12 @@ input:focus, select:focus, textarea:focus, .sj-rich:focus { outline: none; borde
   .sj-row-thumb { width: 76px; flex-basis: 76px; height: 48px; }
   .sj-modal { width: 100vw; height: 100vh; max-height: none; border-radius: 0; }
 }
+
+/* ---------- site settings screen (C1) ---------- */
+.sj-form-legend { font: 700 13px/1 'Segoe UI', Arial; color: var(--navy, #2b4b8a); text-transform: uppercase; letter-spacing: .5px; margin: 22px 0 4px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.sj-form-legend:first-child { margin-top: 0; }
+.sj-form-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 4px 22px; }
+.sj-field span { display: block; font: 700 11.5px/1 'Segoe UI', Arial; text-transform: uppercase; letter-spacing: .4px; color: var(--mut); margin: 16px 0 6px; }
+.sj-field small { display: block; color: var(--mut); font-size: 11.5px; margin-top: 4px; }
+.sj-form-actions { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 14px; }
+.sj-save-note { color: var(--green); font-weight: 600; font-size: 13px; }

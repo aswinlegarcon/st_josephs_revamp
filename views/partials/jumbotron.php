@@ -23,11 +23,12 @@
   @media (max-width: 768px) { .jumbotron .container h1 { font-size: 35px; } }
   @media (max-width: 500px) { .jumbotron .container h1 { font-size: 25px; } .jumbotron .container p { font-size: 14px; } }
 </style>
+<?php // C1: strings come from `settings` (fallbacks = the exact original values). ?>
 <div class="jumbotron jumbotron-fluid jumbotron-reveal">
   <div class="container text-center">
-    <h1 class="display-4">Explore a holistic education at St.Joseph's</h1>
-    <p class="lead">Click Here for Admissions</p>
-    <a class="btn btn-primary btn-lg" href="/index.php#contact" role="button">Learn more</a>
+    <h1 class="display-4"><?= e(repo_setting('jumbotron_heading', "Explore a holistic education at St.Joseph's")) ?></h1>
+    <p class="lead"><?= e(repo_setting('jumbotron_sub', 'Click Here for Admissions')) ?></p>
+    <a class="btn btn-primary btn-lg" href="/index.php#contact" role="button"><?= e(repo_setting('jumbotron_btn', 'Learn more')) ?></a>
   </div>
 </div>
 <script>

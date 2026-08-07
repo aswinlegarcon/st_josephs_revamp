@@ -233,6 +233,60 @@ case 'media':
     <script>window.SJ_PRESETS = <?= json_encode($presets, JSON_UNESCAPED_SLASHES) ?>;</script>
     <?php
     break;
+
+/* ================= SITE SETTINGS (C1) ================= */
+case 'settings':
+    // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is
+    // NOT a registry entity (CLAUDE.md); this screen + its endpoint are the
+    // only write path. Groups: [legend => [key => [label, hint]]].
+    $groups = [
+        'Contact details (footer + contact section)' => [
+            'contact_email'         => ['School email', 'Shown on the contact section and the footer; also used as the mailto: link.'],
+            'contact_phone'         => ['Phone number', 'e.g. 0422-2271367'],
+            'contact_address_line1' => ['Address — line 1', ''],
+            'contact_address_line2' => ['Address — line 2', ''],
+        ],
+        'School timings (footer)' => [
+            'timing_morning'   => ['Morning', ''],
+            'timing_lunch'     => ['Lunch', ''],
+            'timing_afternoon' => ['Afternoon', ''],
+        ],
+        'Admissions band (bottom of most pages)' => [
+            'jumbotron_heading' => ['Heading', ''],
+            'jumbotron_sub'     => ['Sub-line', ''],
+            'jumbotron_btn'     => ['Button label', ''],
+        ],
+        'Social & misc' => [
+            'facebook_url'      => ['Facebook URL', 'Must start with https://'],
+            'youtube_url'       => ['YouTube URL', 'Must start with https://'],
+            'footer_copyright'  => ['Footer copyright line', ''],
+            'marks_years_shown' => ['Top-Marks years shown', 'How many recent years the home/highsec toppers board shows (1–10).'],
+        ],
+    ];
+    ?>
+    <p class="sj-lead">Site-wide text used across pages (contact info, school timings, the admissions
+       band, social links). Edit and press <b>Save settings</b> — the site updates immediately.</p>
+    <form class="sj-form-card" id="sj-settings" data-api="settings">
+      <?php foreach ($groups as $legend => $keys): ?>
+        <h3 class="sj-form-legend"><?= e($legend) ?></h3>
+        <div class="sj-form-grid2">
+        <?php foreach ($keys as $key => [$label, $hint]): ?>
+          <label class="sj-field">
+            <span><?= e($label) ?></span>
+            <input type="text" name="<?= e($key) ?>" value="<?= e(repo_setting($key, '')) ?>">
+            <?php if ($hint): ?><small><?= e($hint) ?></small><?php endif; ?>
+          </label>
+        <?php endforeach; ?>
+        </div>
+      <?php endforeach; ?>
+      <div class="sj-form-actions">
+        <button type="submit" class="sj-btn sj-btn-primary">💾 Save settings</button>
+        <span class="sj-save-note" id="sj-settings-note"></span>
+      </div>
+    </form>
+    <script src="/admin/assets/settings.js?v=<?= SJ_ASSET_VER ?>" defer></script>
+    <?php
+    break;
 }
 
 panel_footer();
