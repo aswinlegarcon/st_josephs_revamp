@@ -29,6 +29,20 @@ Before you mark **any** change complete that touches `public_html/admin/**`, `pu
 
 Never skip this because a change "looks small". A one-line echo or a new endpoint is exactly where XSS/CSRF/SQLi land.
 
+## MANDATORY visual-freeze rule (no styling changes)
+
+Until the full code migration **and** the admin-panel workflow are complete, **do not change how any page looks.** The only work permitted now is **code revamp, performance optimisation, and admin-panel/CMS conversion.** The visual design is frozen.
+
+Concretely:
+
+1. **Pixel-identical.** Every converted or refactored page must render **exactly** like the pre-revamp production site (baseline: git commit `6bd0d11` and live `https://stjosephsondipudur.com/`). Fonts, colours, spacing, backgrounds, sizes, borders, hover states — all unchanged.
+2. **Compensate for framework drift.** When a code change would otherwise move the pixels (e.g. the Bootstrap 4→5 migration drops `.jumbotron`, renames classes, or changes default paddings), you **must add compensating CSS so the rendered result stays identical.** Migrating the code is allowed; letting the look drift is not.
+3. **Don't "fix" quirky-but-shipped CSS.** If the original has an invalid/odd declaration the browser ignores (e.g. `.navbar { background: linear( … ) }`, which is invalid → ignored → the navbar renders as `.bg-light` grey), **keep it as-is.** Reproduce the original's *rendered result*, not your idea of correct code. "Correcting" it silently redesigns the page.
+4. **Allowed only when the appearance is unchanged:** HTML dialect changes (`data-*`→`data-bs-*`, `ml-auto`→`ms-auto`), dead-link / duplicate-id bug fixes, and dead-code removal.
+5. **Intentional visual changes need explicit user approval first** — even improvements. Never slip a redesign in under a refactor.
+
+Before marking complete **any** change that touches a rendered page, view, partial, or CSS: compare against the baseline (git `6bd0d11` / live site), then affirm **`Visual-freeze: PASS`** in your completion summary — or list each spot that intentionally changed, with a one-line reason **and** the user sign-off that approved it.
+
 ## Coding conventions (non-negotiable)
 
 - **SQL:** values only via PDO **placeholders**; table/column **identifiers only from the registry** (`SJ\Content\Registry` / `_libs/registry.php`) or code literals. Never build SQL from request data.
@@ -51,7 +65,7 @@ Never skip this because a change "looks small". A one-line echo or a new endpoin
 
 - Run the change in the real app via `./run.sh`; exercise the edited area in the browser (create → edit → reorder → delete for content; upload for media).
 - Seeder must stay **idempotent** — running it twice changes nothing.
-- No console 404s; no duplicate element IDs; visual diff vs. before = none unless the change is intentionally visual.
+- No console 404s; no duplicate element IDs. **Visual diff vs. the pre-revamp baseline must be zero** (see the visual-freeze rule) — any intentional visual change requires prior user sign-off.
 - For anything security-relevant, run the SEC item's "Agent verification" step.
 
 ## Deploy cautions

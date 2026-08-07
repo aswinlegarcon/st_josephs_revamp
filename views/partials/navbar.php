@@ -1,14 +1,41 @@
-<?php // Site navigation — clean Bootstrap 5 fragment (no nested document). ?>
+<?php // Site navigation — clean Bootstrap 5 fragment (no nested document).
+// STYLING RULE (CLAUDE.md): this <style> is a VERBATIM copy of the original
+// _templates/navbar.php styling. Do not "improve", tidy, or re-value any rule
+// here — the page must render pixel-identical to the pre-revamp site. Only the
+// HTML dialect (data-bs-*, ms-auto/me-auto) and the dead-link fix are allowed to
+// differ, because those are functional/code changes, not visual ones. ?>
 <style>
-  .navbar { background: linear-gradient(#2b4b8a 20%, #ffffff 70%);
+  /* Site-wide base font — the original navbar carried this global rule, so it
+     applied to every page. Restored here so converted pages keep League Spartan. */
+  * { font-family: "League Spartan", sans-serif; font-weight: 400; }
+
+  body { margin: 0; font-family: Arial, sans-serif; }
+
+  /* NOTE: the original value is `linear( ... )` — an INVALID CSS function. The
+     browser therefore IGNORES this declaration and the navbar keeps Bootstrap's
+     .bg-light (light grey). That grey is the intended production look. Do NOT
+     "correct" this to linear-gradient() — doing so introduces a navy gradient and
+     changes the design. Kept verbatim from the original site on purpose. */
+  .navbar {
+    background: linear( #2b4b8a 20%, #ffffff 70%);
     border-bottom: 3px solid transparent;
     border-image: linear-gradient(90deg, rgba(2,0,36,0) 0%, #2a4ac6 50%, rgba(0,212,255,0) 100%);
-    border-image-slice: 1; }
-  .sticky { position: fixed !important; top: 0 !important; width: 100% !important; z-index: 1000 !important;
-    background-color: white; }
+    border-image-slice: 1;
+  }
+
+  .sticky {
+    position: fixed !important;
+    top: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background-color: white;
+  }
+
   .nav-item a { font-size: 19px; word-spacing: 10px; color: black !important; }
   .nav-item a:hover { color: #2b4b8a !important; }
+
   .navbar-brand .img-1 { width: 95px; height: 114px; }
+
   @media (max-width: 460px) {
     .navbar-brand .img-1 { width: 85px; height: 100px; }
     .logo1 img { width: 180px; height: 40px; }
