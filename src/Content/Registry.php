@@ -78,6 +78,14 @@ final class Registry
                     'is_active'  => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
+            'testimonial' => [
+                'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'fields' => [
+                    'name_html' => ['type' => 'html', 'max' => 200,   'label' => 'Student name & tag'],
+                    'body_html' => ['type' => 'html', 'max' => 65000, 'label' => 'Testimonial'],
+                    'is_active' => ['type' => 'bool', 'label' => 'Visible on site'],
+                ],
+            ],
             'mark_year' => [
                 'table' => 'mark_years', 'orderable' => false, 'creatable' => true, 'deletable' => true,
                 'fields' => [

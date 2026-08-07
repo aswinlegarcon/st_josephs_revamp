@@ -218,6 +218,93 @@ $insProfile->execute(['rules', 'Rules and Regulations', 'Important',
       </p>',
     img_id_by_file('schdiary.jpg')]);
 
+/* ---------- Staffs page + home testimonials (C3) ----------
+ * Same rules: EXACT shipped copy; keyed rows INSERT IGNORE; lists only when empty. */
+$pdo->prepare('INSERT IGNORE INTO pages (slug, title, heading_html) VALUES (?,?,?)')->execute([
+    'staffs',
+    "St.Joseph's MHSS, Ondipudur",
+    '',
+]);
+$staffsPageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'staffs'")->fetchColumn();
+$cnt->execute([$staffsPageId]);
+if (!$cnt->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO hero_slides (page_id, image_id, caption_title, caption_text, position) VALUES (?,?,?,?,?)');
+    foreach ([['staff1.jpg', 0], ['teachertour.jpg', 1]] as [$img, $pos]) {
+        $st->execute([$staffsPageId, img_id_by_file($img), 'Our Staffs', 'About Our Staffs', $pos]);
+    }
+    $out[] = 'staffs hero_slides: seeded 2';
+}
+
+$insProfile->execute(['staff_love', 'Staffs', 'We Love our Staffs',
+    '<p>We are fortunate to have a dedicated and passionate team of 63 enthusiastic
+           and committed teachers, supported by a diligent group of 28 non-teaching
+           staff members. Our educators recognize that staying updated is crucial
+           for success in the ever-evolving field of education. To ensure they are
+           well-equipped with the latest teaching methodologies and pedagogical
+           strategies, our teachers actively participate in various professional
+           development opportunities. These include seminars, training sessions,
+            orientation classes, and workshops that cover a broad spectrum of
+            topics relevant to modern education..</p>
+        <p>Additionally, recognizing the importance of maintaining high levels of
+          motivation and energy, we organize an annual tour for our teachers. This
+          tour serves as an opportunity for them to relax, refresh, and recharge away
+          from the routine of school life. It fosters camaraderie and team spirit,
+          providing a perfect blend of professional development and personal
+          rejuvenation. By investing in our teachers\' continuous growth and well-being
+          , we ensure that they remain inspired and capable of delivering the highest
+           quality education to our students.</p>',
+    img_id_by_file('staff1.jpg')]);
+$insProfile->execute(['staff_team', 'Staffs', 'The Staffs',
+    '<p>We are fortunate to have a dedicated and passionate team of 63 enthusiastic
+           and committed teachers, supported by a diligent group of 28 non-teaching
+           staff members. Our educators recognize that staying updated is crucial
+           for success in the ever-evolving field of education.</p>',
+    img_id_by_file('staff1.jpg')]);
+$insProfile->execute(['staff_tour', 'Staffs', 'The Staff Tour',
+    '<p>The school staff recently embarked on a rejuvenating trip to Coorg,
+                  a picturesque hill station in Karnataka known for its lush greenery and
+                  serene landscapes. The journey provided a much-needed break from their daily
+                   routines,
+                   allowing them to unwind and recharge amidst nature’s beauty.
+                     This trip not only refreshed their minds and bodies but also strengthened
+                      their camaraderie, making it a memorable and enriching experience for everyone
+                       involved</p>',
+    img_id_by_file('teachertour.jpg')]);
+
+if (!$pdo->query('SELECT COUNT(*) FROM testimonials')->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO testimonials (name_html, body_html, position) VALUES (?,?,?)');
+    $st->execute(['Kishore N.E, <br>Alumni',
+        '<p>Attending St.Joseph\'s MHSS was a transformative experience, particularly due to its outstanding sports coaching. The dedicated coaches and Ashok sir
+                  provided unwavering support and pushed me to excel, while also emphasizing the importance of resilience, and sportsmanship.
+                  Throughout my high school years, I was fortunate to win numerous prizes in athletics. These achievements were a direct result of the rigorous training,
+                  strategic guidance, and motivational leadership from my mentors. The school\'s facilities and resources were instrumental in helping me set records.
+                </p>
+                <p>Balancing academics and athletics at SJMHSS shaped me into a disciplined, goal-oriented individual. The lessons I learned on the field and in the
+                   classroom have had a lasting impact on my life.
+                    I am immensely grateful for the support and opportunities provided by SJMHSS, and I highly recommend it to any aspiring student-athlete.</p>', 0]);
+    $st->execute(['Santhosh R.D, <br>Alumni',
+        '<p>As an alumnus of St. Joseph\'s Matric Higher Secondary School, my experience was truly transformative.
+                  The rigorous academics challenged me to exceed my own expectations, while the dedicated faculty provided
+                   invaluable support and mentorship. Beyond the classroom, the vibrant community fostered lasting friendships
+                    and essential professional connections.
+                </p>
+                <p> Participating in diverse extracurricular activities allowed me to explore my interests and develop new passions.
+                  Being involved in clubs and sports taught me critical skills like leadership, teamwork, and perseverance. The holistic
+                  education I received at St. Joseph\'s Matric Higher Secondary School equipped me with the knowledge and confidence to succeed
+                   in my career and personal life. I am incredibly grateful for the opportunities and experiences that shaped me during my time at St. Joseph\'s.</p>', 1]);
+    $st->execute(['Aswin K, <br>Alumni<br>',
+        '<p>Scoring 591 in the board exams is an achievement I am incredibly proud of, and it would not have been possible without the unwavering support
+                  of the management and teachers at St.Joseph\'s MHSS.The dedicated faculty members went above and beyond to ensure that we had a thorough understanding
+                  of the subjects. Their passion for teaching and commitment to our success were evident in every lesson, extra class, and individual guidance session.
+                  They always encouraged us to aim high and provided the tools and support needed to reach our goals.
+                </p>
+                <p>The school\'s management also played a crucial role in our academic journey. By fostering a conducive learning environment, providing excellent resources,
+                   and organizing various academic programs, they ensured that we were well-prepared for the exams.
+                    I am deeply grateful to my school for their support and dedication. This achievement is a testament to the hard work of both the
+                    students and the staff, and I highly recommend SJMHSS to anyone seeking a nurturing and high-quality educational experience.</p>', 2]);
+    $out[] = 'testimonials: seeded 3';
+}
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the
@@ -248,7 +335,7 @@ $out[] = "settings: +$newSet newly seeded";
 
 /* ---------- Summary ---------- */
 $counts = [];
-foreach (['images', 'pages', 'hero_slides', 'profiles', 'unique_features', 'ticker_items', 'update_slides', 'mark_years', 'mark_entries', 'settings', 'admin_users'] as $t) {
+foreach (['images', 'pages', 'hero_slides', 'profiles', 'unique_features', 'ticker_items', 'update_slides', 'mark_years', 'mark_entries', 'testimonials', 'settings', 'admin_users'] as $t) {
     $counts[] = "$t=" . $pdo->query("SELECT COUNT(*) FROM $t")->fetchColumn();
 }
 echo "Seed OK\n  " . implode("\n  ", $out) . "\nTotals: " . implode(' · ', $counts) . "\n";

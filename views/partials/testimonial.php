@@ -1,4 +1,7 @@
 <?php // Students Testimonial cards — clean fragment (no nested document).
+// C3: DB-driven — $sj_testimonials comes from the page controller. name_html/
+// body_html are sanitized rich fields (write-path whitelist), echoed raw by
+// design; the card1/2/3 background classes cycle by position.
 // The <style> and <script> are VERBATIM from _templates/testimonial.php — do
 // not tidy (incl. the .testimonial-body rule, which matched nothing on the
 // baseline because the nested <body class="testimonial-body"> was discarded by
@@ -107,51 +110,14 @@
     </style>
     <div class="testimonial-container">
         <h1 class="testimonial-reveal">Students Testimonial</h1>
-        <div class="testimonial">
-            <div class="card card1">
+        <div class="testimonial"<?= ed_add('testimonial', [], 'Add testimonial') ?>>
+            <?php foreach ($sj_testimonials as $ti => $t): ?>
+            <div class="card card<?= ($ti % 3) + 1 ?><?= empty($t['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('testimonial', $t['id'], 'Testimonial') ?>>
             <img class="quote-icon" src="/photos/quote.png" alt="quote icon">
-                <h3>Kishore N.E, <br>Alumni</h3>
-
-                <p>Attending St.Joseph's MHSS was a transformative experience, particularly due to its outstanding sports coaching. The dedicated coaches and Ashok sir
-                  provided unwavering support and pushed me to excel, while also emphasizing the importance of resilience, and sportsmanship.
-                  Throughout my high school years, I was fortunate to win numerous prizes in athletics. These achievements were a direct result of the rigorous training,
-                  strategic guidance, and motivational leadership from my mentors. The school's facilities and resources were instrumental in helping me set records.
-                </p>
-                <p>Balancing academics and athletics at SJMHSS shaped me into a disciplined, goal-oriented individual. The lessons I learned on the field and in the
-                   classroom have had a lasting impact on my life.
-                    I am immensely grateful for the support and opportunities provided by SJMHSS, and I highly recommend it to any aspiring student-athlete.</p>
-
-
+                <h3<?= ed_field('testimonial', $t['id'], 'name_html') ?>><?= $t['name_html'] ?></h3>
+                <?php ed_rich('testimonial', $t['id'], 'body_html', $t['body_html']); ?>
             </div>
-            <div class="card card2">
-            <img class="quote-icon" src="/photos/quote.png" alt="quote icon">
-                <h3>Santhosh R.D, <br>Alumni</h3>
-                <p>As an alumnus of St. Joseph's Matric Higher Secondary School, my experience was truly transformative.
-                  The rigorous academics challenged me to exceed my own expectations, while the dedicated faculty provided
-                   invaluable support and mentorship. Beyond the classroom, the vibrant community fostered lasting friendships
-                    and essential professional connections.
-                </p>
-                <p> Participating in diverse extracurricular activities allowed me to explore my interests and develop new passions.
-                  Being involved in clubs and sports taught me critical skills like leadership, teamwork, and perseverance. The holistic
-                  education I received at St. Joseph's Matric Higher Secondary School equipped me with the knowledge and confidence to succeed
-                   in my career and personal life. I am incredibly grateful for the opportunities and experiences that shaped me during my time at St. Joseph's.</p>
-
-            </div>
-            <div class="card card3">
-            <img class="quote-icon" src="/photos/quote.png" alt="quote icon">
-                <h3>Aswin K, <br>Alumni<br></h3>
-                <p>Scoring 591 in the board exams is an achievement I am incredibly proud of, and it would not have been possible without the unwavering support
-                  of the management and teachers at St.Joseph's MHSS.The dedicated faculty members went above and beyond to ensure that we had a thorough understanding
-                  of the subjects. Their passion for teaching and commitment to our success were evident in every lesson, extra class, and individual guidance session.
-                  They always encouraged us to aim high and provided the tools and support needed to reach our goals.
-                </p>
-                <p>The school's management also played a crucial role in our academic journey. By fostering a conducive learning environment, providing excellent resources,
-                   and organizing various academic programs, they ensured that we were well-prepared for the exams.
-                    I am deeply grateful to my school for their support and dedication. This achievement is a testament to the hard work of both the
-                    students and the staff, and I highly recommend SJMHSS to anyone seeking a nurturing and high-quality educational experience.</p>
-
-
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
     <script>

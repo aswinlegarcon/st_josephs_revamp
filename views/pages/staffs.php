@@ -1,53 +1,41 @@
-<?php // Staffs page body (static content; becomes DB-driven in a later phase). Bootstrap 5 dialect. ?>
+<?php
+// Staffs page body — DB-driven since C3 (hero slides + three profile blocks).
+// Variables from public_html/staffs.php: $sj_page, $sj_hero_slides, $sj_blocks
+// (profiles keyed staff_love / staff_team / staff_tour).
+// The "We Love our Staffs" block is flanked by two photos; they are the
+// staff_team and staff_tour images (one image per profile row).
+$sj_love = $sj_blocks['staff_love'] ?? null;
+$sj_team = $sj_blocks['staff_team'] ?? null;
+$sj_tour = $sj_blocks['staff_tour'] ?? null;
+?>
 <!-- top carousel -->
 <section class="abt-carousel ">
 <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img class="d-block w-100" src="photos/staff1.jpg" alt="First slide">
-      <div class="carousel-caption text-start abt-carousel-reveal">
-          <h5>Our Staffs</h5>
-          <p>About Our Staffs</p>
-
+  <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add staffs slide') : '' ?>>
+    <?php foreach ($sj_hero_slides as $i => $s): ?>
+    <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'Staffs slide') ?>>
+      <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => ($i === 0 ? 'First' : 'Second') . ' slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
+      <div class="carousel-caption text-start<?= $i === 0 ? ' abt-carousel-reveal' : '' ?>">
+          <h5<?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
+          <p<?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
       </div>
     </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="photos/teachertour.jpg" alt="Second slide">
-      <div class="carousel-caption text-start">
-      <h5>Our Staffs</h5>
-          <p>About Our Staffs</p>
-      </div>
-    </div>
-
+    <?php endforeach; ?>
   </div>
 </div>
 </section>
 
 <!-- infrastructurement cards start -->
+<?php if ($sj_love): ?>
 <div class="infrastructure-container">
-    <img src="/photos/staff1.jpg" alt="Left Image" class="infrastructure-image">
+    <?= img_tag($sj_team['image'] ?? null, 'feature_4x3', ['alt' => 'Left Image', 'class' => 'infrastructure-image']) ?>
     <div class="infrastructure-text">
-        <h4 class="infrastructure-text-reveal">We Love our Staffs</h4>
-        <p>We are fortunate to have a dedicated and passionate team of 63 enthusiastic
-           and committed teachers, supported by a diligent group of 28 non-teaching
-           staff members. Our educators recognize that staying updated is crucial
-           for success in the ever-evolving field of education. To ensure they are
-           well-equipped with the latest teaching methodologies and pedagogical
-           strategies, our teachers actively participate in various professional
-           development opportunities. These include seminars, training sessions,
-            orientation classes, and workshops that cover a broad spectrum of
-            topics relevant to modern education..</p>
-        <p>Additionally, recognizing the importance of maintaining high levels of
-          motivation and energy, we organize an annual tour for our teachers. This
-          tour serves as an opportunity for them to relax, refresh, and recharge away
-          from the routine of school life. It fosters camaraderie and team spirit,
-          providing a perfect blend of professional development and personal
-          rejuvenation. By investing in our teachers' continuous growth and well-being
-          , we ensure that they remain inspired and capable of delivering the highest
-           quality education to our students.</p>
+        <h4 class="infrastructure-text-reveal"<?= ed_field('profile', $sj_love['id'], 'person_name') ?>><?= e($sj_love['person_name']) ?></h4>
+        <?php ed_rich('profile', $sj_love['id'], 'message_html', $sj_love['message_html']); ?>
     </div>
-    <img src="/photos/teachertour.jpg" alt="Right Image" class="infrastructure-image">
+    <?= img_tag($sj_tour['image'] ?? null, 'feature_4x3', ['alt' => 'Right Image', 'class' => 'infrastructure-image']) ?>
 </div>
+<?php endif; ?>
 
 
 
@@ -55,32 +43,26 @@
 <!-- new template -->
 <section class="newtemp-body">
 <div class="about-container">
+        <?php if ($sj_team): ?>
         <div class="about-section">
-            <img src="/photos/staff1.jpg" alt="Left Image" class="about-image">
+            <?= img_tag($sj_team['image'], 'feature_4x3', ['alt' => 'Left Image', 'class' => 'about-image', 'extra' => trim(ed_img('profile', $sj_team['id']))]) ?>
             <div class="about-content">
-                <h2 class="infrastructure-text-reveal">The Staffs</h2>
-                <p>We are fortunate to have a dedicated and passionate team of 63 enthusiastic
-           and committed teachers, supported by a diligent group of 28 non-teaching
-           staff members. Our educators recognize that staying updated is crucial
-           for success in the ever-evolving field of education.</p>
+                <h2 class="infrastructure-text-reveal"<?= ed_field('profile', $sj_team['id'], 'person_name') ?>><?= e($sj_team['person_name']) ?></h2>
+                <?php ed_rich('profile', $sj_team['id'], 'message_html', $sj_team['message_html']); ?>
 
               </div>
 
         </div>
+        <?php endif; ?>
+        <?php if ($sj_tour): ?>
         <div class="about-section">
             <div class="about-content">
-                <h2 class="infrastructure-text-reveal">The Staff Tour</h2>
-                <p>The school staff recently embarked on a rejuvenating trip to Coorg,
-                  a picturesque hill station in Karnataka known for its lush greenery and
-                  serene landscapes. The journey provided a much-needed break from their daily
-                   routines,
-                   allowing them to unwind and recharge amidst nature’s beauty.
-                     This trip not only refreshed their minds and bodies but also strengthened
-                      their camaraderie, making it a memorable and enriching experience for everyone
-                       involved</p>
+                <h2 class="infrastructure-text-reveal"<?= ed_field('profile', $sj_tour['id'], 'person_name') ?>><?= e($sj_tour['person_name']) ?></h2>
+                <?php ed_rich('profile', $sj_tour['id'], 'message_html', $sj_tour['message_html']); ?>
             </div>
-            <img src="/photos/teachertour.jpg" alt="Right Image" class="about-image">
+            <?= img_tag($sj_tour['image'], 'feature_4x3', ['alt' => 'Right Image', 'class' => 'about-image', 'extra' => trim(ed_img('profile', $sj_tour['id']))]) ?>
         </div>
+        <?php endif; ?>
 
     </div>
     </section>

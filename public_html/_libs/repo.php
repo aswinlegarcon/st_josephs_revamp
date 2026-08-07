@@ -45,43 +45,19 @@ function repo_attach_images(array $rows, string $fk = 'image_id'): array
     return $rows;
 }
 
-function repo_page(string $slug): ?array
-{
-    $st = db()->prepare('SELECT * FROM pages WHERE slug = ?');
-    $st->execute([$slug]);
-    return $st->fetch() ?: null;
-}
+/** SELECT fragment aliasing every images column as img_* (for one-query joins). */
+const SJ_IMG_SELECT = 'i.id AS img_id, i.legacy_path AS img_legacy_path,
+    i.original_name AS img_original_name, i.alt_text AS img_alt_text,
+    i.mime AS img_mime, i.width AS img_width, i.height AS img_height,
+    i.preset_key AS img_preset_key, i.crop_rect AS img_crop_rect,
+    i.version AS img_version, i.created_at AS img_created_at,
+    i.updated_at AS img_updated_at';
 
-function repo_hero_slides(int $pageId, bool $includeInactive = false): array
+/** Fold the img_* aliases of a joined row back into the 'image' sub-array. */
+function repo_fold_image(array $row): array
 {
-    $sql = 'SELECT * FROM hero_slides WHERE page_id = ?' . ($includeInactive ? '' : ' AND is_active = 1') . ' ORDER BY position, id';
-    $st = db()->prepare($sql);
-    $st->execute([$pageId]);
-    return repo_attach_images($st->fetchAll());
-}
-
-function repo_profile(string $roleKey): ?array
-{
-    // Profile + its image in ONE query (query budget). The img_* aliases are
-    // folded back into the same 'image' sub-array repo_attach_images builds.
-    $st = db()->prepare(
-        'SELECT p.*,
-                i.id AS img_id, i.legacy_path AS img_legacy_path,
-                i.original_name AS img_original_name, i.alt_text AS img_alt_text,
-                i.mime AS img_mime, i.width AS img_width, i.height AS img_height,
-                i.preset_key AS img_preset_key, i.crop_rect AS img_crop_rect,
-                i.version AS img_version, i.created_at AS img_created_at,
-                i.updated_at AS img_updated_at
-           FROM profiles p LEFT JOIN images i ON i.id = p.image_id
-          WHERE p.role_key = ?'
-    );
-    $st->execute([$roleKey]);
-    $row = $st->fetch();
-    if (!$row) {
-        return null;
-    }
     $image = null;
-    if ($row['img_id'] !== null) {
+    if (($row['img_id'] ?? null) !== null) {
         $image = [];
         foreach ($row as $k => $v) {
             if (strncmp($k, 'img_', 4) === 0) {
@@ -96,6 +72,40 @@ function repo_profile(string $roleKey): ?array
     }
     $row['image'] = $image;
     return $row;
+}
+
+function repo_page(string $slug): ?array
+{
+    $st = db()->prepare('SELECT * FROM pages WHERE slug = ?');
+    $st->execute([$slug]);
+    return $st->fetch() ?: null;
+}
+
+function repo_hero_slides(int $pageId, bool $includeInactive = false): array
+{
+    // Slides + their images in ONE query (query budget).
+    $sql = 'SELECT h.*, ' . SJ_IMG_SELECT . ' FROM hero_slides h LEFT JOIN images i ON i.id = h.image_id
+            WHERE h.page_id = ?' . ($includeInactive ? '' : ' AND h.is_active = 1') . ' ORDER BY h.position, h.id';
+    $st = db()->prepare($sql);
+    $st->execute([$pageId]);
+    return array_map('repo_fold_image', $st->fetchAll());
+}
+
+function repo_testimonials(bool $includeInactive = false): array
+{
+    $sql = 'SELECT * FROM testimonials' . ($includeInactive ? '' : ' WHERE is_active = 1') . ' ORDER BY position, id';
+    return db()->query($sql)->fetchAll();
+}
+
+function repo_profile(string $roleKey): ?array
+{
+    // Profile + its image in ONE query (query budget).
+    $st = db()->prepare(
+        'SELECT p.*, ' . SJ_IMG_SELECT . ' FROM profiles p LEFT JOIN images i ON i.id = p.image_id WHERE p.role_key = ?'
+    );
+    $st->execute([$roleKey]);
+    $row = $st->fetch();
+    return $row ? repo_fold_image($row) : null;
 }
 
 function repo_unique_features(bool $includeInactive = false): array

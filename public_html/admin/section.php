@@ -278,6 +278,70 @@ case 'aboutpage':
     <?php
     break;
 
+/* ================= STAFFS PAGE (C3) ================= */
+case 'staffspage':
+    $staffsPage   = repo_page('staffs');
+    $staffsSlides = $staffsPage ? repo_hero_slides((int)$staffsPage['id'], true) : [];
+    ?>
+    <p class="sj-lead">Everything on the <b>Staffs</b> page: the top photo carousel and the three text blocks.</p>
+
+    <h3 class="sj-form-legend">Top carousel</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Photos rotating at the top of the Staffs page.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$staffsPage['id']], 'Add staffs slide') ?>>＋ Add slide</button>
+    </div>
+    <div class="sj-list" data-list="hero_slide">
+      <?php foreach ($staffsSlides as $sl) {
+          panel_row([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'title'  => $sl['caption_title'] ?: '(no caption)',
+              'sub'    => $sl['caption_text'],
+              'active' => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+
+    <h3 class="sj-form-legend">Content blocks</h3>
+    <div class="sj-list">
+      <?php foreach (['staff_love' => 'We Love our Staffs (top block)', 'staff_team' => 'The Staffs', 'staff_tour' => 'The Staff Tour'] as $roleKey => $label) {
+          $b = repo_profile($roleKey);
+          if (!$b) { continue; }
+          panel_row([
+              'entity' => 'profile', 'id' => $b['id'],
+              'thumb'  => $b['image'] ? img_url($b['image'], 'feature_4x3') : null,
+              'title'  => $label,
+              'sub'    => $b['person_name'],
+          ]);
+      } ?>
+    </div>
+    <p class="sj-hint">The photos beside the top block are the images of "The Staffs" and
+       "The Staff Tour" — change those blocks' images to change all of them.</p>
+    <?php
+    break;
+
+/* ================= TESTIMONIALS (C3) ================= */
+case 'testimonials':
+    $rows = repo_testimonials(true);
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">The "Students Testimonial" cards on the Home page. Order here = order on the site;
+         the three background styles repeat automatically.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('testimonial', [], 'Add testimonial') ?>>＋ Add testimonial</button>
+    </div>
+    <div class="sj-list" data-list="testimonial">
+      <?php foreach ($rows as $t) {
+          panel_row([
+              'entity' => 'testimonial', 'id' => $t['id'],
+              'title'  => trim(strip_tags($t['name_html'])) ?: '(unnamed)',
+              'sub'    => mb_substr(trim(strip_tags($t['body_html'])), 0, 90) . '…',
+              'active' => (bool)$t['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is

@@ -23,6 +23,8 @@ function panel_sections(): array
         'hero'      => ['🎠', 'Hero Carousel'],
         'principal' => ['👤', 'Principal'],
         'aboutpage' => ['📖', 'About Page'],
+        'staffspage'   => ['🧑‍🏫', 'Staffs Page'],
+        'testimonials' => ['💬', 'Testimonials'],
         'unique'    => ['✨', "What's Unique"],
         'ticker'    => ['📣', 'News Ticker'],
         'updates'   => ['📺', 'New Updates'],
