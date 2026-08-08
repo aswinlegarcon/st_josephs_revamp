@@ -470,6 +470,32 @@ if (!$pdo->query('SELECT COUNT(*) FROM achievements')->fetchColumn()) {
     $out[] = 'achievements: seeded ' . count($achData['rows']);
 }
 
+/* ---------- Gallery albums (C9) ---------- */
+$galData = require __DIR__ . '/seed-data/gallery.php';
+uasort($galData, static fn ($a, $b) => ($a['hub_pos'] ?? 99) <=> ($b['hub_pos'] ?? 99));
+$insAlbum = $pdo->prepare('INSERT IGNORE INTO gallery_albums (slug, title, heading, card_sub, card_image_id, position) VALUES (?,?,?,?,?,?)');
+$albPos = 0;
+foreach ($galData as $slug => $G) {
+    $insAlbum->execute([$slug, $G['card_title'], $G['title'], $G['card_sub'], $G['card_image'] ? img_id_by_file($G['card_image']) : null, $albPos++]);
+    $aid = (int)$pdo->query('SELECT id FROM gallery_albums WHERE slug = ' . $pdo->quote($slug))->fetchColumn();
+    foreach ($G['years'] as $yi => $Y) {
+        $pdo->prepare('INSERT IGNORE INTO album_years (album_id, year_label, position) VALUES (?,?,?)')
+            ->execute([$aid, $Y['label'], $yi]);
+        $yid = (int)$pdo->query("SELECT id FROM album_years WHERE album_id = $aid AND year_label = " . $pdo->quote($Y['label']))->fetchColumn();
+        $c = $pdo->prepare("SELECT COUNT(*) FROM image_links WHERE owner_type = 'album_year' AND owner_id = ? AND role = 'photos'");
+        $c->execute([$yid]);
+        if (!$c->fetchColumn() && !empty($G['photos'][$Y['label']])) {
+            $st = $pdo->prepare("INSERT IGNORE INTO image_links (owner_type, owner_id, role, image_id, position) VALUES ('album_year', ?, 'photos', ?, ?)");
+            foreach ($G['photos'][$Y['label']] as $i => $img) {
+                $st->execute([$yid, img_id_by_file($img), $i]);
+            }
+        }
+    }
+}
+$out[] = 'gallery_albums: ' . $pdo->query('SELECT COUNT(*) FROM gallery_albums')->fetchColumn()
+       . ' albums, ' . $pdo->query('SELECT COUNT(*) FROM album_years')->fetchColumn() . ' years, '
+       . $pdo->query("SELECT COUNT(*) FROM image_links WHERE owner_type='album_year'")->fetchColumn() . ' photos';
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the

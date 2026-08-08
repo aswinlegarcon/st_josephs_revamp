@@ -22,9 +22,9 @@ final class Layout
         'academy',
         // C4 — the four section pages share views/pages/section.php
         'section',
-        // R1c — gallery pages (11)
-        'gal-alumni', 'gal-annual', 'gal-children', 'gal-expo', 'gal-expressionz',
-        'gal-grad', 'gal-independence', 'gal-sciexpo', 'gal-spach', 'gal-sports', 'gal-teacher',
+        // C9 — the 10 gallery albums share views/pages/album.php
+        // (gal-sciexpo 301s to gal-spach — bug 3)
+        'album',
     ];
 
     public static function render(string $page, array $data = []): void

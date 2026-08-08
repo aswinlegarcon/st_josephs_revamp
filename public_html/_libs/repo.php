@@ -202,6 +202,48 @@ function repo_achievements(string $type, bool $includeInactive = false): array
     return array_map('repo_fold_image', $st->fetchAll());
 }
 
+/** All gallery albums for the hub, with card images (C9). */
+function repo_albums(bool $includeInactive = false): array
+{
+    $sql = 'SELECT g.*, ' . SJ_IMG_SELECT . ' FROM gallery_albums g LEFT JOIN images i ON i.id = g.card_image_id'
+         . ($includeInactive ? '' : ' WHERE g.is_active = 1') . ' ORDER BY g.position, g.id';
+    return array_map('repo_fold_image', db()->query($sql)->fetchAll());
+}
+
+/** One album by slug with its years and every year's photos — three queries (C9). */
+function repo_album(string $slug, bool $includeInactive = false): ?array
+{
+    $st = db()->prepare('SELECT * FROM gallery_albums WHERE slug = ?');
+    $st->execute([$slug]);
+    $album = $st->fetch();
+    if (!$album) {
+        return null;
+    }
+    $sql = 'SELECT * FROM album_years WHERE album_id = ?' . ($includeInactive ? '' : ' AND is_active = 1') . ' ORDER BY position, id';
+    $st = db()->prepare($sql);
+    $st->execute([$album['id']]);
+    $years = $st->fetchAll();
+    if ($years) {
+        $ids = array_column($years, 'id');
+        $in  = implode(',', array_fill(0, count($ids), '?'));
+        $st = db()->prepare(
+            'SELECT l.owner_id, ' . SJ_IMG_SELECT . ' FROM image_links l JOIN images i ON i.id = l.image_id
+              WHERE l.owner_type = \'album_year\' AND l.role = \'photos\' AND l.owner_id IN (' . $in . ')
+              ORDER BY l.position, l.id'
+        );
+        $st->execute($ids);
+        $byYear = [];
+        foreach ($st->fetchAll() as $r) {
+            $byYear[(int)$r['owner_id']][] = repo_fold_image($r)['image'];
+        }
+        foreach ($years as &$y) {
+            $y['photos'] = $byYear[(int)$y['id']] ?? [];
+        }
+    }
+    $album['years'] = $years;
+    return $album;
+}
+
 /** Images linked to one owner collection (image_links), ordered — one query (M1). */
 function repo_linked_images(string $ownerType, int $ownerId, string $role = 'carousel'): array
 {

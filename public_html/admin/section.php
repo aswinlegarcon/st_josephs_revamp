@@ -593,6 +593,59 @@ case 'achievements':
     <?php
     break;
 
+/* ================= GALLERY ALBUMS (C9) ================= */
+case 'gallery':
+    $albums = repo_albums(true);
+    $curAlb = (int)($_GET['album'] ?? ($albums[0]['id'] ?? 0));
+    ?>
+    <div class="sj-tabs">
+      <?php foreach ($albums as $al): ?>
+      <a class="sj-btn <?= (int)$al['id'] === $curAlb ? 'sj-btn-primary' : 'sj-btn-ghost' ?>"
+         href="/admin/section.php?s=gallery&album=<?= (int)$al['id'] ?>"><?= e($al['title']) ?></a>
+      <?php endforeach; ?>
+    </div>
+    <?php foreach ($albums as $al): if ((int)$al['id'] !== $curAlb) { continue; } ?>
+    <h3 class="sj-form-legend">Album card (gallery hub)</h3>
+    <div class="sj-list">
+      <?php panel_row([
+          'entity' => 'gallery_album', 'id' => (int)$al['id'],
+          'thumb'  => $al['image'] ? img_url($al['image'], 'card_4x3') : null,
+          'title'  => $al['title'],
+          'sub'    => $al['card_sub'] . ' · /' . $al['slug'] . '.php',
+          'active' => (bool)$al['is_active'],
+      ]); ?>
+    </div>
+
+    <h3 class="sj-form-legend">Years & photos</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Each year has its own photo set (managed with 🖼️). The first year is the default filter.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('album_year', ['album_id' => (int)$al['id']], 'Add year') ?>>＋ Add year</button>
+    </div>
+    <div class="sj-list" data-list="album_year">
+      <?php
+      $full = repo_album($al['slug'], true);
+      foreach ($full['years'] as $Y) { ?>
+        <div class="sj-row<?= $Y['is_active'] ? '' : ' off' ?>" data-row="album_year:<?= (int)$Y['id'] ?>">
+          <div class="sj-row-main">
+            <b><?= e($Y['year_label']) ?></b>
+            <span><?= count($Y['photos']) ?> photos</span>
+          </div>
+          <?php if (!$Y['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
+          <div class="sj-row-actions">
+            <button class="sj-ico" title="Photos" <?= panel_photos_attr('album_year', (int)$Y['id'], 'photos', 'gallery_full', $al['title'] . ' — ' . $Y['year_label'] . ' photos') ?>>🖼️</button>
+            <button class="sj-ico" title="Edit" data-act="edit">✏️</button>
+            <button class="sj-ico" title="Move up" data-act="move" data-dir="-1">↑</button>
+            <button class="sj-ico" title="Move down" data-act="move" data-dir="1">↓</button>
+            <button class="sj-ico" title="<?= $Y['is_active'] ? 'Hide' : 'Show' ?>" data-act="toggle" data-active="<?= $Y['is_active'] ? 1 : 0 ?>"><?= $Y['is_active'] ? '👁️' : '🚫' ?></button>
+            <button class="sj-ico danger" title="Delete" data-act="del" data-confirm="Delete this year AND its photo list? The photos stay in the library.">🗑️</button>
+          </div>
+        </div>
+      <?php } ?>
+    </div>
+    <?php endforeach; ?>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is

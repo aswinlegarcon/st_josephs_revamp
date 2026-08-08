@@ -30,6 +30,7 @@ function panel_sections(): array
         'sports'       => ['🏅', 'Sports'],
         'facilities'   => ['🏗️', 'Infrastructure'],
         'achievements' => ['🏆', 'Achievements'],
+        'gallery'      => ['🖼️', 'Gallery Albums'],
         'unique'    => ['✨', "What's Unique"],
         'ticker'    => ['📣', 'News Ticker'],
         'updates'   => ['📺', 'New Updates'],

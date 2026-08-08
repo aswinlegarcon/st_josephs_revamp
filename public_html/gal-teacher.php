@@ -1,9 +1,17 @@
 <?php
-// gal-teacher gallery — thin controller (single-document BS5 layout).
+// gal-teacher — thin controller (shared album template, DB-driven since C9).
 require __DIR__ . '/_libs/load.php';
 
-\SJ\View\Layout::render('gal-teacher', [
+$sj_album = repo_album('gal-teacher', is_edit());
+if (!$sj_album) {
+    http_response_code(503);
+    exit('Album content not seeded.');
+}
+
+\SJ\View\Layout::render('album', [
     'title'     => "St.Joseph's MHSS, Ondipudur",
     'bodyClass' => 'gal-teacher',
-    'styles'    => [],
+    'styles'    => ['albums/gal-teacher'],
+    'sj_slug'   => 'gal-teacher',
+    'sj_album'  => $sj_album,
 ]);

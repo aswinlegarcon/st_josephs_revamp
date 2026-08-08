@@ -112,123 +112,27 @@
 </script>
 
 <!-- album card grid -->
+<?php
+// C9: the album cards render from gallery_albums (order = admin order).
+// Three cards per reveal-section, like the shipped page.
+foreach (array_chunk($sj_albums, 3) as $ri => $chunk): ?>
 <section class="gallery-card gallery-card-reveal">
   <div class="row mt-5">
+    <?php foreach ($chunk as $al): ?>
     <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/annualday12.jpg" class="card-img-top" alt="...">
+      <div class="card<?= empty($al['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('gallery_album', $al['id'], $al['card_title'] ?? $al['title']) ?>>
+        <?= img_tag($al['image'], 'card_4x3', ['class' => 'card-img-top', 'alt' => '...', 'extra' => trim(ed_img('gallery_album', $al['id'], 'card_image_id'))]) ?>
         <div class="card-body">
-          <h3 class="card-title">Annual Day</h3>
-          <p class="card-text">2023 &amp; 2024</p>
-          <a href="/gal-annual.php" class="btn btn-primary">More</a>
+          <h3 class="card-title"<?= ed_field('gallery_album', $al['id'], 'title') ?>><?= e($al['title']) ?></h3>
+          <p class="card-text"<?= ed_field('gallery_album', $al['id'], 'card_sub') ?>><?= e($al['card_sub']) ?></p>
+          <a href="/<?= e($al['slug']) ?>.php" class="btn btn-primary">More</a>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/sports.jpeg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Sports Day</h3>
-          <p class="card-text">2023 &amp; 2024 </p>
-          <a href="/gal-sports.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/indday1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Independence Day</h3>
-          <p class="card-text">2023 &amp; 2024</p>
-          <a href="/gal-independence.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
+    <?php endforeach; ?>
+  </div>
 </section>
-
-<!-- sec -2 -->
-<section class="gallery-card gallery-card-reveal2">
-  <div class="row mt-5">
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/childday1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Children's Day</h3>
-          <p class="card-text">2023</p>
-          <a href="/gal-children.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/teachday1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Teachers Day</h3>
-          <p class="card-text">2023</p>
-          <a href="/gal-teacher.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/expressday20.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Expressionz Day</h3>
-          <p class="card-text">2023</p>
-          <a href="/gal-expressionz.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-</section>
-
-<!-- sec-3 -->
-<section class="gallery-card gallery-card-reveal3">
-  <div class="row mt-5">
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/expo1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Science Expo</h3>
-          <p class="card-text">2023 &amp; 2024</p>
-          <a href="/gal-expo.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/gradday1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">KG Graduation</h3>
-          <p class="card-text">2023</p>
-          <a href="/gal-grad.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/alumni1.png" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Alumni</h3>
-          <p class="card-text">2023</p>
-          <a href="/gal-alumni.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-</section>
-
-<section class="gallery-card gallery-card-reveal3">
-  <div class="row mt-5">
-    <div class="col-md-4">
-      <div class="card">
-        <img src="/photos/spach14.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Sports Achivements</h3>
-          <p class="card-text">2023</p>
-          <a href="/gal-spach.php" class="btn btn-primary">More</a>
-        </div>
-      </div>
-    </div>
-</section>
+<?php endforeach; ?>
 
 <script>
     window.addEventListener('DOMContentLoaded', reveal);

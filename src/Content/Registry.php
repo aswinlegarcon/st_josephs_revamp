@@ -155,6 +155,24 @@ final class Registry
                     'is_active' => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
+            'gallery_album' => [
+                'table' => 'gallery_albums', 'orderable' => true, 'creatable' => false, 'deletable' => false,
+                'fields' => [
+                    'title'         => ['type' => 'text', 'max' => 100, 'label' => 'Hub-card title'],
+                    'heading'       => ['type' => 'text', 'max' => 100, 'label' => 'Album-page heading'],
+                    'card_sub'      => ['type' => 'text', 'max' => 60,  'label' => 'Hub-card sub-line (years)'],
+                    'card_image_id' => ['type' => 'image', 'preset' => 'card_4x3', 'label' => 'Hub-card photo'],
+                    'is_active'     => ['type' => 'bool', 'label' => 'Visible on the gallery hub'],
+                ],
+            ],
+            'album_year' => [
+                'table' => 'album_years', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'parent' => 'album_id',
+                'fields' => [
+                    'year_label' => ['type' => 'text', 'max' => 20, 'label' => 'Year label (e.g. 2025)'],
+                    'is_active'  => ['type' => 'bool', 'label' => 'Visible on site'],
+                ],
+            ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [

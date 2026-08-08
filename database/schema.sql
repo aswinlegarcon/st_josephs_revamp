@@ -326,6 +326,8 @@ CREATE TABLE IF NOT EXISTS gallery_albums (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   slug          VARCHAR(40) NOT NULL UNIQUE,
   title         VARCHAR(100) NOT NULL,
+  heading       VARCHAR(100) NOT NULL DEFAULT '',
+  card_sub      VARCHAR(60)  NOT NULL DEFAULT '',
   card_image_id INT UNSIGNED NULL,
   position      SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   is_active     TINYINT(1) NOT NULL DEFAULT 1,

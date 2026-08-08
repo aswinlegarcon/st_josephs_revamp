@@ -1,9 +1,6 @@
 <?php
-// gal-sciexpo gallery — thin controller (single-document BS5 layout).
-require __DIR__ . '/_libs/load.php';
-
-\SJ\View\Layout::render('gal-sciexpo', [
-    'title'     => "St.Joseph's MHSS, Ondipudur",
-    'bodyClass' => 'gal-spach',
-    'styles'    => [],
-]);
+// gal-sciexpo was an unlinked, stale copy of the Sports Achievements album
+// (its heading and styles are gal-spach's). Permanent redirect (C9, bug 3).
+http_response_code(301);
+header('Location: /gal-spach.php');
+exit;

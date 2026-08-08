@@ -1,9 +1,17 @@
 <?php
-// gal-annual gallery — thin controller (single-document BS5 layout).
+// gal-annual — thin controller (shared album template, DB-driven since C9).
 require __DIR__ . '/_libs/load.php';
 
-\SJ\View\Layout::render('gal-annual', [
+$sj_album = repo_album('gal-annual', is_edit());
+if (!$sj_album) {
+    http_response_code(503);
+    exit('Album content not seeded.');
+}
+
+\SJ\View\Layout::render('album', [
     'title'     => "St.Joseph's MHSS, Ondipudur",
     'bodyClass' => 'gal-annual',
-    'styles'    => [],
+    'styles'    => ['albums/gal-annual'],
+    'sj_slug'   => 'gal-annual',
+    'sj_album'  => $sj_album,
 ]);

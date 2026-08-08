@@ -22,6 +22,9 @@ $cards = [
         (int)db()->query('SELECT COUNT(*) FROM facilities')->fetchColumn() . ' facilities'],
     ['achievements', '🏆', 'Achievements', 'The zig-zag achievement and award lists.',
         (int)db()->query('SELECT COUNT(*) FROM achievements')->fetchColumn() . ' items'],
+    ['gallery', '🖼️', 'Gallery Albums', 'The photo albums — years, photo sets and hub cards.',
+        (int)db()->query('SELECT COUNT(*) FROM gallery_albums')->fetchColumn() . ' albums · ' .
+        (int)db()->query("SELECT COUNT(*) FROM image_links WHERE owner_type='album_year'")->fetchColumn() . ' photos'],
     ['unique',    '✨', "What's Unique",  'The ESC / Language Academies feature blocks.',
         (int)db()->query('SELECT COUNT(*) FROM unique_features')->fetchColumn() . ' blocks'],
     ['ticker',    '📣', 'News Ticker',    'The scrolling announcement bar with links.',
