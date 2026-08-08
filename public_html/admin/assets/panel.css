@@ -214,3 +214,10 @@ input:focus, select:focus, textarea:focus, .sj-rich:focus { outline: none; borde
 .sj-phototile.sj-dragging { opacity: .45; }
 .sj-photo-x { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%; border: none; background: rgba(18,35,63,.75); color: #fff; font-size: 15px; line-height: 1; cursor: pointer; }
 .sj-photo-x:hover { background: firebrick; }
+
+/* ---------- M3: crop UI ---------- */
+.sj-crophost { margin-top: 12px; }
+.sj-cropimg { max-width: 100%; max-height: 420px; display: block; }
+.sj-pick { position: relative; }
+.sj-recrop { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(18,35,63,.8); color: #fff; cursor: pointer; font-size: 14px; line-height: 1; }
+.sj-recrop:hover { background: var(--blue, #2b4b8a); }

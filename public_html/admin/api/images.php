@@ -6,7 +6,7 @@ $q    = trim((string)($_GET['q'] ?? ''));
 $page = max(0, (int)($_GET['page'] ?? 0));
 $per  = 24;
 
-$sql  = 'SELECT id, legacy_path, original_name, alt_text, mime, preset_key, version FROM images';
+$sql  = 'SELECT id, legacy_path, original_name, alt_text, mime, preset_key, crop_rect, width, height, version FROM images';
 $args = [];
 if ($q !== '') {
     $sql .= ' WHERE legacy_path LIKE ? OR original_name LIKE ?';
@@ -34,6 +34,17 @@ foreach ($rows as $r) {
         }
         $label = $r['original_name'] ?: ('upload #' . $r['id']);
     }
-    $items[] = ['id' => (int)$r['id'], 'thumb' => $thumb, 'label' => $label];
+    $isLegacy = !empty($r['legacy_path']);
+    $items[] = [
+        'id'         => (int)$r['id'],
+        'thumb'      => $thumb . ($isLegacy ? '' : '?v=' . (int)$r['version']),
+        'label'      => $label,
+        'legacy'     => $isLegacy,
+        'preset_key' => $r['preset_key'],
+        'crop_rect'  => $r['crop_rect'],
+        'w'          => (int)$r['width'],
+        'h'          => (int)$r['height'],
+        'orig'       => $isLegacy ? null : '/media/' . $r['id'] . '/original.' . sj_ext_for_mime((string)$r['mime']),
+    ];
 }
 api_out(['items' => $items, 'hasMore' => $hasMore]);

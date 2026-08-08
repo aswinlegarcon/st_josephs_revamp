@@ -220,7 +220,6 @@ case 'marks':
 
 /* ================= MEDIA LIBRARY ================= */
 case 'media':
-    $presets = db()->query('SELECT preset_key, label FROM image_presets ORDER BY preset_key')->fetchAll();
     ?>
     <div class="sj-section-head">
       <p class="sj-lead">Every image available to the website — the original photo collection plus your uploads.
@@ -230,7 +229,6 @@ case 'media':
     <input type="text" id="sj-media-search" class="sj-search" placeholder="Search images by file name…">
     <div class="sj-grid" id="sj-media-grid"></div>
     <button class="sj-btn sj-btn-ghost sj-more" id="sj-media-more">Load more</button>
-    <script>window.SJ_PRESETS = <?= json_encode($presets, JSON_UNESCAPED_SLASHES) ?>;</script>
     <?php
     break;
 

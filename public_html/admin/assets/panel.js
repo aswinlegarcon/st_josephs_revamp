@@ -37,6 +37,16 @@
     });
   }
 
+  /* ---------------- preset metadata (M3, CSP-safe via body data-attr) ------ */
+  var SJ_PRESETS = [];
+  try { SJ_PRESETS = JSON.parse(document.body.getAttribute('data-sj-presets') || '[]'); } catch (e) {}
+  function presetMeta(key) {
+    for (var i = 0; i < SJ_PRESETS.length; i++) {
+      if (SJ_PRESETS[i].preset_key === key) return SJ_PRESETS[i];
+    }
+    return null;
+  }
+
   /* ---------------- modal scaffolding ---------------- */
   function openModal(title) {
     var ov = el('div', 'sj-overlay');
@@ -180,10 +190,10 @@
         tUp.className = 'on'; tLib.className = '';
         pane.innerHTML = '';
         var chosenPreset = preset;
-        if (opts.presetChoice && window.SJ_PRESETS) {
+        if (opts.presetChoice && SJ_PRESETS.length) {
           pane.appendChild(el('label', '', 'Crop shape (where will this image be used?)'));
           var sel = document.createElement('select');
-          window.SJ_PRESETS.forEach(function (p) {
+          SJ_PRESETS.forEach(function (p) {
             var o = el('option', '', esc(p.label));
             o.value = p.preset_key;
             sel.appendChild(o);
@@ -199,9 +209,30 @@
         pane.appendChild(el('label', '', 'Description (optional)'));
         var alt = document.createElement('input'); alt.type = 'text';
         pane.appendChild(alt);
+        // M3: crop stage — appears once a file is chosen (cover-shape presets only)
+        var cropHost = el('div', 'sj-crophost');
+        pane.appendChild(cropHost);
+        var cropper = null;
+        function mountCropper() {
+          var meta = presetMeta(chosenPreset);
+          if (cropper) { cropper.destroy(); cropper = null; }
+          cropHost.innerHTML = '';
+          if (!file.files.length || !window.Cropper || !meta || meta.mode !== 'cover' || !meta.aspect_w) return;
+          cropHost.appendChild(el('label', '', '✂️ Choose the crop (locked to the slot shape)'));
+          var img = document.createElement('img');
+          img.className = 'sj-cropimg';
+          img.src = URL.createObjectURL(file.files[0]);
+          cropHost.appendChild(img);
+          cropper = new Cropper(img, {
+            aspectRatio: meta.aspect_w / meta.aspect_h,
+            viewMode: 1, autoCropArea: 1, movable: false, zoomable: false, rotatable: false, scalable: false
+          });
+        }
+        file.addEventListener('change', mountCropper);
+        pane.querySelectorAll('select').forEach(function (s) { s.addEventListener('change', mountCropper); });
         pane.appendChild(el('div', 'sj-upnote',
-          '✂️ Uploads are <b>auto-cropped</b> to the exact shape this spot needs and lightly ' +
-          '<b>compressed</b> (JPEG + WebP) — cards and slides always stay uniform and fast.'));
+          '✂️ Uploads are <b>cropped to the exact shape this spot needs</b> (drag the box above to choose ' +
+          'what stays) and lightly <b>compressed</b> (JPEG + WebP) — cards and slides always stay uniform and fast.'));
         var go = el('button', 'sj-btn sj-btn-primary', 'Upload'); go.type = 'button';
         go.style.marginTop = '14px';
         pane.appendChild(go);
@@ -212,6 +243,10 @@
           fd.append('file', file.files[0]);
           fd.append('preset', chosenPreset || '');
           fd.append('alt', alt.value);
+          if (cropper) {
+            var d = cropper.getData(true); // natural-size coordinates, rounded
+            fd.append('crop_rect', Math.max(0, d.x) + ',' + Math.max(0, d.y) + ',' + d.width + ',' + d.height);
+          }
           fetch('/admin/api/index.php?r=upload', { method: 'POST', headers: { 'X-CSRF-Token': CSRF }, body: fd })
             .then(function (r) { return r.json(); })
             .then(function (j) {
@@ -564,6 +599,40 @@
     var mSearch = document.getElementById('sj-media-search');
     var mMore = document.getElementById('sj-media-more');
     var mPage = 0, mQ = '';
+    /* M3: re-crop an uploaded image — Cropper primed with the stored rect. */
+    function openRecrop(it) {
+      var meta = presetMeta(it.preset_key);
+      if (!meta || meta.mode !== 'cover' || !window.Cropper) { toast('This image has no crop shape', true); return; }
+      var M = openModal('✂️ Re-crop — ' + it.label);
+      var img = document.createElement('img');
+      img.className = 'sj-cropimg';
+      img.src = it.orig;
+      M.body.appendChild(img);
+      var save = el('button', 'sj-btn sj-btn-primary', '💾 Save crop'); save.type = 'button';
+      M.foot.appendChild(save);
+      var initial;
+      if (it.crop_rect) {
+        var p = it.crop_rect.split(',').map(Number);
+        initial = { x: p[0], y: p[1], width: p[2], height: p[3] };
+      }
+      var cr = new Cropper(img, {
+        aspectRatio: meta.aspect_w / meta.aspect_h,
+        viewMode: 1, autoCropArea: 1, movable: false, zoomable: false, rotatable: false, scalable: false,
+        data: initial,
+        ready: function () { if (initial) cr.setData(initial); }
+      });
+      save.addEventListener('click', function () {
+        var d = cr.getData(true);
+        save.disabled = true;
+        api('recrop.php', { image_id: it.id, crop_rect: Math.max(0, d.x) + ',' + Math.max(0, d.y) + ',' + d.width + ',' + d.height })
+          .then(function () {
+            toast('Re-cropped ✔ — every page shows the new crop');
+            cr.destroy(); M.close(); loadMedia(true);
+          })
+          .catch(function (err) { toast(err.message, true); save.disabled = false; });
+      });
+    }
+
     function loadMedia(reset) {
       if (reset) { mediaGrid.innerHTML = ''; mPage = 0; }
       fetch('/admin/api/index.php?r=images&q=' + encodeURIComponent(mQ) + '&page=' + mPage)
@@ -572,6 +641,11 @@
           j.items.forEach(function (it) {
             var d = el('div', 'sj-pick');
             d.innerHTML = '<img loading="lazy" src="' + esc(it.thumb) + '"><span>' + esc(it.label) + '</span>';
+            if (!it.legacy && it.preset_key) {
+              var rc = el('button', 'sj-recrop', '✂️'); rc.type = 'button'; rc.title = 'Re-crop';
+              rc.addEventListener('click', function (e) { e.stopPropagation(); openRecrop(it); });
+              d.appendChild(rc);
+            }
             mediaGrid.appendChild(d);
           });
           mMore.style.display = j.hasMore ? '' : 'none';

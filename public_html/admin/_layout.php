@@ -83,8 +83,11 @@ function panel_header(string $active, string $title): void
 <link rel="icon" href="/photos/logo-main.png" type="image/x-icon">
 <meta name="sj-csrf" content="<?= e(csrf_token()) ?>">
 <link rel="stylesheet" href="/admin/assets/panel.css?v=<?= SJ_ASSET_VER ?>">
+<link rel="stylesheet" href="/admin/assets/cropper/cropper.min.css?v=<?= SJ_ASSET_VER ?>">
 </head>
-<body class="sj-panel">
+<?php // data-sj-presets: preset metadata for panel.js (CSP-safe — no inline scripts).
+$__presets = db()->query('SELECT preset_key, label, max_w, max_h, aspect_w, aspect_h, mode FROM image_presets ORDER BY preset_key')->fetchAll(); ?>
+<body class="sj-panel" data-sj-presets='<?= str_replace("'", "&#39;", json_encode($__presets, JSON_UNESCAPED_SLASHES)) ?>'>
 <aside class="sj-side">
   <div class="sj-side-brand">
     <img src="/photos/logo-main.png" alt="">
@@ -121,6 +124,7 @@ function panel_footer(): void
     ?>
   </div>
 </main>
+<script src="/admin/assets/cropper/cropper.min.js?v=<?= SJ_ASSET_VER ?>" defer></script>
 <script src="/admin/assets/panel.js?v=<?= SJ_ASSET_VER ?>" defer></script>
 </body>
 </html>
