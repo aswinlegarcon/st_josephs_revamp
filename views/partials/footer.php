@@ -14,7 +14,7 @@ $sj_f_copy    = repo_setting('footer_copyright', "© 2024 St.Joseph's MHSS, Ondi
   <div class="container">
     <div class="footer-sections">
       <div class="footer-column">
-        <h4>Useful Links</h4>
+        <h2>Useful Links</h2>
         <ul>
           <li><a href="/index.php">Home</a></li>
           <li><a href="/about.php">About</a></li>
@@ -22,7 +22,7 @@ $sj_f_copy    = repo_setting('footer_copyright', "© 2024 St.Joseph's MHSS, Ondi
         </ul>
       </div>
       <div class="footer-column">
-        <h4>School Timings</h4>
+        <h2>School Timings</h2>
         <ul>
           <li>Morning : <?= e($sj_f_morning) ?></li>
           <li>Lunch : <?= e($sj_f_lunch) ?></li>
@@ -30,14 +30,14 @@ $sj_f_copy    = repo_setting('footer_copyright', "© 2024 St.Joseph's MHSS, Ondi
         </ul>
       </div>
       <div class="footer-column">
-        <h4>Contact Us</h4>
+        <h2>Contact Us</h2>
         <ul>
           <li><i class="fa-solid fa-phone"></i>   <?= e($sj_f_phone) ?></li>
           <li class="mail"><i class="fa-solid fa-envelope"></i>   <?= e($sj_f_email) ?></li>
         </ul>
       </div>
       <div class="footer-column social-media">
-        <h4>Stay Connected</h4>
+        <h2>Stay Connected</h2>
         <div class="social-media-icons">
           <a href="<?= e($sj_f_yt) ?>" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
           <a href="<?= e($sj_f_fb) ?>" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>

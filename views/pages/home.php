@@ -65,7 +65,7 @@ $__pp = dirname(__DIR__) . '/partials';
 <!-- new template -->
 <section class="newtemp-body">
   <div class="new-temp-text">
-    <h3>What's Unique?</h3>
+    <h2>What's Unique?</h2>
   </div>
 <div class="newtemp-about-container"<?= ed_add('unique_feature', [], "Add \"What's Unique\" block") ?>>
         <?php foreach ($sj_features as $fi => $f): ?>

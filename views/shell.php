@@ -32,6 +32,14 @@ $showJumbotron = $showJumbotron ?? false;
   <?php foreach ($styles as $css): ?>
   <link rel="stylesheet" href="/css/<?= e($css) ?>.css?v=<?php echo SJ_ASSET_VER; ?>">
   <?php endforeach; ?>
+  <?php // Dynamic per-page CSS built from DB data (academy/facility backgrounds).
+        // The page view sets $sjHeadCss (Layout shares its scope with this shell);
+        // a head <style> is valid HTML where the old body <style> was not (R3).
+        if (!empty($sjHeadCss)): ?>
+  <style>
+<?= $sjHeadCss ?>
+  </style>
+  <?php endif; ?>
   <?php if (is_admin()): // O1 overlay — admins only; visitors get zero admin bytes ?>
   <meta name="sj-csrf" content="<?= e(csrf_token()) ?>">
   <link rel="stylesheet" href="/css/admin.css?v=<?php echo SJ_ASSET_VER; ?>">

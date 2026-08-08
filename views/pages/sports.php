@@ -41,14 +41,14 @@ $sj_words = ['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten
               <div class="accordion-main" id="accordion-<?= $n + 1 ?>">
                 <div class="accordion-card">
                 <div class="card-header" id="heading<?= e($word) ?>">
-                <h5 class="mb-0">
+                <h4 class="mb-0">
                     <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapse<?= e($word) ?>" aria-expanded="true" aria-controls="collapse<?= e($word) ?>">
                     Read More
                     </button>
-                </h5>
+                </h4>
                 </div>
 
-                <div id="collapse<?= e($word) ?>" class="collapse" aria-labelledby="heading<?= e($word) ?>" data-bs-parent="#accordion-<?= $n + 1 ?>">
+                <div id="collapse<?= e($word) ?>" class="collapse" data-bs-parent="#accordion-<?= $n + 1 ?>">
                 <div class="card-body">
                 <?php ed_rich('sport', $S['id'], 'details_html', $S['details_html']); ?>
 

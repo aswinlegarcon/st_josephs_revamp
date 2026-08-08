@@ -85,7 +85,7 @@ $pageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'index'")->fetchCo
 /* ---------- 4. Hero slides (7, from _templates/carousel.php) ---------- */
 $count = $pdo->query("SELECT COUNT(*) FROM hero_slides WHERE page_id = $pageId")->fetchColumn();
 if (!$count) {
-    $slides = ['sportsday20.jpg', 'sports.jpeg', 'ann3.jpg', 'expressday1.jpg', 'sportsday40.jpg', 'carosel1.jpg', 'kg-boys.jpg'];
+    $slides = ['sportsday20.jpg', 'sports.jpeg', 'ann3.jpg', 'expressday1.jpg', 'sportsday40.jpg', 'carousel1.jpg', 'kg-boys.jpg'];
     $st = $pdo->prepare('INSERT INTO hero_slides (page_id, image_id, caption_title, caption_text, button_label, button_url, position) VALUES (?,?,?,?,?,?,?)');
     foreach ($slides as $i => $file) {
         $st->execute([$pageId, img_id_by_file($file), "St.Joseph's",
@@ -523,6 +523,43 @@ foreach ($settings as $k => $v) {
     $newSet += $insSet->rowCount();
 }
 $out[] = "settings: +$newSet newly seeded";
+
+/* ---------- R3 fixups: bug-14 typos + the carosel1.jpg filename ----------
+   Idempotent by construction: REPLACE() only changes rows still carrying the
+   old text, so a re-run is a no-op. Applied to EXISTING databases (the
+   seed-data files above only feed fresh/empty ones). Sanctioned visible-text
+   corrections per PHASES.md R3. */
+$fixups = [
+    ["UPDATE hero_slides SET caption_title = REPLACE(caption_title, 'Higer Secondary', 'Higher Secondary') WHERE caption_title LIKE '%Higer Secondary%'"],
+    ["UPDATE gallery_albums SET title = 'Annual Day' WHERE slug = 'gal-annual' AND title = 'annual Day'"],
+    ["UPDATE gallery_albums SET heading = 'Annual Day' WHERE slug = 'gal-annual' AND heading = 'annual Day'"],
+    ["UPDATE gallery_albums SET title = 'Sports Achievements' WHERE slug = 'gal-spach' AND title = 'Sports Achivements'"],
+    ["UPDATE academies SET body_html = REPLACE(body_html, 'Creativness', 'Creativeness') WHERE body_html LIKE '%Creativness%'"],
+];
+$fixed = 0;
+foreach ($fixups as [$sql]) {
+    $fixed += $pdo->exec($sql);
+}
+// carosel1.jpg → carousel1.jpg: the photo-scan above may already have inserted
+// a fresh (unreferenced) row for the renamed file — remove it, then rename the
+// original row so every FK that points at it keeps working.
+$old = $pdo->query("SELECT id FROM images WHERE legacy_path = '/photos/carosel1.jpg'")->fetchColumn();
+if ($old) {
+    $dup = $pdo->query("SELECT id FROM images WHERE legacy_path = '/photos/carousel1.jpg'")->fetchColumn();
+    if ($dup) {
+        $used = 0;
+        foreach (['SELECT COUNT(*) FROM hero_slides WHERE image_id = ?', 'SELECT COUNT(*) FROM image_links WHERE image_id = ?'] as $q) {
+            $st = $pdo->prepare($q);
+            $st->execute([$dup]);
+            $used += (int)$st->fetchColumn();
+        }
+        if ($used === 0) {
+            $pdo->prepare('DELETE FROM images WHERE id = ?')->execute([$dup]);
+        }
+    }
+    $fixed += $pdo->exec("UPDATE images SET legacy_path = '/photos/carousel1.jpg' WHERE legacy_path = '/photos/carosel1.jpg'");
+}
+$out[] = "R3 typo fixups: $fixed row(s) corrected";
 
 /* ---------- Summary ---------- */
 $counts = [];

@@ -1,56 +1,11 @@
 <?php // Site navigation — clean Bootstrap 5 fragment (no nested document).
-// STYLING RULE (CLAUDE.md): this <style> is a VERBATIM copy of the original
-// _templates/navbar.php styling. Do not "improve", tidy, or re-value any rule
-// here — the page must render pixel-identical to the pre-revamp site. Only the
-// HTML dialect (data-bs-*, ms-auto/me-auto) and the dead-link fix are allowed to
-// differ, because those are functional/code changes, not visual ones. ?>
-<style>
-  /* Site-wide base font — the original navbar carried this global rule, so it
-     applied to every page. Restored here so converted pages keep League Spartan. */
-  * { font-family: "League Spartan", sans-serif; font-weight: 400; }
-
-  body { margin: 0; font-family: Arial, sans-serif; }
-
-  /* NOTE: the original value is `linear( ... )` — an INVALID CSS function. The
-     browser therefore IGNORES this declaration and the navbar keeps Bootstrap's
-     .bg-light (light grey). That grey is the intended production look. Do NOT
-     "correct" this to linear-gradient() — doing so introduces a navy gradient and
-     changes the design. Kept verbatim from the original site on purpose. */
-  .navbar {
-    background: linear( #2b4b8a 20%, #ffffff 70%);
-    border-bottom: 3px solid transparent;
-    border-image: linear-gradient(90deg, rgba(2,0,36,0) 0%, #2a4ac6 50%, rgba(0,212,255,0) 100%);
-    border-image-slice: 1;
-  }
-
-  .sticky {
-    position: fixed !important;
-    top: 0 !important;
-    width: 100% !important;
-    z-index: 1000 !important;
-    background-color: white;
-  }
-
-  .nav-item a { font-size: 19px; word-spacing: 10px; color: black !important; }
-  .nav-item a:hover { color: #2b4b8a !important; }
-
-  .navbar-brand .img-1 { width: 95px; height: 114px; }
-
-  @media (max-width: 460px) {
-    .navbar-brand .img-1 { width: 85px; height: 100px; }
-    .logo1 img { width: 180px; height: 40px; }
-    .logo-text { font-size: 14px; }
-    .navbar-nav { font-size: 17px; }
-    .navbar-nav .dropdown-menu { font-size: 16px; }
-  }
-  @media (max-width: 400px) {
-    .navbar-brand .img-1 { width: 70px; height: 85px; }
-    .logo1 img { width: 150px; height: 30px; }
-    .logo-text { font-size: 11px; }
-    .navbar-nav { font-size: 15px; }
-    .navbar-nav .dropdown-menu { font-size: 14px; }
-  }
-</style>
+// STYLING RULE (CLAUDE.md): the styles live VERBATIM in /css/partials/navbar.css
+// (a body <link rel=stylesheet> is valid HTML where a body <style> is not — R3;
+// same document position, so the cascade is unchanged). The famous invalid
+// `background: linear(…)` quirk is preserved there as a comment — see the note.
+// R3 validation: the dropdowns' aria-labelledby was dropped (invalid on a plain
+// <div>, and inert for assistive tech there — Bootstrap 5.2+ dropped it too). ?>
+<link rel="stylesheet" href="/css/partials/navbar.css?v=<?php echo SJ_ASSET_VER; ?>">
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/index.php">
@@ -72,7 +27,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navAboutDropdown" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">About</a>
-        <div class="dropdown-menu" aria-labelledby="navAboutDropdown">
+        <div class="dropdown-menu">
           <a class="dropdown-item" href="/about.php">Our School</a>
           <a class="dropdown-item" href="/staffs.php">Our Staffs</a>
         </div>
@@ -83,7 +38,7 @@
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navCurriculumDropdown" role="button"
            data-bs-toggle="dropdown" aria-expanded="false">Curriculum</a>
-        <div class="dropdown-menu" aria-labelledby="navCurriculumDropdown">
+        <div class="dropdown-menu">
           <a class="dropdown-item" href="/academics.php">Academics</a>
           <a class="dropdown-item" href="/co-curriculum.php">Co-Curriculum</a>
           <a class="dropdown-item" href="/sports.php">Sports</a>

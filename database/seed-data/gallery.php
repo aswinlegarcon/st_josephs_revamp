@@ -3,7 +3,7 @@
 return array (
   'gal-annual' => 
   array (
-    'title' => 'annual Day',
+    'title' => 'Annual Day',
     'years' => 
     array (
       0 => 
@@ -496,7 +496,7 @@ return array (
       ),
     ),
     'card_image' => 'spach14.jpg',
-    'card_title' => 'Sports Achivements',
+    'card_title' => 'Sports Achievements',
     'card_sub' => '2023',
     'hub_pos' => 9,
   ),

@@ -1,247 +1,20 @@
 <?php // "New Updates" carousel — clean Bootstrap 5 fragment (no nested document).
 // Parametrized: $sj_updates comes from the page controller.
-// The <style> and the reveal <script> are VERBATIM from _templates/new-updates.php
-// — do not tidy. Only the carousel dialect is translated (data-bs-*, indicator
-// buttons, visually-hidden), which is a code change, not a visual one. ?>
-<style>
-    :root {
-  --primaryblue: #2b4b8a;
-  --secondaryblue: #1a355d;
-  --gold: #ffd700;
-  --white: white;
-  --black: black;
-  --maroon: firebrick;
-}
-
-.update {
-  margin: auto;
-  padding-bottom: 100px;
-}
-
-.update-text h5 {
-  font-family: "Fjalla One", sans-serif !important;
-  text-align: center;
-  font-size: 55px;
-  font-weight: 600;
-  margin: 50px;
-}
-
-.update-carousel {
-  box-sizing: border-box;
-  height: 70%;
-  width: 90%;
-  align-items: center;
-  margin: auto;
-
-  border-radius: 60px;
-  overflow: hidden;
-}
-
-.update-carousel-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.5)
-  );
-  z-index: 1;
-}
-/* animation */
-.reveal-update {
-  transition: 1.2s;
-  transform: translateY(50px);
-  opacity: 0;
-}
-
-.reveal-update.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.update-carousel-item img {
-  height: 100%;
-  width: 100%;
-  position: relative;
-  z-index: 0;
-}
-.upd .update-carousel-caption {
-  top: 38%;
-}
-
-.update-carousel-caption h5 {
-  font-family: "Fjalla One", sans-serif !important;
-  color: #ffd700;
-  font-size: 80px;
-  font-weight: 700;
-}
-
-.update-carousel-caption p {
-  font-family: "LeagueSpartan", sans-serif !important;
-
-  font-size: 18px;
-  top: 2rem;
-}
-
-.update-slider-btn {
-  margin-top: 30px;
-}
-
-.update-slider-btn .btn {
-  background-color: none;
-  color: #fff;
-
-  font-size: 20px;
-  transition: 0.5s;
-}
-
-.update-slider-btn .btn:hover {
-  color: #fff;
-  background: linear-gradient(to left, #2b4b8a, #1a355d) !important;
-  color: var(--white);
-}
-
-@media (max-width: 1200px) {
-  .update-carousel {
-    width: 90%;
-    height: 90%;
-  }
-
-  .update-carousel-item img {
-    height: 600px;
-    width: 1100px;
-  }
-
-  .update-carousel-caption h5 {
-    font-size: 70px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 15px;
-    top: 2rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 30px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 17px;
-  }
-}
-
-@media (max-width: 768px) {
-  .update-carousel {
-    width: 90%;
-    height: 90%;
-  }
-
-  .update-carousel-caption {
-    top: 40%;
-  }
-
-  .update-carousel-caption h5 {
-    font-size: 55px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 12px;
-    top: 2rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 15px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 600px) {
-  .update-carousel-caption {
-    top: 42%;
-  }
-
-  .update-carousel-caption h5 {
-    font-size: 60px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 12px;
-    top: 1rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 10px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.3rem 2rem;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 500px) {
-  .update-text h5 {
-    font-size: 35px;
-  }
-  .update-carousel-caption {
-    top: 40%;
-  }
-
-  .update-carousel-caption h5 {
-    font-size: 35px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 11px;
-    top: 1rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 8px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.4rem 2rem;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 370px) {
-  .update-carousel-caption h5 {
-    font-size: 30px;
-    font-weight: 700;
-  }
-
-  .update-slider-btn {
-    margin-top: 1px;
-  }
-
-  .update-carousel-caption p {
-    top: 0.5rem;
-  }
-}
-
-  </style>
+// Styles live VERBATIM in /css/partials/new-updates.css (body link = valid
+// HTML, same cascade position — R3). Only the carousel dialect is translated
+// (data-bs-*, indicator buttons, visually-hidden), a code change, not visual.
+// R3 validation: the slide link's inner <button> became <span class="btn btn-1">
+// (a button may not sit inside an <a>); Bootstrap's .btn styling is class-based
+// and its reboot gives button/span identical inherited fonts, so it renders
+// the same — the anchor itself stays the clickable element, as before. ?>
+<link rel="stylesheet" href="/css/partials/new-updates.css?v=<?php echo SJ_ASSET_VER; ?>">
 
 <!-- Carousel Starts -->
  <section class="update ">
  <div class="update-text">
-    <h5 class="reveal-update">
+    <h3 class="reveal-update">
         New Updates
-    </h5>
+    </h3>
  </div>
  <div class="update-carousel">
 
@@ -258,11 +31,11 @@
       <div class="carousel-item update-carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($u['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('update_slide', $u['id'], 'Update slide') ?>>
         <?= img_tag($u['image'], 'update_16x9', ['class' => 'd-block', 'alt' => 'Update slide', 'extra' => trim(ed_img('update_slide', $u['id']))]) ?>
         <div class="carousel-caption update-carousel-caption">
-          <h5<?= ed_field('update_slide', $u['id'], 'title') ?>><?= e($u['title']) ?></h5>
+          <h4<?= ed_field('update_slide', $u['id'], 'title') ?>><?= e($u['title']) ?></h4>
           <p<?= ed_field('update_slide', $u['id'], 'subtitle') ?>><?= e($u['subtitle']) ?></p>
           <?php if (!empty($u['link_url'])): ?>
           <a href="<?= e($u['link_url']) ?>" target="_blank" class="slider-btn update-slider-btn">
-            <button class="btn btn-1"<?= ed_field('update_slide', $u['id'], 'link_label') ?>><?= e($u['link_label']) ?></button>
+            <span class="btn btn-1"<?= ed_field('update_slide', $u['id'], 'link_label') ?>><?= e($u['link_label']) ?></span>
           </a>
           <?php endif; ?>
         </div>
@@ -279,6 +52,11 @@
     </button>
   </div>
 
+</div>
+<?php /* R3: the shipped markup never closed .update-carousel — the parser
+         recovered by closing it here at </section>, so this explicit close
+         reproduces the exact same DOM (controls stay inside .carousel-inner,
+         as the browser always parsed them). */ ?>
 </div>
 </section>
 

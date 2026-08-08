@@ -14,7 +14,7 @@ $sj_container = str_replace('gal-', 'gal-', $sj_slug) . '-container';
     <h1<?= ed_field('gallery_album', $sj_album['id'], 'heading') ?>><?= e($sj_album['heading']) ?></h1>
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group"<?= ed_add('album_year', ['album_id' => (int)$sj_album['id']], 'Add year') ?>>
         <?php foreach ($sj_album['years'] as $yi => $Y): ?>
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio<?= e($Y['year_label']) ?>" autocomplete="off"<?= $yi === 0 ? ' checked' : '' ?>>
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio<?= e($Y['year_label']) ?>"<?= $yi === 0 ? ' checked' : '' ?>>
         <label class="btn btn-outline-primary" for="btnradio<?= e($Y['year_label']) ?>"><?= e($Y['year_label']) ?></label>
         <?php endforeach; ?>
     </div>

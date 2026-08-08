@@ -530,19 +530,19 @@ Exposure visits are made to learn from the experience by direct interactions our
       0 => 
       array (
         0 => 'highsec4.jpg',
-        1 => 'Higer Secondary',
+        1 => 'Higher Secondary',
         2 => 'Where students explore how to educate',
       ),
       1 => 
       array (
         0 => 'highsec3.jpg',
-        1 => 'Higer Secondary',
+        1 => 'Higher Secondary',
         2 => 'Where students explore how to educate',
       ),
       2 => 
       array (
         0 => 'highsec2.jpg',
-        1 => 'Higer Secondary',
+        1 => 'Higher Secondary',
         2 => 'Where students explore how to educate',
       ),
     ),

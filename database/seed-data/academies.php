@@ -426,7 +426,7 @@ And, as a bonus, our abacus training also improves physical strength! We proudly
       "Unlock your child\'s creative potential with St.Joseph Matric HR.Sec School!
    Our teachers motivate the students by,boosting: <br>
 
-   <span style="color:#ffd700;font-size:24px;font-weight:bolder;">- Creativness. <br>
+   <span style="color:#ffd700;font-size:24px;font-weight:bolder;">- Creativeness. <br>
 - Community engagement.<br>
 - Cultural exchange.<br> </span>
 

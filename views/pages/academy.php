@@ -5,10 +5,15 @@
 // Per-page bits preserved from the static R1b views: the .bg-1 background
 // (the only per-page CSS) and the {slug}Carousel id.
 ?>
-<style>
-  /* Per-page hero background for the .infra-new band (the only per-page difference). */
-  .bg-1 { background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('<?= e($sj_academy['image'] ? img_url($sj_academy['image'], 'bg_wide') : '') ?>') no-repeat; background-size: cover; }
-</style>
+<?php
+// Per-page hero background for the .infra-new band (the only per-page
+// difference). Rendered by the shell as a HEAD <style> — valid HTML where the
+// old body <style> was not (R3); nothing else styles .bg-1, so the position
+// change cannot alter the cascade.
+$sjHeadCss = "  .bg-1 { background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('"
+    . e($sj_academy['image'] ? img_url($sj_academy['image'], 'bg_wide') : '')
+    . "') no-repeat; background-size: cover; }";
+?>
 
 <section class="back-bar">
   <div class="back-text back-bar-reveal">

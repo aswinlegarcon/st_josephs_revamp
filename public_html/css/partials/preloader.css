@@ -1,0 +1,5 @@
+/* Preloader partial styles (moved verbatim from the partial's <style> block in
+   R3 — a body <link rel=stylesheet> is valid HTML where a <style> is not; the
+   document position, and therefore the cascade, is unchanged). */
+#preloader { background: #fff url(/photos/Typing.gif) no-repeat center center;
+  height: 100vh; width: 100%; position: fixed; z-index: 100; }

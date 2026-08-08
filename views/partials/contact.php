@@ -85,7 +85,7 @@ $sj_c_fb    = repo_setting('facebook_url', 'https://www.facebook.com/stjosephssc
             <span>
               <ion-icon name="call"></ion-icon>
             </span>
-            <a href="tel: <?= e(str_replace('-', ' ', $sj_c_phone)) ?>"> + <?= e($sj_c_phone) ?></a>
+            <a href="tel:<?= e(preg_replace('/[^0-9]/', '', $sj_c_phone)) ?>"> + <?= e($sj_c_phone) ?></a>
           </div>
 
 

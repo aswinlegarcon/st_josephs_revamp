@@ -6,47 +6,10 @@
     <p>Tons of Memories carry our Gallery</p>
 </div>
 
-<!-- gal-slider (inlined custom 15-image cross-fade slideshow; not Bootstrap) -->
-<style>
-    .gal-slider {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f0f0f0;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-    }
-
-    .container-slider {
-        position: relative;
-        width: 60%;
-        margin:auto;
-        height: 500px;
-        border-radius: 10px;
-        border: 5px solid #2b4b8a;
-        box-shadow: 0px 0px 25px #2b4b8a;
-        overflow: hidden;
-    }
-
-    .slide {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        transition: opacity 1s ease-in-out;
-    }
-
-    @media (max-width: 768px) {
-        .container-slider {
-            width: 100%;
-            height: 350px;
-        }
-    }
-</style>
+<!-- gal-slider (custom 15-image cross-fade slideshow; not Bootstrap).
+     Styles live VERBATIM in /css/partials/gallery-slider.css (body link =
+     valid HTML, same cascade position — R3). -->
+<link rel="stylesheet" href="/css/partials/gallery-slider.css?v=<?php echo SJ_ASSET_VER; ?>">
 <div class="container-slider">
     <div class="slide" style="background-image: url(/photos/sportsday1.jpg); opacity: 1;"></div>
     <div class="slide" style="background-image: url(/photos/sportsday10.jpg); opacity: 0;"></div>

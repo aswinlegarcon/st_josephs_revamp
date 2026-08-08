@@ -68,7 +68,7 @@ $sid  = (int)$sj_section['id'];
                 </h5>
                 </div>
 
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-bs-parent="#accordion">
+                <div id="collapseOne" class="collapse" data-bs-parent="#accordion">
                 <div class="card-body">
                 <ul class="timeline"<?= ed_add('timeline_entry', ['section_id' => $sid], 'Add timeline month') ?>>
                     <?php foreach ($sj_timeline as $ti => $t): ?>

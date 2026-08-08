@@ -1,0 +1,10 @@
+/* Back-to-top button styles (moved verbatim from the partial's <style> block
+   in R3 — body link, same document position, cascade unchanged). */
+html { scroll-behavior: smooth; }
+.go-top-btn { position: fixed; width: 50px; background: #2b4b8a; bottom: 40px; right: 50px;
+  text-decoration: none; text-align: center; line-height: 50px; color: white; font-size: 18px;
+  border-radius: 50%; z-index: 700; }
+.go-top-btn:hover { background: #FFD700; color: black; }
+.reveal-btn { transition: 1.3s; opacity: 0; visibility: hidden; }
+.reveal-btn.active { opacity: 1; visibility: visible; }
+@media (max-width: 768px) { .go-top-btn { bottom: 30px; right: 30px; } }

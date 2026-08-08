@@ -2,7 +2,7 @@
 
 .footer {
   background: linear-gradient(rgba(43, 75, 138, 0.8), rgba(26, 53, 93, 0.8)),
-    url("../photos/schname.jpg");
+    url("/photos/schname.jpg");
   background-size: cover;
   color: white;
   padding: 30px 0;
@@ -30,10 +30,15 @@
   text-align: center;
 }
 
-.footer-column h4 {
+.footer-column h2 { /* was h4 — R3 heading-order fix */
   font-family: "Fjalla One", sans-serif !important;
-
+  /* pin the h4 default size the baseline rendered with (Bootstrap's RFS h4:
+     the calc below 1200px, capped at exactly 1.5rem from 1200px up) */
+  font-size: calc(1.275rem + .3vw);
   margin-bottom: 15px;
+}
+@media (min-width: 1200px) {
+  .footer-column h2 { font-size: 1.5rem; }
 }
 
 .footer-column ul {

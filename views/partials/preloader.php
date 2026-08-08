@@ -1,8 +1,6 @@
-<?php // Full-screen loading overlay — clean fragment. ?>
-<style>
-  #preloader { background: #fff url(/photos/Typing.gif) no-repeat center center;
-    height: 100vh; width: 100%; position: fixed; z-index: 100; }
-</style>
+<?php // Full-screen loading overlay — clean fragment. Styles in /css/partials/
+// (a body <link rel=stylesheet> is valid HTML; a body <style> is not — R3). ?>
+<link rel="stylesheet" href="/css/partials/preloader.css?v=<?php echo SJ_ASSET_VER; ?>">
 <div id="preloader"></div>
 <script>
   var sjLoader = document.getElementById("preloader");

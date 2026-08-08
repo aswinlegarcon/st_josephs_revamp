@@ -238,7 +238,7 @@ html {
 
 .newtemp-body {
   background: linear-gradient(rgba(43, 75, 138, 0.8), rgba(26, 53, 93, 0.8)),
-    url("../photos/schname.jpg");
+    url("/photos/schname.jpg");
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -248,7 +248,7 @@ html {
 
   padding: 50px 0 50px;
 }
-.new-temp-text h3 {
+.new-temp-text h2 { /* was h3 — R3 heading-order fix; font-size is pinned below */
   color: #ffd700 !important;
   font-weight: 700;
 }
@@ -300,7 +300,7 @@ html {
   font-family: "Fjalla One", sans-serif !important;
   font-size: 18px;
 }
-.new-temp-text h3 {
+.new-temp-text h2 { /* was h3 — R3 heading-order fix; font-size is pinned below */
   font-family: "Fjalla One", sans-serif !important;
   color: #ffffff;
   font-size: 45px;
@@ -585,7 +585,7 @@ html {
   border-radius: 20px;
   padding: 65px;
   background: linear-gradient(rgba(43, 75, 138, 0.9), rgba(26, 53, 93, 0.9)),
-    url("../photos/schname.jpg");
+    url("/photos/schname.jpg");
   background-size: cover;
 
   box-shadow: 0px 0px 40px 0px rgba(255, 255, 255, 0.05);
@@ -634,7 +634,7 @@ html {
   padding: 20px 12px;
   box-sizing: border-box;
 }
-.motto-col h3 {
+.motto-col h2 { /* was h3 — R3 heading-order fix; the rule pins every visible property */
   font-family: "Fjalla One", sans-serif !important;
   text-align: center;
   font-weight: 600;
@@ -671,7 +671,7 @@ html {
   .motto p {
     font-size: 11px;
   }
-  .motto-col h3 {
+  .motto-col h2 { /* was h3 — R3 heading-order fix; the rule pins every visible property */
     font-size: 22px;
   }
   .motto-col p {
@@ -685,7 +685,7 @@ html {
 .products {
   width: 100%;
   background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("../photos/asemb1.jpg");
+    url("/photos/asemb1.jpg");
   background-size: cover;
   text-align: center;
   padding-top: 100px;

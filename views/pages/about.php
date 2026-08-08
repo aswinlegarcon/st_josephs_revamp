@@ -43,7 +43,10 @@
         <tr><td>12.30 P.M to 3.20 P.M </td><td>- Instructional Hours</td></tr>
         <tr><td>10 Minutes </td><td>- Interval</td></tr>
       </table>
-      <span style="color:#ffd700;"><p>To see more about our rules and regulations, then click on Download --  <a href="/files/diary.pdf" download="SchoolDiary.pdf" class="download-btn">Download</a></p></span>
+      <?php /* R3: was <span style><p>…</p></span> — a <p> may not sit inside a
+               <span>. The gold color now lives on the <p> itself; the text and
+               the link inherit exactly the same computed color as before. */ ?>
+      <p style="color:#ffd700;">To see more about our rules and regulations, then click on Download --  <a href="/files/diary.pdf" download="SchoolDiary.pdf" class="download-btn">Download</a></p>
       <?php endif; ?>
     </div>
   </div>

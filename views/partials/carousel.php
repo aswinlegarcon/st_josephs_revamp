@@ -23,7 +23,7 @@
           <p<?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
           <?php if (!empty($s['button_label'])): ?>
           <a href="<?= e($s['button_url'] ?: '#') ?>" class="slider-btn">
-            <button class="btn btn-1"<?= ed_field('hero_slide', $s['id'], 'button_label') ?>><?= e($s['button_label']) ?></button>
+            <span class="btn btn-1"<?= ed_field('hero_slide', $s['id'], 'button_label') ?>><?= e($s['button_label']) ?></span>
           </a>
           <?php endif; ?>
         </div>

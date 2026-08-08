@@ -9,11 +9,11 @@
 
     <div class="motto-row">
         <div class="motto-col">
-            <h3>Discipline </h3>
+            <h2>Discipline </h2>
             <p class="dp">Discipline is systematic instruction intended to train a person activity, exercise, or a regimen that develops or improves a skill.</p>
         </div>
         <div class="motto-col">
-            <h3>Knowledge</h3>
+            <h2>Knowledge</h2>
             <p>Knowledge is facts, information, and skills acquired through experience or education; the theoretical or practical understanding of a subject</p>
         </div>
     </div>

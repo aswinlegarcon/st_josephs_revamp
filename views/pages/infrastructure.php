@@ -28,16 +28,18 @@
 <!-- infrastructurement cards start -->
 <!-- navigation -->
 
-<style>
-  /* Per-facility section backgrounds (values match the pre-C7 css rules). */
-  <?php foreach ($sj_facilities as $fi => $F): ?>
-  #bg-<?= $fi + 1 ?> {
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("<?= e($F['image'] ? img_url($F['image'], 'bg_wide') : '') ?>") no-repeat center center;
-  background-size: cover;
+<?php
+// Per-facility section backgrounds (values match the pre-C7 css rules).
+// Rendered by the shell as a HEAD <style> — valid HTML where the old body
+// <style> was not (R3); nothing else styles #bg-N, so the position change
+// cannot alter the cascade.
+$sjHeadCss = '';
+foreach ($sj_facilities as $fi => $F) {
+    $sjHeadCss .= '  #bg-' . ($fi + 1) . " {\n  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),\n    url(\""
+        . e($F['image'] ? img_url($F['image'], 'bg_wide') : '')
+        . "\") no-repeat center center;\n  background-size: cover;\n}\n";
 }
-  <?php endforeach; ?>
-</style>
+?>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light ">
     <h3 class="inside-nav-text">Infrastructure</h3>
@@ -48,7 +50,7 @@
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <?php foreach ($sj_facilities as $fi => $F): ?>
             <a href="#bg-<?= $fi + 1 ?>">
-                <label class="btn btn-outline-primary"><?= e($F['name']) ?></label>
+                <span class="btn btn-outline-primary"><?= e($F['name']) ?></span>
             </a>
             <?php endforeach; ?>
         </div>
