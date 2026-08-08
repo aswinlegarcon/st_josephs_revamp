@@ -22,6 +22,7 @@ By the end you will understand:
 | 3 | [`03-what-we-built.md`](03-what-we-built.md) | Stages A & B — security + the modern code structure, phase by phase. |
 | 4 | [`04-stage-c-and-d.md`](04-stage-c-and-d.md) | Stages C & D — the Bootstrap-5 front-end revamp + speed/deploy work. |
 | 5 | [`05-stage-e.md`](05-stage-e.md) | Stage E — content moves into the database; the admin panel learns to edit it. |
+| 6 | [`06-stage-f.md`](06-stage-f.md) | Stage F — the live-edit overlay: change the site by clicking on the site. |
 
 ## How to study
 
