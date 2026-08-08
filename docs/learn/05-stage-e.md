@@ -5,9 +5,8 @@
 > actual CMS work**: moving the words and photos out of the code and into the
 > database, so the school can edit them in the admin panel — no programmer needed.
 >
-> Status: **C1 ✅ C2 ✅ C3 ✅ M1 ✅ M2 ✅ C4 ✅** · remaining: C5–C9 (academies,
-> sports, infrastructure, achievements, gallery) + M3 (crop UI) + M4 (media library).
-> This file grows as those land.
+> Status: **✅ COMPLETE — all 13 phases** (C1–C9 content phases + M1–M4 media
+> tooling). Every content area of the site is now editable in the admin panel.
 
 ---
 
@@ -136,6 +135,101 @@ the old pages* and generates the seed data mechanically. The proof it worked: al
 four pages' visible text was **character-for-character identical** before and after
 the switch — including Higher Secondary's 72-item toppers marquee.
 
+## Phase C5 — the 18 academy pages
+
+Same recipe as C4, applied to the academy family. A parser script read all 18
+static pages **plus** the Co-Curriculum card grid, so each academy row carries both
+its page content (banner, write-up, background photo, carousel) and its card
+(title, subtitle, photo). The Co-Curriculum grid now *renders from the same rows* —
+hide an academy in admin and its card disappears from the grid (we tested exactly
+that: 18 cards → 17 → 18).
+
+**Two long-broken images finally load.** Six photo references said `.jpg` where
+the file on disk is `.jpeg` — so the Art-Expo and Abacus pages had shown broken
+images since launch (bugs #1/#2). The extractor resolves each reference to the
+file that actually exists; all six now return 200. This is the one place a page
+*looks* different — because something broken now works, exactly as the plan
+ordered.
+
+## Phase C6 — the Sports page
+
+Nine sport cards with their "Read More" panels became database rows. The unique
+accordion ids from R1a's bug-11 fix are preserved, and we re-verified independence:
+opening cards #1 and #5 together leaves exactly those two open.
+
+## Phase M3 — choose your own crop
+
+Until now uploads were auto-cropped to the center. Now the upload dialog shows a
+**crop box locked to the exact shape the slot needs** — drag it to choose what
+stays. And every uploaded image in the media library has a ✂️ **Re-crop** button
+that reopens the *original* file with the stored crop preloaded; saving regenerates
+the site images and **changes their URL version**, so browsers can't show the stale
+crop.
+
+How we proved it: we built a test image — red top half, blue bottom half —
+uploaded it into a wide slot choosing the *bottom*, and sampled the result: blue.
+Re-cropped to the *top*: red, version 1 → 2. No guesswork.
+
+(Bonus: the preset metadata the cropper needs now travels in a CSP-safe HTML
+attribute — which also fixed an older bug where the admin's own security policy
+was blocking an inline script.)
+
+## Phase C7 — the Infrastructure page
+
+The biggest single page: 15 facility showcases, each with its own carousel,
+description and background photo, plus the quick-jump button bar. All of it is now
+rows — and because the section backgrounds are now generated *from each facility's
+photo*, an admin can **add facility #16 and it appears complete**: quick-jump
+button, section, carousel and background. We created one through the panel and
+watched all of that render, then deleted it.
+
+A parsing war story worth learning from: the shipped HTML contains **unclosed
+`<div>`s**, and standard HTML parsers "helpfully repair" that by swallowing the
+next section — our first extraction silently duplicated a paragraph. The
+character-level diff caught it; the fix was to slice the raw source per section
+instead of trusting the repaired DOM. **This is why we diff everything.**
+
+## Phase C8 — Achievements + the Academics grade cards
+
+The two zig-zag lists (10 achievements, 4 awards) became typed rows; adding an
+11th item lands in the correct left/right position automatically (tested live).
+The Academics page's four grade cards now come from the **same section rows C4
+created** — one edit updates everywhere. The diff also caught a real slip here:
+the new page accidentally gained the admissions band the original never had —
+fixed before it shipped.
+
+## Phase M4 — a media library that can't break the site
+
+Every image in the library now shows **where it's used** (a 🔗 badge counting all
+eleven places an image can be referenced). Deleting is **refused with a
+plain-language reason** while anything still uses the photo ("Cannot delete — used
+in: 1 × hero slide" — verified live), orphans delete cleanly, and descriptions
+(alt text) are editable in a click-through detail view. An "Unused only" filter
+finds forgotten photos.
+
+## Phase C9 — the Gallery (the finale)
+
+Ten photo albums, 14 year-sets, **247 photos** — all rows now. One template renders
+every album; each album's slightly-different shipped styling was extracted verbatim
+into its own small CSS file. The admin gets album tabs with per-year photo managers
+(the M2 modal again).
+
+Four shipped gallery bugs died here, as planned:
+- **#3** — `gal-sciexpo.php` was an unlinked, stale copy of the Sports
+  Achievements page. It now permanently redirects there.
+- **#7** — the year buttons: some labels weren't clickable (they pointed at ids
+  that don't exist) and some *said* "2024" while showing the 2022 photo set. Labels
+  now match their buttons AND their photos — this visibly changes a few year labels,
+  which is precisely what the plan's acceptance test demanded.
+- **#8** — the lightbox's hidden default image pointed at a file variant that
+  isn't in the grid.
+- **#11** — dozens of duplicate `id="image-3"` attributes (used by nothing) are gone.
+
+And the lightbox learned manners: **← / → move only through the selected year's
+photos** (we opened a 2023 photo and pressed → 25 times: it cycled exactly the 21
+photos of 2023, never leaking into 2024), **Esc closes**, and none of it interferes
+while you're typing in a form.
+
 ---
 
 ## Where the project stands
@@ -143,7 +237,7 @@ the switch — including Higher Secondary's 72-item toppers marquee.
 | Stage | Status |
 |---|---|
 | A — Security · B — Platform · C — Front-end · D — Speed & deploy | ✅ done |
-| **E — Content into the DB** | **C1 ✅ C2 ✅ C3 ✅ M1 ✅ M2 ✅ C4 ✅ — remaining: C5 (academies) C6 (sports) M3 (crop) C7 (infrastructure) C8 (achievements) M4 (media) C9 (gallery)** |
+| **E — Content into the DB** | **✅ COMPLETE — C1–C9 + M1–M4: every content area of the site is editable in the admin panel** |
 | F — Live-edit overlay · G — Revamp completion · H — Perf/SEO/ops | upcoming |
 
 ### Try it yourself
