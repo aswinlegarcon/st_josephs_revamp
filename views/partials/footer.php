@@ -39,8 +39,8 @@ $sj_f_copy    = repo_setting('footer_copyright', "© 2024 St.Joseph's MHSS, Ondi
       <div class="footer-column social-media">
         <h2>Stay Connected</h2>
         <div class="social-media-icons">
-          <a href="<?= e($sj_f_yt) ?>" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
-          <a href="<?= e($sj_f_fb) ?>" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="<?= e($sj_f_yt) ?>" target="_blank" rel="noopener" class="social-icon" aria-label="YouTube channel"><i class="fab fa-youtube"></i></a>
+          <a href="<?= e($sj_f_fb) ?>" target="_blank" rel="noopener" class="social-icon" aria-label="Facebook page"><i class="fab fa-facebook-f"></i></a>
         </div>
       </div>
     </div>

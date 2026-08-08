@@ -26,8 +26,8 @@ RedirectMatch 404 "^/\.(?!well-known/)"
 # Gzip text responses (~70% smaller HTML/CSS/JS/SVG/JSON).
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml \
-    application/javascript application/x-javascript application/json \
-    image/svg+xml application/xml
+    application/javascript application/x-javascript text/javascript \
+    application/json image/svg+xml application/xml
 </IfModule>
 
 # Cache static assets hard (they are versioned with ?v=SJ_ASSET_VER, so a new

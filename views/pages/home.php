@@ -26,7 +26,7 @@ $__pp = dirname(__DIR__) . '/partials';
                 <h3<?= ed_field('profile', $sj_principal['id'], 'heading') ?>><?= e($sj_principal['heading']) ?></h3>
                 <h2 class="ab-1"<?= ed_field('profile', $sj_principal['id'], 'person_name') ?>><?= e($sj_principal['person_name']) ?></h2>
                 <?php ed_rich('profile', $sj_principal['id'], 'message_html', $sj_principal['message_html']); ?>
-                  <a class="btn btn-primary btn-lg" href="about.php" role="button">Read more</a>
+                  <a class="btn btn-primary btn-lg" href="about.php" role="button" aria-label="Read more about the school">Read more</a>
                 </div>
         </div>
 <?php endif; ?>

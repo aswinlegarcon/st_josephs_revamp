@@ -58,3 +58,55 @@ curl -s -o /dev/null -w '%{http_code} %{time_starttransfer} %{size_download}' --
 # Local SQL query count (needs config['debug']=true):
 curl -s "http://localhost:8090/<page>" | grep -oE 'sj-queries: [0-9]+'
 ```
+
+---
+
+# F4 results (2026-08-09, after F1 delivery + F2 renditions + F3 SEO)
+
+Local Docker, same Performance-API method as F0. Home page, cold load:
+
+| Metric | F0 (live) | F4 (now) | Target | Verdict |
+|---|---|---|---|---|
+| Total transferred | 10,344 KB | **1,906 KB** | < 3 MB | ✅ (−82%) |
+| Image payload | 9,834 KB | **1,108 KB** | ↓ ≥ 70% | ✅ (−89%) |
+| Requests | 57 | 47 | < 25 | ❌ (see below) |
+| SQL queries (home) | 16 | **12** | ≤ 12 | ✅ |
+| Largest image | 2,732 KB | 270 KB | no original > 300 KB | ✅ |
+
+Mobile Lighthouse (throttled 4G simulation, headless Chromium, dev box —
+no HTTP/2, no CDN):
+
+| Page | Perf | A11y | Best-Pr. | SEO | LCP | CLS |
+|---|---|---|---|---|---|---|
+| academy (tamil) | **96** | 100 | 96 | **100** | 2.6 s | 0.019 |
+| album (gal-annual) | 72 | 100 | 96 | **100** | 9.1 s | 0.004 |
+| home | 64 | 96 | 96 | 92 | 11.3 s | 0.048 |
+| infrastructure | 65 | 100 | 96 | 92 | 17.1 s | 0.001 |
+
+**Read of the results.** A11y/Best-Practices ≥ 96 everywhere ✅. SEO 100 on
+albums/academies; the two 92s lose points ONLY for the literal words
+"Read more"/"Learn more" on two buttons — reword them in Site Settings for
+100 (content decision, not code). CLS ≤ 0.05 everywhere ✅ (the
+"zero image-driven CLS" goal in practice). Throttled-mobile Performance
+passes on academies; the three image-heavy pages (home hero stack, infra's
+15 full-screen CSS backgrounds, album photo grids) sit at 64–72 under
+simulated slow 4G.
+
+**Remaining levers (the "stragglers" list), in impact order:**
+1. **Responsive `srcset`** — serve ~768 px variants to phones (renditions are
+   single-size today; the pipeline can grow a second width per preset).
+2. **Album grids** — serve the existing `gallery_tile` preset in the grid and
+   keep `gallery_full` for the lightbox (markup + lightbox change).
+3. **Defer the icon font + Google Fonts CSS** (render-blocking chain; needs a
+   FOUC-tolerance decision — visual-freeze relevant).
+4. **Request count** (47): the biggest groups are per-partial CSS (11 files,
+   deliberately split for cacheability/validity in R3) and font files. HTTP/2
+   on the real host makes the count largely moot; merging would trade
+   maintainability for a metric.
+5. **Production realities** dev can't show: LiteSpeed HTTP/2, Brotli, and the
+   optional **Cloudflare** front (DEPLOY.md) — all lift LCP directly.
+
+One deliberate exception ships in the codebase: legacy photos render as plain
+`<img>` (no `<picture>`/WebP, no width/height attributes) because the
+verifier measured both changing shipped layouts (flex-item swap; attribute
+height pinning). New uploads get the full `<picture>` + dimensions treatment.

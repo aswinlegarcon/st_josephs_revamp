@@ -7,7 +7,7 @@
   <div class="container text-center">
     <h1 class="display-4"><?= e(repo_setting('jumbotron_heading', "Explore a holistic education at St.Joseph's")) ?></h1>
     <p class="lead"><?= e(repo_setting('jumbotron_sub', 'Click Here for Admissions')) ?></p>
-    <a class="btn btn-primary btn-lg" href="/index.php#contact" role="button"><?= e(repo_setting('jumbotron_btn', 'Learn more')) ?></a>
+    <a class="btn btn-primary btn-lg" href="/index.php#contact" role="button" aria-label="Admissions — contact the school"><?= e(repo_setting('jumbotron_btn', 'Learn more')) ?></a>
   </div>
 </div>
 <script>
