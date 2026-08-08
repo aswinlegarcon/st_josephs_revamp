@@ -166,6 +166,7 @@ function ed_add(string $entity, array $preset = [], string $label = 'Add'): stri
             'options'  => $def['values'] ?? null,
             'preset'   => $def['preset'] ?? null,
             'required' => !empty($def['required']),
+            'multiline' => !empty($def['multiline']),
         ];
     }
     $payload = ['entity' => $entity, 'preset' => $preset, 'label' => $label, 'fields' => $fields];

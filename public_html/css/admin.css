@@ -1,0 +1,125 @@
+/* On-page admin overlay styles (Stage F). Loaded ONLY for logged-in admins —
+ * never served to visitors. The sjov- namespace never collides with site CSS.
+ * The admin bar is position:fixed, so it changes NOTHING about page layout. */
+
+/* ---------- admin bar ---------- */
+.sjov-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 99990;
+  display: flex; align-items: center; gap: 14px; padding: 8px 16px;
+  background: #12233f; color: #fff;
+  font: 600 13px/1 'Segoe UI', Arial, sans-serif;
+  box-shadow: 0 -2px 14px rgba(0, 0, 0, .35);
+}
+.sjov-bar.editing { background: linear-gradient(90deg, #12233f, #2b4b8a); }
+.sjov-brand { color: #ffd700; letter-spacing: .5px; }
+.sjov-state { opacity: .85; font-weight: 400; }
+.sjov-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.sjov-link { color: #fff; text-decoration: underline; font-weight: 400; }
+.sjov-form { margin: 0; display: inline; }
+.sjov-btn {
+  border: 1.5px solid #ffd700; background: transparent; color: #ffd700;
+  padding: 7px 14px; border-radius: 20px; cursor: pointer; font: inherit;
+}
+.sjov-btn:hover { background: #ffd700; color: #12233f; }
+.sjov-btn.on { background: #ffd700; color: #12233f; }
+
+/* ---------- edit-mode affordances ---------- */
+.sj-edit-mode [data-edit-field]:not([data-edit-type="image"]) {
+  outline: 1.5px dashed rgba(255, 215, 0, .55); outline-offset: 2px;
+  cursor: text; border-radius: 2px;
+  transition: outline-color .15s;
+}
+.sj-edit-mode [data-edit-field]:not([data-edit-type="image"]):hover {
+  outline-color: #ffd700; background: rgba(255, 215, 0, .07);
+}
+.sjov-editing { outline: 2px solid #ffd700 !important; background: rgba(255, 215, 0, .1) !important; min-width: 30px; }
+.sjov-saved { outline-color: #35b26b !important; }
+
+.sjov-richbar {
+  position: absolute; z-index: 99991; display: flex; gap: 4px; padding: 6px;
+  background: #12233f; border-radius: 9px; box-shadow: 0 4px 16px rgba(0, 0, 0, .35);
+}
+.sjov-richbar button {
+  border: 1px solid rgba(255, 255, 255, .25); background: #fff; border-radius: 6px;
+  min-width: 34px; min-height: 28px; cursor: pointer; font: 600 13px 'Segoe UI', Arial;
+}
+.sjov-richbar button.gold { color: #8a6d00; }
+.sjov-richbar .sjov-done { background: #ffd700; border-color: #ffd700; }
+
+.sjov-enum { font: inherit; padding: 2px 6px; border-radius: 6px; border: 2px solid #ffd700; }
+
+/* ---------- O2: item chips ---------- */
+.sj-edit-mode .sjov-item { position: relative; outline: 1px dashed rgba(43, 75, 138, .45); outline-offset: 3px; }
+.sjov-chip {
+  position: absolute; top: -12px; right: -6px; z-index: 9990;
+  display: none; align-items: center; gap: 4px; padding: 4px 8px;
+  background: #12233f; color: #fff; border-radius: 16px;
+  font: 600 11px/1 'Segoe UI', Arial; box-shadow: 0 3px 10px rgba(0, 0, 0, .35);
+  white-space: nowrap;
+}
+.sj-edit-mode .sjov-item:hover > .sjov-chip { display: inline-flex; }
+.sjov-ico {
+  border: none; background: rgba(255, 255, 255, .16); color: #fff; border-radius: 50%;
+  width: 22px; height: 22px; cursor: pointer; font-size: 12px; line-height: 1;
+}
+.sjov-ico:hover { background: #ffd700; color: #12233f; }
+.sjov-del:hover { background: firebrick; color: #fff; }
+
+/* ---------- O2: add buttons ---------- */
+.sj-edit-mode .sjov-addhost { position: relative; }
+.sjov-add {
+  position: absolute; right: 8px; bottom: 8px; z-index: 9990;
+  border: none; background: #ffd700; color: #12233f; border-radius: 18px;
+  padding: 7px 13px; cursor: pointer; font: 700 12px 'Segoe UI', Arial;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .3);
+}
+.sjov-add:hover { filter: brightness(1.08); }
+
+/* ---------- O2: image slots ---------- */
+.sjov-imghost { position: relative; }
+.sjov-cam {
+  position: absolute; top: 8px; right: 8px; z-index: 9990;
+  border: none; background: rgba(18, 35, 63, .82); color: #fff; border-radius: 50%;
+  width: 34px; height: 34px; cursor: pointer; font-size: 16px; line-height: 1;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .3);
+}
+.sjov-cam:hover { background: #ffd700; color: #12233f; }
+
+/* dimmed hidden-on-site rows (is_active = 0), visible only in edit mode */
+.sj-edit-mode .sj-inactive { opacity: .45; }
+
+/* the shared modals (sj-ui.js) reuse the panel's sj- classes — minimal
+   standalone copies so they render correctly outside /admin pages */
+.sj-overlay { position: fixed; inset: 0; background: rgba(10, 18, 35, .55); z-index: 99995; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.sj-modal { background: #fff; color: #12233f; border-radius: 14px; width: min(720px, 96vw); max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; font: 14px 'Segoe UI', Arial; }
+.sj-modal-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; font-weight: 700; border-bottom: 1px solid #e3e7f0; }
+.sj-x { border: none; background: none; font-size: 22px; cursor: pointer; color: #6b7690; }
+.sj-modal-body { padding: 16px 18px; overflow: auto; }
+.sj-modal-foot { padding: 12px 18px; border-top: 1px solid #e3e7f0; display: flex; justify-content: flex-end; gap: 10px; }
+.sj-modal label { display: block; font: 700 11.5px/1 'Segoe UI', Arial; text-transform: uppercase; letter-spacing: .4px; color: #6b7690; margin: 14px 0 6px; }
+.sj-modal input[type="text"], .sj-modal input[type="number"], .sj-modal select, .sj-modal textarea { width: 100%; padding: 9px 11px; border: 1.5px solid #d5d9e2; border-radius: 8px; font: 14px 'Segoe UI', Arial; }
+.sj-btn { border: none; border-radius: 9px; padding: 9px 16px; cursor: pointer; font: 600 13px 'Segoe UI', Arial; }
+.sj-btn-primary { background: #2b4b8a; color: #fff; }
+.sj-btn-ghost { background: #eef1f7; color: #12233f; }
+.sj-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.sj-tabs button { border: 1.5px solid #d5d9e2; background: #fff; border-radius: 8px; padding: 7px 12px; cursor: pointer; }
+.sj-tabs button.on { background: #2b4b8a; color: #fff; border-color: #2b4b8a; }
+.sj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.sj-pick { position: relative; border: 1.5px solid #e3e7f0; background: #fff; border-radius: 10px; overflow: hidden; cursor: pointer; padding: 0; text-align: center; }
+.sj-pick img { width: 100%; height: 86px; object-fit: cover; display: block; }
+.sj-pick span { display: block; font-size: 10.5px; padding: 4px 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sj-search { width: 100%; padding: 9px 12px; border: 1.5px solid #d5d9e2; border-radius: 8px; margin-bottom: 10px; font: 14px 'Segoe UI', Arial; }
+.sj-more { margin-top: 10px; }
+.sj-toast { position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); background: #12233f; color: #fff; padding: 10px 18px; border-radius: 22px; z-index: 99999; font: 600 13px 'Segoe UI', Arial; box-shadow: 0 4px 16px rgba(0,0,0,.35); }
+.sj-toast.err { background: firebrick; }
+.sj-richwrap { border: 1.5px solid #d5d9e2; border-radius: 9px; overflow: hidden; background: #fff; }
+.sj-richbar { display: flex; gap: 4px; padding: 7px; background: #f4f6fb; border-bottom: 1px solid #e3e7f0; }
+.sj-richbar button { border: 1px solid #d5d9e2; background: #fff; border-radius: 6px; min-width: 36px; min-height: 30px; cursor: pointer; }
+.sj-rich { min-height: 110px; padding: 10px 12px; outline: none; }
+.sj-imgfield { display: flex; align-items: center; gap: 12px; }
+.sj-imgfield img { width: 90px; height: 68px; object-fit: cover; border-radius: 8px; border: 1px solid #e3e7f0; }
+.sj-noimg { width: 90px; height: 68px; border-radius: 8px; background: #eef1f7; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #6b7690; }
+.sj-upnote { background: #f4f6fb; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; margin-top: 12px; }
+.sj-crophost { margin-top: 12px; }
+.sj-cropimg { max-width: 100%; max-height: 420px; display: block; }
+.sj-check { display: flex; gap: 8px; align-items: center; font: 600 13px 'Segoe UI', Arial; text-transform: none; }

@@ -32,8 +32,15 @@ $showJumbotron = $showJumbotron ?? false;
   <?php foreach ($styles as $css): ?>
   <link rel="stylesheet" href="/css/<?= e($css) ?>.css?v=<?php echo SJ_ASSET_VER; ?>">
   <?php endforeach; ?>
+  <?php if (is_admin()): // O1 overlay — admins only; visitors get zero admin bytes ?>
+  <meta name="sj-csrf" content="<?= e(csrf_token()) ?>">
+  <link rel="stylesheet" href="/css/admin.css?v=<?php echo SJ_ASSET_VER; ?>">
+  <link rel="stylesheet" href="/admin/assets/cropper/cropper.min.css?v=<?php echo SJ_ASSET_VER; ?>">
+  <?php endif; ?>
 </head>
-<body class="<?= e($bodyClass) ?>">
+<body class="<?= e($bodyClass) ?><?= is_edit() ? ' sj-edit-mode' : '' ?>"<?php if (is_admin()):
+    $__presets = db()->query('SELECT preset_key, label, max_w, max_h, aspect_w, aspect_h, mode FROM image_presets ORDER BY preset_key')->fetchAll();
+    ?> data-sj-presets='<?= str_replace("'", '&#39;', json_encode($__presets, JSON_UNESCAPED_SLASHES)) ?>'<?php endif; ?>>
 
 <?php if ($showPreloader) include $__p . '/preloader.php'; ?>
 <?php include $__p . '/navbar.php'; ?>
@@ -49,5 +56,11 @@ $showJumbotron = $showJumbotron ?? false;
 <?php foreach ($scripts as $js): ?>
 <script src="/js/<?= e($js) ?>.js"></script>
 <?php endforeach; ?>
+<?php if (is_admin()): // O1/O2 live-edit overlay ?>
+<?php include $__p . '/admin-bar.php'; ?>
+<script src="/admin/assets/cropper/cropper.min.js?v=<?php echo SJ_ASSET_VER; ?>" defer></script>
+<script src="/admin/assets/sj-ui.js?v=<?php echo SJ_ASSET_VER; ?>" defer></script>
+<script src="/js/admin.js?v=<?php echo SJ_ASSET_VER; ?>" defer></script>
+<?php endif; ?>
 </body>
 </html>

@@ -37,6 +37,11 @@ final class Layout
         $views = \dirname(SJ_PUBLIC_ROOT) . '/views';
         \extract($data, EXTR_SKIP);
 
+        // Live-edit pages must never be framed (O1 / SEC-14).
+        if (\function_exists('is_edit') && is_edit() && !\headers_sent()) {
+            \header('X-Frame-Options: DENY');
+        }
+
         \ob_start();
         include $views . '/pages/' . $page . '.php';
         $content = \ob_get_clean();

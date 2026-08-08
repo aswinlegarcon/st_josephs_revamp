@@ -128,6 +128,7 @@ function panel_footer(): void
   </div>
 </main>
 <script src="/admin/assets/cropper/cropper.min.js?v=<?= SJ_ASSET_VER ?>" defer></script>
+<script src="/admin/assets/sj-ui.js?v=<?= SJ_ASSET_VER ?>" defer></script>
 <script src="/admin/assets/panel.js?v=<?= SJ_ASSET_VER ?>" defer></script>
 </body>
 </html>
