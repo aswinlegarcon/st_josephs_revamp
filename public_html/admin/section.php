@@ -426,6 +426,38 @@ case 'sections':
     <?php
     break;
 
+/* ================= ACADEMIES (C5) ================= */
+case 'academies':
+    $rows = repo_academies(true);
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">The 18 academy pages (Tamil, Maths, … Band, NCC, Art&nbsp;Expo) and their cards on the
+         Co-Curriculum page. Order here = card order on that page. Each academy's photo carousel has its
+         own manager (🖼️). Adding a brand-new academy needs a developer (its page needs a URL).</p>
+    </div>
+    <div class="sj-list" data-list="academy">
+      <?php foreach ($rows as $ac) { ?>
+        <div class="sj-row<?= $ac['is_active'] ? '' : ' off' ?>" data-row="academy:<?= (int)$ac['id'] ?>">
+          <?php if ($ac['image']): ?><img class="sj-row-thumb" src="<?= e(img_url($ac['image'], 'card_4x3')) ?>" alt="">
+          <?php else: ?><div class="sj-row-thumb noimg">no image</div><?php endif; ?>
+          <div class="sj-row-main">
+            <b><?= e($ac['card_title']) ?></b>
+            <span><?= e($ac['card_subtitle']) ?> · /<?= e($ac['slug']) ?>.php</span>
+          </div>
+          <?php if (!$ac['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
+          <div class="sj-row-actions">
+            <button class="sj-ico" title="Carousel photos" <?= panel_photos_attr('academy', (int)$ac['id'], 'carousel', 'content_slide', $ac['card_title'] . ' — carousel photos') ?>>🖼️</button>
+            <button class="sj-ico" title="Edit" data-act="edit">✏️</button>
+            <button class="sj-ico" title="Move up" data-act="move" data-dir="-1">↑</button>
+            <button class="sj-ico" title="Move down" data-act="move" data-dir="1">↓</button>
+            <button class="sj-ico" title="<?= $ac['is_active'] ? 'Hide from co-curriculum grid' : 'Show on co-curriculum grid' ?>" data-act="toggle" data-active="<?= $ac['is_active'] ? 1 : 0 ?>"><?= $ac['is_active'] ? '👁️' : '🚫' ?></button>
+          </div>
+        </div>
+      <?php } ?>
+    </div>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is

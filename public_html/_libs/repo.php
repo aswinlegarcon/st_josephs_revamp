@@ -135,6 +135,25 @@ function repo_section_events(int $sectionId): array
     return array_map('repo_fold_image', $st->fetchAll());
 }
 
+/** One academy by slug, with its bg image (C5). */
+function repo_academy(string $slug): ?array
+{
+    $st = db()->prepare(
+        'SELECT a.*, ' . SJ_IMG_SELECT . ' FROM academies a LEFT JOIN images i ON i.id = a.bg_image_id WHERE a.slug = ?'
+    );
+    $st->execute([$slug]);
+    $row = $st->fetch();
+    return $row ? repo_fold_image($row) : null;
+}
+
+/** All academies in grid order, with their card images (co-curriculum — C5). */
+function repo_academies(bool $includeInactive = false): array
+{
+    $sql = 'SELECT a.*, ' . SJ_IMG_SELECT . ' FROM academies a LEFT JOIN images i ON i.id = a.card_image_id'
+         . ($includeInactive ? '' : ' WHERE a.is_active = 1') . ' ORDER BY a.position, a.id';
+    return array_map('repo_fold_image', db()->query($sql)->fetchAll());
+}
+
 /** Images linked to one owner collection (image_links), ordered — one query (M1). */
 function repo_linked_images(string $ownerType, int $ownerId, string $role = 'carousel'): array
 {

@@ -593,8 +593,8 @@ Everything else (carousels, collapses, dropdowns) is Bootstrap CDN behaviour; ea
 >   remains nested), **#11 in part** (carousel/accordion ids now unique on all converted pages;
 >   sports `accordion-1..9`, infrastructure's carousels all unique).
 > - **Intentionally preserved** (content-level quirks kept byte-verbatim under the visual-freeze
->   rule — do NOT "fix" during migration; slate them for the CMS/content phase): **#1, #2**
->   (`.jpeg` vs `.jpg` image paths), **#3** (`gal-sciexpo` mislabeled orphan / `gal-spach`
+>   rule — do NOT "fix" during migration; slate them for the CMS/content phase): ~~#1, #2~~
+>   (`.jpeg` vs `.jpg` image paths — FIXED in C5: seeds resolve to the real files), **#3** (`gal-sciexpo` mislabeled orphan / `gal-spach`
 >   classes), **#7** (gallery year-toggle id/label mismatches), **#8** (gal-alumni lightbox
 >   default), **#9** (`schname.JPG` case), ~~#12~~ (contact email mismatch — FIXED in C1: both come from the `contact_email` setting), **#14**
 >   (visible-text typos), **#15** (mixed image-path styles), and gallery's duplicate `id="image-3"`

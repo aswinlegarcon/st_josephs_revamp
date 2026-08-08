@@ -18,11 +18,8 @@ final class Layout
         'home',                                                   // P4, moved to BS5 shell in R1d
         'about', 'staffs', 'academics', 'achievements',          // R1a hub pages
         'co-curriculum', 'sports', 'infrastructure', 'gallery',  // (BS5 shell)
-        // R1b — academy-family pages (18, shared academy.css/js)
-        'abacusacademy', 'artacademy', 'artandexpo', 'band', 'communicativeacademy',
-        'danceacademy', 'englishacademy', 'instrumentacademy', 'langacademy',
-        'martialacademy', 'mathsacademy', 'ncc', 'scienceacademy', 'socialacademy',
-        'sportsacademy', 'tamilacademy', 'vocalacademy', 'yogaacademy',
+        // C5 — the 18 academy-family pages share views/pages/academy.php
+        'academy',
         // C4 — the four section pages share views/pages/section.php
         'section',
         // R1c — gallery pages (11)

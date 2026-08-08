@@ -109,6 +109,22 @@ final class Registry
                     'image_id'  => ['type' => 'image', 'preset' => 'feature_4x3', 'label' => 'Photo', 'nullable' => true],
                 ],
             ],
+            'academy' => [
+                // creatable=false on purpose: a new academy needs its own URL stub
+                // (a thin controller file), which is a developer task until R2+.
+                'table' => 'academies', 'orderable' => true, 'creatable' => false, 'deletable' => false,
+                'fields' => [
+                    'banner_title'    => ['type' => 'text', 'max' => 100, 'label' => 'Banner title'],
+                    'banner_subtitle' => ['type' => 'text', 'max' => 120, 'label' => 'Banner subtitle'],
+                    'content_heading' => ['type' => 'text', 'max' => 100, 'label' => 'Content heading'],
+                    'body_html'       => ['type' => 'html', 'max' => 65000, 'label' => 'Write-up'],
+                    'card_title'      => ['type' => 'text', 'max' => 100, 'label' => 'Co-curriculum card title'],
+                    'card_subtitle'   => ['type' => 'text', 'max' => 120, 'label' => 'Co-curriculum card subtitle'],
+                    'card_image_id'   => ['type' => 'image', 'preset' => 'card_4x3',  'label' => 'Card photo'],
+                    'bg_image_id'     => ['type' => 'image', 'preset' => 'bg_wide',   'label' => 'Page background photo'],
+                    'is_active'       => ['type' => 'bool', 'label' => 'Visible on the co-curriculum grid'],
+                ],
+            ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [

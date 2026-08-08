@@ -36,229 +36,30 @@
 </div>
 
 <section class="co-curriculum-all">
-<section class="co-curriculum-card co-curriculum-card-reveal">
+<?php
+// C5: the 18 academy cards render from the `academies` table (grid order =
+// admin order). Three cards per reveal-section; the reveal-class suffixes
+// reproduce the shipped sequence ('', 2, 3, 4, 4, 5 — the duplicate 4 is a
+// shipped quirk kept on purpose). $sj_academies from the controller.
+$sj_suffixes = ['', '2', '3', '4', '4', '5'];
+foreach (array_chunk($sj_academies, 3) as $ri => $chunk): ?>
+    <section class="co-curriculum-card co-curriculum-card-reveal<?= $sj_suffixes[min($ri, 5)] ?>">
     <div class="row mt-5">
+    <?php foreach ($chunk as $ac): ?>
         <div class="col-md-4">
-          <div class="card">
-            <img src="photos/tamaca1.jpg" class="card-img-top" alt="...">
+          <div class="card<?= empty($ac['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('academy', $ac['id'], $ac['card_title']) ?>>
+            <?= img_tag($ac['image'], 'card_4x3', ['class' => 'card-img-top', 'alt' => '...', 'extra' => trim(ed_img('academy', $ac['id'], 'card_image_id'))]) ?>
             <div class="card-body">
-              <h3 class="card-title">Academy of Tamil</h3>
-              <p class="card-text">Valanar Ilakkiya Mandram</p>
-              <a class="btn btn-primary btn-lg" href="tamilacademy.php" role="button">Read more</a>
-
+            <h3 class="card-title"<?= ed_field('academy', $ac['id'], 'card_title') ?>><?= e($ac['card_title']) ?></h3>
+            <p class="card-text"<?= ed_field('academy', $ac['id'], 'card_subtitle') ?>><?= e($ac['card_subtitle']) ?></p>
+            <a class="btn btn-primary btn-lg" href="<?= e($ac['slug']) ?>.php" role="button">Read more</a>
             </div>
           </div>
         </div>
-
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/engaca2.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of English</h3>
-            <p class="card-text">Excel English Academy</p>
-            <a class="btn btn-primary btn-lg" href="englishacademy.php" role="button">Read more</a>
-            </div>
-          </div>
-        </div>
-
-      <div class="col-md-4">
-          <div class="card">
-            <img src="photos/mataca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Maths</h3>
-            <p class="card-text">Math Magician Academy</p>
-            <a class="btn btn-primary btn-lg" href="mathsacademy.php" role="button">Read more</a>
-            </div>
-            </div>
+    <?php endforeach; ?>
+    </div>
     </section>
-
-    <!-- sec-2 -->
-
-    <section class="co-curriculum-card co-curriculum-card-reveal2">
-    <div class="row mt-5">
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/sciaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h3 class="card-title">Academy of Science</h3>
-              <p class="card-text">Masterminds Academy</p>
-              <a class="btn btn-primary btn-lg" href="scienceacademy.php" role="button">Read more</a>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/sstaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Social Science</h3>
-            <p class="card-text">Patriotic Panthers Academy</p>
-            <a class="btn btn-primary btn-lg" href="socialacademy.php" role="button">Read more</a>
-            </div>
-          </div>
-        </div>
-
-      <div class="col-md-4">
-          <div class="card">
-            <img src="photos/langaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Foreign Languages</h3>
-            <p class="card-text">Spanish - German - French</p>
-            <a class="btn btn-primary btn-lg" href="langacademy.php" role="button">Read more</a>
-            </div>
-            </div>
-    </section>
-
-    <!-- sec-3 -->
-    <section class="co-curriculum-card co-curriculum-card-reveal3">
-    <div class="row mt-5">
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/insaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h3 class="card-title">Instrumental Academy</h3>
-              <p class="card-text">Musical Instruments</p>
-              <a class="btn btn-primary btn-lg" href="instrumentacademy.php" role="button">Read more</a>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/karaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Martial Arts</h3>
-            <p class="card-text">Karate</p>
-            <a class="btn btn-primary btn-lg" href="martialacademy.php" role="button">Read more</a>
-            </div>
-          </div>
-        </div>
-
-      <div class="col-md-4">
-          <div class="card">
-            <img src="photos/comeaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Communicative English</h3>
-            <p class="card-text">Effective Communication</p>
-            <a class="btn btn-primary btn-lg" href="communicativeacademy.php" role="button">Read more</a>
-            </div>
-            </div>
-    </section>
-    <!-- sec-4 -->
-
-    <section class="co-curriculum-card co-curriculum-card-reveal4">
-    <div class="row mt-5">
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/spoaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h3 class="card-title">Academy of Athletes and Sports</h3>
-              <p class="card-text">Sports</p>
-              <a class="btn btn-primary btn-lg" href="sportsacademy.php" role="button">Read more</a>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/vocaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Vocal Academy</h3>
-            <p class="card-text">Chorus Singing</p>
-            <a class="btn btn-primary btn-lg" href="vocalacademy.php" role="button">Read more</a>
-            </div>
-          </div>
-        </div>
-
-      <div class="col-md-4">
-          <div class="card">
-            <img src="photos/yogaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Yoga</h3>
-            <p class="card-text">Yoga </p>
-            <a class="btn btn-primary btn-lg" href="yogaacademy.php" role="button">Read more</a>
-            </div>
-            </div>
-    </section>
-    <!-- sec-5 -->
-
-    <section class="co-curriculum-card co-curriculum-card-reveal4">
-    <div class="row mt-5">
-    <div class="col-md-4">
-          <div class="card">
-            <img src="photos/danceaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Classical Dance</h3>
-            <p class="card-text">Bharatanatyam</p>
-            <a class="btn btn-primary btn-lg" href="danceacademy.php" role="button">Read more</a>
-            </div>
-            </div>
-</div>
-        <div class="col-md-4">
-          <div class="card">
-            <img src="photos/band1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h3 class="card-title">Band</h3>
-              <p class="card-text">St. Joseph’s Tradition of Excellence</p>
-              <a class="btn btn-primary btn-lg" href="band.php" role="button">Read more</a>
-
-            </div>
-          </div>
-        </div>
-
-      <div class="col-md-4">
-          <div class="card">
-            <img src="photos/ncc1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">NCC</h3>
-            <p class="card-text">National Cadet Corps</p>
-            <a class="btn btn-primary btn-lg" href="ncc.php" role="button">Read more</a>
-            </div>
-            </div>
-
-
-    </section>
-    </section>
-    <!-- sec-6 -->
-
-    <section class="co-curriculum-card co-curriculum-card-reveal5">
-    <div class="row mt-5">
-    <div class="col-md-4">
-          <div class="card">
-            <img src="photos/abacaca1.jpeg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Abacus</h3>
-            <p class="card-text">Saibodhi Abacus Academy</p>
-            <a class="btn btn-primary btn-lg" href="abacusacademy.php" role="button">Read more</a>
-            </div>
-            </div>
-</div>
-
-    <div class="col-md-4">
-          <div class="card">
-            <img src="photos/artexpo0.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Art and Crafts Expo</h3>
-            <p class="card-text">Innovation</p>
-            <a class="btn btn-primary btn-lg" href="artandexpo.php" role="button">Read more</a>
-            </div>
-            </div>
-            </div>
-
-            <div class="col-md-4">
-          <div class="card">
-            <img src="photos/artaca1.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-            <h3 class="card-title">Academy of Art and Crafts</h3>
-            <p class="card-text">Creative Thinking</p>
-            <a class="btn btn-primary btn-lg" href="artacademy.php" role="button">Read more</a>
-            </div>
-            </div>
-
-    </section>
+<?php endforeach; ?>
     </section>
 
 <script src="/js/co-curriculum.js"></script>
