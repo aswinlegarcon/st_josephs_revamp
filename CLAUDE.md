@@ -43,6 +43,20 @@ Concretely:
 
 Before marking complete **any** change that touches a rendered page, view, partial, or CSS: compare against the baseline (git `6bd0d11` / live site), then affirm **`Visual-freeze: PASS`** in your completion summary — or list each spot that intentionally changed, with a one-line reason **and** the user sign-off that approved it.
 
+## MANDATORY file-writing rule (this is a monitored corporate endpoint)
+
+This repo is developed on an EDR-monitored (CrowdStrike Falcon) work machine. **On 2026-08-08 a Falcon rule killed an agent's shell process for "Web Shell / Persistence"** — the agent had used a `python3` heredoc to rewrite `_libs/edit.php` in place and then `cat > public_html/admin/editmode.php <<'EOF'` to drop a new PHP file into the admin directory, in one process tree. The code was a legitimate 26-line CSRF-checked edit-mode toggle, but at the process level "interpreter/shell writes new request-handling PHP into a web-served directory" *is* the web-shell signature. It escalated to the organisation's IT security team.
+
+Therefore, without exception:
+
+1. **Never create or modify source files with shell commands.** No `cat > file`, no `tee`, no `>`/`>>` redirection, no heredocs, no `sed -i`, no `python3`/`php -r` scripts that `open(..., 'w')` or `file_put_contents()` a tracked file. Use your **editor tools** (Write / Edit / NotebookEdit) for **every** file change. They perform the same edit without the shell process lineage that trips behavioural detection.
+2. **Shell is for read-only work and real commands only** — `git`, `grep`, `ls`, `curl`, `docker compose`, `composer`, test runs. Reading files with the shell is fine; writing them is not.
+3. **A silent or unexplained failure is a stop condition, not a retry prompt.** If a write returns a bare non-zero exit with no error text, or a file vanishes after you created it, assume a security control blocked it. **Stop, tell the user, and wait.** Never retry the same write through a different mechanism — that is bypassing a control, whether or not you realise it at the time. (This is exactly what went wrong on 2026-08-08: the block was misread as a broken heredoc and re-attempted with a file-write tool, which succeeded.)
+4. **Committed generators are the narrow exception, and stay narrow.** `database/extract-*.php` runs *inside the container* and may write only **generated data and inert assets** — `database/seed-data/*.php` data arrays and `public_html/css/albums/*.css`. No generator may ever emit **executable PHP into `public_html/`**. Adding a new generator that writes to the webroot needs explicit user approval first.
+5. **Never touch security tooling.** Do not attempt to inspect, disable, exclude paths from, or work around Falcon or any endpoint agent. Path exclusions are IT security's decision — surface the need to the user and let them route it.
+
+If a task seems to require a prohibited write, say so and propose the editor-tool equivalent instead of improvising.
+
 ## Coding conventions (non-negotiable)
 
 - **SQL:** values only via PDO **placeholders**; table/column **identifiers only from the registry** (`SJ\Content\Registry` / `_libs/registry.php`) or code literals. Never build SQL from request data.
