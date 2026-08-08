@@ -162,6 +162,36 @@ function repo_sports(bool $includeInactive = false): array
     return array_map('repo_fold_image', db()->query($sql)->fetchAll());
 }
 
+/** All facilities with bg images + their carousels batched — two queries (C7). */
+function repo_facilities(bool $includeInactive = false): array
+{
+    $sql = 'SELECT f.*, ' . SJ_IMG_SELECT . ' FROM facilities f LEFT JOIN images i ON i.id = f.bg_image_id'
+         . ($includeInactive ? '' : ' WHERE f.is_active = 1') . ' ORDER BY f.position, f.id';
+    $rows = array_map('repo_fold_image', db()->query($sql)->fetchAll());
+    if (!$rows) {
+        return [];
+    }
+    // one batched query for every facility carousel (no N+1)
+    $ids = array_column($rows, 'id');
+    $in  = implode(',', array_fill(0, count($ids), '?'));
+    $st  = db()->prepare(
+        'SELECT l.owner_id, l.id AS link_id, ' . SJ_IMG_SELECT . '
+           FROM image_links l JOIN images i ON i.id = l.image_id
+          WHERE l.owner_type = \'facility\' AND l.role = \'carousel\' AND l.owner_id IN (' . $in . ')
+          ORDER BY l.position, l.id'
+    );
+    $st->execute($ids);
+    $byOwner = [];
+    foreach ($st->fetchAll() as $r) {
+        $oid = (int)$r['owner_id'];
+        $byOwner[$oid][] = repo_fold_image($r)['image'];
+    }
+    foreach ($rows as &$f) {
+        $f['carousel'] = $byOwner[(int)$f['id']] ?? [];
+    }
+    return $rows;
+}
+
 /** Images linked to one owner collection (image_links), ordered — one query (M1). */
 function repo_linked_images(string $ownerType, int $ownerId, string $role = 'carousel'): array
 {

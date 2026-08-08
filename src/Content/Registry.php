@@ -135,6 +135,16 @@ final class Registry
                     'is_active'     => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
+            'facility' => [
+                'table' => 'facilities', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'fields' => [
+                    'slug'             => ['type' => 'text', 'max' => 40,   'label' => 'URL key (letters/dashes, unique)', 'required' => true],
+                    'name'             => ['type' => 'text', 'max' => 80,   'label' => 'Facility name'],
+                    'description_html' => ['type' => 'html', 'max' => 65000, 'label' => 'Description'],
+                    'bg_image_id'      => ['type' => 'image', 'preset' => 'bg_wide', 'label' => 'Background photo', 'required' => true],
+                    'is_active'        => ['type' => 'bool', 'label' => 'Visible on site'],
+                ],
+            ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [

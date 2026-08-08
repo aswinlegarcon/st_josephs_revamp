@@ -497,6 +497,57 @@ case 'sports':
     <?php
     break;
 
+/* ================= INFRASTRUCTURE (C7) ================= */
+case 'facilities':
+    $infraPage = repo_page('infrastructure');
+    ?>
+    <h3 class="sj-form-legend">Top carousel</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Photos rotating at the top of the Infrastructure page.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$infraPage['id']], 'Add slide') ?>>＋ Add slide</button>
+    </div>
+    <div class="sj-list" data-list="hero_slide">
+      <?php foreach (repo_hero_slides((int)$infraPage['id'], true) as $sl) {
+          panel_row([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'title'  => $sl['caption_title'] ?: '(no caption)',
+              'sub'    => $sl['caption_text'],
+              'active' => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+
+    <h3 class="sj-form-legend">Facility showcases</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">The 15 facility sections. Order here = order (and quick-jump buttons) on the page.
+         Each facility's photo carousel has its own manager (🖼️).</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('facility', [], 'Add facility') ?>>＋ Add facility</button>
+    </div>
+    <div class="sj-list" data-list="facility">
+      <?php foreach (repo_facilities(true) as $F) { ?>
+        <div class="sj-row<?= $F['is_active'] ? '' : ' off' ?>" data-row="facility:<?= (int)$F['id'] ?>">
+          <?php if ($F['image']): ?><img class="sj-row-thumb" src="<?= e(img_url($F['image'], 'bg_wide')) ?>" alt="">
+          <?php else: ?><div class="sj-row-thumb noimg">no image</div><?php endif; ?>
+          <div class="sj-row-main">
+            <b><?= e($F['name']) ?></b>
+            <span><?= count($F['carousel']) ?> carousel photos</span>
+          </div>
+          <?php if (!$F['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
+          <div class="sj-row-actions">
+            <button class="sj-ico" title="Carousel photos" <?= panel_photos_attr('facility', (int)$F['id'], 'carousel', 'content_slide', $F['name'] . ' — carousel photos') ?>>🖼️</button>
+            <button class="sj-ico" title="Edit" data-act="edit">✏️</button>
+            <button class="sj-ico" title="Move up" data-act="move" data-dir="-1">↑</button>
+            <button class="sj-ico" title="Move down" data-act="move" data-dir="1">↓</button>
+            <button class="sj-ico" title="<?= $F['is_active'] ? 'Hide from site' : 'Show on site' ?>" data-act="toggle" data-active="<?= $F['is_active'] ? 1 : 0 ?>"><?= $F['is_active'] ? '👁️' : '🚫' ?></button>
+            <button class="sj-ico danger" title="Delete" data-act="del">🗑️</button>
+          </div>
+        </div>
+      <?php } ?>
+    </div>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is

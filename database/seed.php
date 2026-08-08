@@ -418,6 +418,35 @@ if (!$pdo->query('SELECT COUNT(*) FROM sports')->fetchColumn()) {
     $out[] = 'sports: seeded ' . count($sportsData['sports']);
 }
 
+/* ---------- Infrastructure facilities (C7) ---------- */
+$facData = require __DIR__ . '/seed-data/facilities.php';
+$pdo->prepare('INSERT IGNORE INTO pages (slug, title, heading_html) VALUES (?,?,?)')
+    ->execute(['infrastructure', "St.Joseph's MHSS, Ondipudur", '']);
+$infraPageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'infrastructure'")->fetchColumn();
+$cnt->execute([$infraPageId]);
+if (!$cnt->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO hero_slides (page_id, image_id, caption_title, caption_text, position) VALUES (?,?,?,?,?)');
+    foreach ($facData['hero'] as $i => [$img, $t, $x]) {
+        $st->execute([$infraPageId, img_id_by_file($img), $t, $x, $i]);
+    }
+    $out[] = 'infrastructure hero_slides: seeded ' . count($facData['hero']);
+}
+$insFac = $pdo->prepare('INSERT IGNORE INTO facilities (slug, name, description_html, bg_image_id, position) VALUES (?,?,?,?,?)');
+foreach ($facData['facilities'] as $i => $F) {
+    $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($F['name'])));
+    $insFac->execute([$slug, $F['name'], $F['description_html'], $F['bg_image'] ? img_id_by_file($F['bg_image']) : null, $i]);
+    $fid = (int)$pdo->query('SELECT id FROM facilities WHERE slug = ' . $pdo->quote($slug))->fetchColumn();
+    $c = $pdo->prepare("SELECT COUNT(*) FROM image_links WHERE owner_type = 'facility' AND owner_id = ? AND role = 'carousel'");
+    $c->execute([$fid]);
+    if (!$c->fetchColumn()) {
+        $st = $pdo->prepare("INSERT INTO image_links (owner_type, owner_id, role, image_id, position) VALUES ('facility', ?, 'carousel', ?, ?)");
+        foreach ($F['carousel'] as $j => $img) {
+            $st->execute([$fid, img_id_by_file($img), $j]);
+        }
+    }
+}
+$out[] = 'facilities: ' . $pdo->query('SELECT COUNT(*) FROM facilities')->fetchColumn() . ' rows';
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the
