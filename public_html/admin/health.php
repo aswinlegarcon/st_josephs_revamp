@@ -43,8 +43,25 @@ $check('opcache', (bool) ini_get('opcache.enable'));
 $check('https',   (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
                   || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'));
 
+// X3 additions — operational telemetry for the dashboard widget + UptimeRobot.
+$free = @disk_free_space(SJ_PUBLIC_ROOT);
+$check('disk_free', $free !== false && $free > 200 * 1048576, // gate: < 200 MB free is an incident
+    $free !== false ? round($free / 1073741824, 2) . ' GB' : 'unknown');
+try {
+    $imgs = (int) db()->query('SELECT COUNT(*) FROM images')->fetchColumn();
+    $check('images', $imgs > 0, (string)$imgs);
+} catch (\Throwable $e) { $check('images', false, '?'); }
+$check('sitemap', is_file(SJ_PUBLIC_ROOT . '/sitemap.xml'));
+// last backup age — reported, not gating (dev boxes and pre-cron prod have none)
+$bdir = sj_config()['backup_dir'] ?? (dirname(SJ_PUBLIC_ROOT) . '/backups');
+$newest = 0;
+foreach (glob($bdir . '/db-*.sql.gz') ?: [] as $f) {
+    $newest = max($newest, (int)filemtime($f));
+}
+$check('backup_age', $newest > 0, $newest ? round((time() - $newest) / 3600, 1) . ' h' : 'none found');
+
 $gating = $checks;
-unset($gating['https']);
+unset($gating['https'], $gating['backup_age']);
 $allOk = array_reduce($gating, static fn($c, $x) => $c && $x['ok'], true);
 http_response_code($allOk ? 200 : 503);
 echo json_encode([

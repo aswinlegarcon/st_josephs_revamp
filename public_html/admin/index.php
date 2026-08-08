@@ -36,14 +36,41 @@ $cards = [
         (int)db()->query('SELECT COUNT(*) FROM mark_entries')->fetchColumn() . ' toppers'],
     ['media',     '🖼️', 'Media Library',  'All site images — browse, search and upload.',
         (int)db()->query('SELECT COUNT(*) FROM images')->fetchColumn() . ' images'],
+    ['seo',       '🔍', 'SEO',            'Browser-tab titles and search-result descriptions, per page.',
+        (int)db()->query('SELECT COUNT(*) FROM seo_meta')->fetchColumn() . ' pages'],
     ['settings',  '⚙️', 'Site Settings',  'Contact details, school timings, admissions band, social links.',
         (int)db()->query('SELECT COUNT(*) FROM settings')->fetchColumn() . ' settings'],
 ];
+
+// ---- X2/X3 health strip: status only — deliberately NO download links (SEC-20)
+$sjHealth = [];
+$free = @disk_free_space(SJ_PUBLIC_ROOT);
+$sjHealth[] = ['💽', 'Disk free', $free !== false ? round($free / 1073741824, 1) . ' GB' : '—',
+    $free !== false && $free > 200 * 1048576];
+$sjHealth[] = ['🖼️', 'Images', (string)(int)db()->query('SELECT COUNT(*) FROM images')->fetchColumn(), true];
+$bdir = sj_config()['backup_dir'] ?? (dirname(SJ_PUBLIC_ROOT) . '/backups');
+$newest = 0; $bsize = 0;
+foreach (glob($bdir . '/db-*.sql.gz') ?: [] as $f) {
+    if ((int)filemtime($f) > $newest) { $newest = (int)filemtime($f); $bsize = (int)filesize($f); }
+}
+$sjHealth[] = ['🗄️', 'Last DB backup',
+    $newest ? round((time() - $newest) / 3600, 1) . ' h ago · ' . round($bsize / 1024) . ' KB' : 'none yet',
+    $newest > 0 && (time() - $newest) < 48 * 3600];
 
 panel_header('dashboard', 'Dashboard');
 ?>
 <p class="sj-lead">Welcome! Pick a section to edit the Home page content. Changes are saved to the
 database immediately — visitors see them as soon as they refresh the site.</p>
+
+<div class="sj-health">
+  <?php foreach ($sjHealth as [$hIcon, $hLabel, $hValue, $hOk]): ?>
+  <div class="sj-health-item<?= $hOk ? '' : ' bad' ?>">
+    <span class="sj-health-ico"><?= $hIcon ?></span>
+    <span class="sj-health-label"><?= e($hLabel) ?></span>
+    <b><?= e($hValue) ?></b>
+  </div>
+  <?php endforeach; ?>
+</div>
 
 <div class="sj-cards">
   <?php foreach ($cards as [$slug, $icon, $title, $desc, $count]): ?>

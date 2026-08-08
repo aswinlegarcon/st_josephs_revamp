@@ -79,5 +79,58 @@ the older code still runs against the newer schema. Do **not** roll back the dat
 | `media_writable` | uploads will work |
 | `opcache` | bytecode cache on (speed) |
 | `https` | informational — should be `true` in prod, is `false` on the dev http box |
+| `disk_free` | gates below 200 MB free (uploads/backups would start failing) |
+| `images` / `sitemap` | content sanity: images table populated, sitemap.xml present |
+| `backup_age` | informational — hours since the newest `db-*.sql.gz` (X2) |
 
 `ok: true` (HTTP 200) means safe to serve. Point **UptimeRobot** (X3) at this URL.
+
+## 6. Image renditions (F2)
+
+Renditions for the 478 legacy photos are generated **in Docker only** — never on
+the shared host:
+
+```
+docker compose exec -T web php /var/www/database/backfill.php
+```
+
+Idempotent (existing pairs are skipped). To ship them: upload `public_html/media/`
+with the release **and** apply the `image_renditions` rows (export from dev:
+`mysqldump --no-tablespaces stjosephs image_renditions | gzip`). If a rendition
+regenerates (recrop/backfill re-run), the image's `version` bumps and the URLs
+change — browsers refetch automatically. A legacy photo with no rendition simply
+serves its original from `/photos/` — nothing breaks.
+
+## 7. Backups (X2)
+
+mPanel → **Cron Jobs** → one nightly entry (e.g. 01:30):
+
+```
+/bin/sh /home/<account>/database/backup.sh
+```
+
+Nightly gzipped DB dump + weekly (Sunday) `media/` archive into `~/backups/`
+(NON-web), 14-day retention. Credentials are read from `config/config.php` by
+the script — nothing secret in the crontab. The admin dashboard shows the last
+backup's age and size (status only — **no download endpoint**, SEC-20).
+
+**Restore drill** (do this quarterly, in Docker):
+```
+gunzip -c backups/db-YYYYmmdd-HHMM.sql.gz | docker compose exec -T db \
+  sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mysql -uroot drill_restore'
+```
+(create `drill_restore` first, compare row counts, then drop it — verified
+2026-08-09: images 478/478, seo_meta 41/41, image_renditions 988/988.)
+
+## 8. Monitoring (X3)
+
+Two **UptimeRobot** monitors (free tier, 5-min interval):
+
+1. `https://stjosephsondipudur.com/` — keyword monitor, expect `St.Joseph`.
+2. `https://stjosephsondipudur.com/admin/health.php?token=<health_token>` —
+   HTTP monitor; any non-200 (the endpoint returns 503 when a gating check
+   fails) triggers the alert e-mail.
+
+Outage behaviour verified in dev: DB stopped → health returned 503 within one
+request; DB restarted → 200. PHP errors land in the host's `error_log` (mPanel
+→ Error Log); the admin dashboard's health strip mirrors disk/backup status.
