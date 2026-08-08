@@ -9,12 +9,35 @@ $bodyClass  = $bodyClass  ?? '';
 $showPreloader = $showPreloader ?? true;
 $showJumbotron = $showJumbotron ?? false;
 ?>
+<?php
+// F3 SEO: per-URL title/description/canonical/OG. The slug comes from the
+// entry script's own name (server-set, never request-derived); rows live in
+// seo_meta (admin-editable). Fallbacks keep pages working with no row.
+$sjSlug  = \basename($_SERVER['SCRIPT_NAME'] ?? 'index.php', '.php') ?: 'index';
+$sjSeo   = repo_seo($sjSlug) ?: [];
+$sjBase  = rtrim(sj_config()['base_url'] ?? 'https://stjosephsondipudur.com', '/');
+$sjCanon = $sjBase . ($sjSlug === 'index' ? '/' : '/' . $sjSlug . '.php');
+$sjTitle = ($sjSeo['title'] ?? '') !== '' ? $sjSeo['title'] : ($title ?? "St.Joseph's MHSS, Ondipudur");
+$sjDesc  = $sjSeo['description'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= e($title ?? "St.Joseph's MHSS, Ondipudur") ?></title>
+  <title><?= e($sjTitle) ?></title>
+  <?php if ($sjDesc !== ''): ?>
+  <meta name="description" content="<?= e($sjDesc) ?>">
+  <?php endif; ?>
+  <link rel="canonical" href="<?= e($sjCanon) ?>">
+  <meta property="og:site_name" content="St.Joseph's MHSS, Ondipudur">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<?= e($sjTitle) ?>">
+  <?php if ($sjDesc !== ''): ?>
+  <meta property="og:description" content="<?= e($sjDesc) ?>">
+  <?php endif; ?>
+  <meta property="og:url" content="<?= e($sjCanon) ?>">
+  <meta property="og:image" content="<?= e($sjBase) ?>/photos/logo-main.png">
   <link rel="icon" href="/photos/logo-main.png" type="image/x-icon">
 
   <!-- ONE self-hosted Bootstrap 5.3.3 -->

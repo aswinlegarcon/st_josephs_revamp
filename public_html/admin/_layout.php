@@ -36,6 +36,7 @@ function panel_sections(): array
         'updates'   => ['📺', 'New Updates'],
         'marks'     => ['🏆', 'Top Marks'],
         'media'     => ['🖼️', 'Media Library'],
+        'seo'       => ['🔍', 'SEO'],
         'settings'  => ['⚙️', 'Site Settings'],
     ];
 }

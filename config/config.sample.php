@@ -24,6 +24,9 @@ return [
 
     'upload_max_bytes' => 10 * 1024 * 1024, // 10 MB
 
+    // F3 SEO: absolute origin used for canonical/OG URLs and the sitemap.
+    'base_url' => 'https://stjosephsondipudur.com',
+
     // Production hardening (consumed from S3 onward; safe defaults for dev).
     'force_secure_cookies' => false, // set true once the site is HTTPS-only
     'session_save_path'    => null,  // e.g. '/home/<account>/tmp/sessions' (chmod 700) in prod

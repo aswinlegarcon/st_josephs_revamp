@@ -31,6 +31,14 @@ final class Repo
         return $cache[$key] ?? $default;
     }
 
+    /** SEO row (title/description) for one URL slug — F3. */
+    public static function seo(string $slug): ?array
+    {
+        $st = db()->prepare('SELECT * FROM seo_meta WHERE slug = ?');
+        $st->execute([$slug]);
+        return $st->fetch() ?: null;
+    }
+
     public static function image(int $id): ?array
     {
         $st = db()->prepare('SELECT * FROM images WHERE id = ?');
@@ -279,8 +287,11 @@ final class Repo
 
     public static function uniqueFeatures(bool $includeInactive = false): array
     {
-        $sql = 'SELECT * FROM unique_features' . ($includeInactive ? '' : ' WHERE is_active = 1') . ' ORDER BY position, id';
-        return self::attachImages(db()->query($sql)->fetchAll());
+        // Image via JOIN (one query) — keeps Home inside the ≤12-query budget
+        // now that F2 renditions + F3 seo each cost a query per request.
+        $sql = 'SELECT u.*, ' . self::IMG_SELECT . ' FROM unique_features u LEFT JOIN images i ON i.id = u.image_id'
+             . ($includeInactive ? '' : ' WHERE u.is_active = 1') . ' ORDER BY u.position, u.id';
+        return \array_map([self::class, 'foldImage'], db()->query($sql)->fetchAll());
     }
 
     public static function ticker(bool $includeInactive = false): array
@@ -291,8 +302,10 @@ final class Repo
 
     public static function updateSlides(bool $includeInactive = false): array
     {
-        $sql = 'SELECT * FROM update_slides' . ($includeInactive ? '' : ' WHERE is_active = 1') . ' ORDER BY position, id';
-        return self::attachImages(db()->query($sql)->fetchAll());
+        // Image via JOIN (one query) — see uniqueFeatures().
+        $sql = 'SELECT u.*, ' . self::IMG_SELECT . ' FROM update_slides u LEFT JOIN images i ON i.id = u.image_id'
+             . ($includeInactive ? '' : ' WHERE u.is_active = 1') . ' ORDER BY u.position, u.id';
+        return \array_map([self::class, 'foldImage'], db()->query($sql)->fetchAll());
     }
 
     /** Latest N active years (oldest→newest for display), each with 'entries' grouped ready. */

@@ -33,7 +33,9 @@ function panel_row(array $o): void
         <?php if (isset($o['active'])): ?>
           <button class="sj-ico" title="<?= $o['active'] ? 'Hide from site' : 'Show on site' ?>" data-act="toggle" data-active="<?= $o['active'] ? 1 : 0 ?>"><?= $o['active'] ? '👁️' : '🚫' ?></button>
         <?php endif; ?>
+        <?php if ($o['canDelete'] ?? true): ?>
         <button class="sj-ico danger" title="Delete" data-act="del">🗑️</button>
+        <?php endif; ?>
       </div>
     </div>
     <?php
@@ -647,6 +649,28 @@ case 'gallery':
     break;
 
 /* ================= SITE SETTINGS (C1) ================= */
+/* ================= SEO (F3) ================= */
+case 'seo':
+    $rows = db()->query('SELECT * FROM seo_meta ORDER BY id')->fetchAll();
+    ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">The browser-tab title and the search-result description for every public page.
+         Google shows roughly the first 60 characters of a title and 155 of a description —
+         front-load what matters. One row per URL; rows can't be added or removed.</p>
+    </div>
+    <div class="sj-list" data-list="seo_meta">
+      <?php foreach ($rows as $r) {
+          panel_row([
+              'entity' => 'seo_meta', 'id' => $r['id'],
+              'title'  => '/' . ($r['slug'] === 'index' ? '' : $r['slug'] . '.php') . ' — ' . $r['title'],
+              'sub'    => $r['description'],
+              'canMove' => false, 'canDelete' => false,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is
     // NOT a registry entity (CLAUDE.md); this screen + its endpoint are the

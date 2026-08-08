@@ -205,6 +205,11 @@ function repo_setting(string $key, ?string $default = null): ?string
     return Repo::setting($key, $default);
 }
 
+function repo_seo(string $slug): ?array
+{
+    return Repo::seo($slug);
+}
+
 function repo_image(int $id): ?array
 {
     return Repo::image($id);

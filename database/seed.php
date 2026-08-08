@@ -524,6 +524,59 @@ foreach ($settings as $k => $v) {
 }
 $out[] = "settings: +$newSet newly seeded";
 
+/* ---------- SEO defaults (F3, migration 007) ----------
+   One row per public URL. INSERT IGNORE: an admin's edits always win. */
+$seoRows = [
+    ['index',                "St.Joseph's Matric Hr. Sec. School, Ondipudur, Coimbatore", "St.Joseph's Matriculation Higher Secondary School, Ondipudur, Coimbatore — quality education from KG to Higher Secondary since 1986. Admissions, academics, sports and campus life."],
+    ['about',                "About Our School | St.Joseph's MHSS, Ondipudur", "The history, mission and daily life of St.Joseph's MHSS, Ondipudur — founded in 1986 by the R.C. Mission of Coimbatore Diocese, with school timings, rules and the principal's message."],
+    ['staffs',               "Our Staff | St.Joseph's MHSS, Ondipudur", "Meet the teaching and non-teaching team of St.Joseph's MHSS, Ondipudur — 63 committed educators and 28 support staff who make the school run."],
+    ['academics',            "Academics | St.Joseph's MHSS, Ondipudur", "Academic programmes at St.Joseph's MHSS, Ondipudur — Kindergarten, Primary, High School and Higher Secondary sections with a strong record in board results."],
+    ['co-curriculum',        "Co-Curricular Activities | St.Joseph's MHSS, Ondipudur", "Eighteen academies beyond the classroom — Tamil, Maths, Science, English, arts, music, dance, yoga, NCC, band and more at St.Joseph's MHSS, Ondipudur."],
+    ['sports',               "Sports | St.Joseph's MHSS, Ondipudur", "Sports at St.Joseph's MHSS, Ondipudur — athletics, silambam, karate, volleyball, throwball and more, with regular zonal and district participation."],
+    ['infrastructure',       "Infrastructure | St.Joseph's MHSS, Ondipudur", "Tour the campus of St.Joseph's MHSS, Ondipudur — smart classrooms, science and computer labs, library, auditorium, play areas and transport facilities."],
+    ['achievements',         "Achievements | St.Joseph's MHSS, Ondipudur", "Awards and achievements of St.Joseph's MHSS, Ondipudur — centum results, rank holders, sports laurels and recognitions earned by our students and staff."],
+    ['gallery',              "Photo Gallery | St.Joseph's MHSS, Ondipudur", "Photo gallery of St.Joseph's MHSS, Ondipudur — annual day, sports day, independence day, children's day and more moments from school life."],
+    ['highschl',             "High School Section | St.Joseph's MHSS, Ondipudur", "The High School section (6th–10th std) of St.Joseph's MHSS, Ondipudur — events calendar, exams and activities through the academic year."],
+    ['highsec',              "Higher Secondary Section | St.Joseph's MHSS, Ondipudur", "The Higher Secondary section (11th–12th std) of St.Joseph's MHSS, Ondipudur — groups offered, board exam toppers and the year's events."],
+    ['primary',              "Primary Section | St.Joseph's MHSS, Ondipudur", "The Primary section (1st–5th std) of St.Joseph's MHSS, Ondipudur — activity-based learning and the young learners' year in events."],
+    ['kg',                   "Kindergarten | St.Joseph's MHSS, Ondipudur", "The Kindergarten of St.Joseph's MHSS, Ondipudur — a joyful, safe start to school life with play-based learning, celebrations and little milestones."],
+    ['tamilacademy',         "Tamil Academy | St.Joseph's MHSS, Ondipudur", "The Tamil Academy at St.Joseph's MHSS, Ondipudur nurtures love for the language through literature, speech and cultural activities."],
+    ['mathsacademy',         "Maths Academy | St.Joseph's MHSS, Ondipudur", "The Maths Academy at St.Joseph's MHSS, Ondipudur builds problem-solving skill through abacus, puzzles and competitive practice."],
+    ['scienceacademy',       "Science Academy | St.Joseph's MHSS, Ondipudur", "The Science Academy at St.Joseph's MHSS, Ondipudur — experiments, exhibitions and hands-on learning that make science come alive."],
+    ['englishacademy',       "English Academy | St.Joseph's MHSS, Ondipudur", "The English Academy at St.Joseph's MHSS, Ondipudur strengthens communication through debate, drama, reading and writing practice."],
+    ['socialacademy',        "Social Academy | St.Joseph's MHSS, Ondipudur", "The Social Academy at St.Joseph's MHSS, Ondipudur connects classroom learning to the world through heritage, civics and current affairs."],
+    ['langacademy',          "Language Academy | St.Joseph's MHSS, Ondipudur", "The Language Academy at St.Joseph's MHSS, Ondipudur opens doors to new languages and cultures beyond the core curriculum."],
+    ['communicativeacademy', "Communicative English Academy | St.Joseph's MHSS, Ondipudur", "The Communicative English Academy at St.Joseph's MHSS, Ondipudur builds fluent, confident spoken English for every student."],
+    ['abacusacademy',        "Abacus Academy | St.Joseph's MHSS, Ondipudur", "The Abacus Academy at St.Joseph's MHSS, Ondipudur trains speed arithmetic and concentration through structured abacus practice."],
+    ['vocalacademy',         "Vocal Music Academy | St.Joseph's MHSS, Ondipudur", "The Vocal Academy at St.Joseph's MHSS, Ondipudur trains young voices in classical and light music for stage and competition."],
+    ['instrumentacademy',    "Instrumental Music Academy | St.Joseph's MHSS, Ondipudur", "The Instrumental Academy at St.Joseph's MHSS, Ondipudur teaches keyboard, percussion and more — from first notes to stage performance."],
+    ['danceacademy',         "Dance Academy | St.Joseph's MHSS, Ondipudur", "The Dance Academy at St.Joseph's MHSS, Ondipudur trains classical and contemporary dance for school events and competitions."],
+    ['artacademy',           "Art Academy | St.Joseph's MHSS, Ondipudur", "The Art Academy at St.Joseph's MHSS, Ondipudur develops drawing, painting and craft skills — creativity on paper and beyond."],
+    ['martialacademy',       "Martial Arts Academy | St.Joseph's MHSS, Ondipudur", "The Martial Arts Academy at St.Joseph's MHSS, Ondipudur builds fitness, discipline and self-defence through karate and silambam."],
+    ['yogaacademy',          "Yoga Academy | St.Joseph's MHSS, Ondipudur", "The Yoga Academy at St.Joseph's MHSS, Ondipudur brings calm, focus and flexibility to daily school life through regular practice."],
+    ['sportsacademy',        "Sports Academy | St.Joseph's MHSS, Ondipudur", "The Sports Academy at St.Joseph's MHSS, Ondipudur coaches athletics and team games with regular tournament exposure."],
+    ['band',                 "School Band | St.Joseph's MHSS, Ondipudur", "The School Band of St.Joseph's MHSS, Ondipudur leads parades and ceremonies with drums, brass and disciplined rhythm."],
+    ['ncc',                  "NCC | St.Joseph's MHSS, Ondipudur", "The NCC unit at St.Joseph's MHSS, Ondipudur builds discipline, service and leadership through parades, camps and community work."],
+    ['artandexpo',           "Art & Expo | St.Joseph's MHSS, Ondipudur", "Art & Expo at St.Joseph's MHSS, Ondipudur — the annual showcase of student creativity, models and exhibits across every grade."],
+    ['gal-annual',           "Annual Day Photos | St.Joseph's MHSS, Ondipudur", "Annual Day celebrations at St.Joseph's MHSS, Ondipudur — prize distributions, performances and proud moments, year by year."],
+    ['gal-sports',           "Sports Day Photos | St.Joseph's MHSS, Ondipudur", "Sports Day at St.Joseph's MHSS, Ondipudur — march past, track events and team spirit captured on camera."],
+    ['gal-children',         "Children's Day Photos | St.Joseph's MHSS, Ondipudur", "Children's Day at St.Joseph's MHSS, Ondipudur — games, gifts and celebrations that put students at the centre."],
+    ['gal-expo',             "Science Expo Photos | St.Joseph's MHSS, Ondipudur", "The Science Expo at St.Joseph's MHSS, Ondipudur — student projects, working models and young scientists in action."],
+    ['gal-independence',     "Independence Day Photos | St.Joseph's MHSS, Ondipudur", "Independence Day at St.Joseph's MHSS, Ondipudur — flag hoisting, cultural programmes and patriotic pride."],
+    ['gal-teacher',          "Teachers' Day Photos | St.Joseph's MHSS, Ondipudur", "Teachers' Day at St.Joseph's MHSS, Ondipudur — students honouring their teachers with performances and gratitude."],
+    ['gal-grad',             "KG Graduation Photos | St.Joseph's MHSS, Ondipudur", "Kindergarten graduation at St.Joseph's MHSS, Ondipudur — caps, gowns and the first big milestone of school life."],
+    ['gal-alumni',           "Alumni Photos | St.Joseph's MHSS, Ondipudur", "Alumni gatherings of St.Joseph's MHSS, Ondipudur — old students reconnecting with their school and teachers."],
+    ['gal-expressionz',      "Expressionz Day Photos | St.Joseph's MHSS, Ondipudur", "Expressionz Day at St.Joseph's MHSS, Ondipudur — the stage where every student's talent finds its audience."],
+    ['gal-spach',            "Sports Achievements Photos | St.Joseph's MHSS, Ondipudur", "Sports achievements of St.Joseph's MHSS, Ondipudur — trophies, medals and the athletes who earned them."],
+];
+$insSeo = $pdo->prepare('INSERT IGNORE INTO seo_meta (slug, title, description) VALUES (?,?,?)');
+$newSeo = 0;
+foreach ($seoRows as [$slug, $t, $d]) {
+    $insSeo->execute([$slug, $t, $d]);
+    $newSeo += $insSeo->rowCount();
+}
+$out[] = "seo_meta: +$newSeo newly seeded";
+
 /* ---------- R3 fixups: bug-14 typos + the carosel1.jpg filename ----------
    Idempotent by construction: REPLACE() only changes rows still carrying the
    old text, so a re-run is a no-op. Applied to EXISTING databases (the

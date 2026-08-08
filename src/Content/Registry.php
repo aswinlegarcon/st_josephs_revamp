@@ -181,6 +181,15 @@ final class Registry
                     'is_active' => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
+            // F3: per-URL search snippet. The row set is fixed (one per public
+            // URL, seeded) — only the two text fields are editable.
+            'seo_meta' => [
+                'table' => 'seo_meta', 'orderable' => false, 'creatable' => false, 'deletable' => false,
+                'fields' => [
+                    'title'       => ['type' => 'text', 'max' => 160, 'label' => 'Browser/search title'],
+                    'description' => ['type' => 'text', 'max' => 300, 'label' => 'Meta description', 'multiline' => true],
+                ],
+            ],
             'mark_year' => [
                 'table' => 'mark_years', 'orderable' => false, 'creatable' => true, 'deletable' => true,
                 'fields' => [

@@ -52,6 +52,20 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
   KEY idx_ip_time (ip, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Per-URL SEO title + meta description (F3, migration 007). Keyed by the URL
+-- slug (basename without .php; home = 'index') because the public URLs span
+-- several entities. Admin-editable; never registered fields beyond title/desc.
+CREATE TABLE IF NOT EXISTS seo_meta (
+  id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  slug        VARCHAR(64)  NOT NULL,
+  title       VARCHAR(160) NOT NULL DEFAULT '',
+  description VARCHAR(300) NOT NULL DEFAULT '',
+  created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_seo_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ============ media ============
 CREATE TABLE IF NOT EXISTS images (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

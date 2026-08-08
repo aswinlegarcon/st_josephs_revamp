@@ -1,0 +1,7 @@
+# St.Joseph's MHSS, Ondipudur — crawler policy (F3).
+# Everything public is crawlable; the admin panel and the API are not pages.
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://stjosephsondipudur.com/sitemap.xml
