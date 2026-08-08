@@ -44,7 +44,13 @@
 </section>
 
 <!-- Custom JavaScript -->
-<script src="/js/carousel.js"></script>
+<script>
+// Hero reveal — shipped parameters (was /js/carousel.js), now through the
+// shared helper in /js/site.js, which loads at the end of the body (R2).
+window.addEventListener('DOMContentLoaded', function () {
+  sjReveal('.reveal-carousel', 150, true);
+});
+</script>
 <script>
 // Keyboard navigation for the HOME HERO carousel only (FEATURES_PLAN.md §3).
 // index.php has two carousels — .carousel-main is unique to the hero.

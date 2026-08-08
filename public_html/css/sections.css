@@ -1,6 +1,14 @@
+/* sections.css - ONE sheet for the four school-section pages (R2).
+   The shipped highschl/highsec/primary/kg.css were the same file cloned with a
+   find-and-replace; this is their union, verified line-by-line:
+   - hero-carousel rules live under .kg-carousel (kg is the only page whose hero
+     wrapper carries a slug class; the other three use .abt-carousel, so their
+     cloned copies of these rules never matched anything - dropped as dead).
+   - the reveal animation keeps all four shipped class names.
+   - real per-page differences (bg-6 photo, kg's 4th-event mobile swap, the
+     accordion font line) are scoped with the body classes the pages already had.
+   Do NOT "fix" the quirks noted below - the render must match the baseline. */
 
-
-/* kg-carousel */
 .kg-carousel .carousel-item::before {
     
     content: "";
@@ -36,6 +44,9 @@ font-size: 18px;
 top: 2rem;
 }
 /* anomation */
+.highschl-carousel-reveal,
+.highsec-carousel-reveal,
+.primary-carousel-reveal,
 .kg-carousel-reveal
 {
     transition: 1.5s;
@@ -44,6 +55,9 @@ top: 2rem;
 }
 
 
+.highschl-carousel-reveal.active,
+.highsec-carousel-reveal.active,
+.primary-carousel-reveal.active,
 .kg-carousel-reveal.active 
 {
     opacity: 1;
@@ -154,8 +168,8 @@ top: 2rem;
 
 }
 .home-text h2{
-    font-size: 46px;
     font-family: "Fjalla One", sans-serif!important;
+    font-size: 46px;
   
 }
 .home-text span{
@@ -270,23 +284,38 @@ top: 2rem;
     .about-section:nth-child(2) .about-image {
         order: 1;
     }
-    .about-section:nth-child(4) .about-content {
+    /* kg only: shipped kg.css also swaps the 4th event block on mobile */
+    body.kg .about-section:nth-child(4) .about-content {
         order: 2;
     }
-
-    .about-section:nth-child(4) .about-image {
+    body.kg .about-section:nth-child(4) .about-image {
         order: 1;
+    }
+
+    .about-image {
+        width: 100%;
     }
     .about-content p {
         text-align: justify;
-    }
-    .about-image {
-        width: 100%;
     }
 }
 
 /* high schl stds strt */
 .bg-6{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('../photos/high1.jpg') no-repeat;;
+    background-size: cover;
+}
+/* per-page hero background (each shipped sheet hard-coded its own photo).
+   background-size is repeated because the shorthand above would reset it. */
+body.highsec .bg-6{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('../photos/highsec1.jpg') no-repeat;;
+    background-size: cover;
+}
+body.primary .bg-6{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('../photos/primary1.jpg') no-repeat;;
+    background-size: cover;
+}
+body.kg .bg-6{
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('../photos/kg1.jpg') no-repeat;;
     background-size: cover;
 }
@@ -352,6 +381,13 @@ top: 2rem;
     background: linear-gradient(to left, #2b4b8a, #1a355d)!important;
     color: #fff;   
 }
+/* shipped kg.css alone omitted this font line ("LeagueSpartan" is a typo the
+   browser cannot resolve, so it falls back to sans-serif; kept verbatim) */
+body.highschl .infra-new-text .accordion-main .btn,
+body.highsec .infra-new-text .accordion-main .btn,
+body.primary .infra-new-text .accordion-main .btn{
+    font-family: "LeagueSpartan", sans-serif!important;
+}
 .infra-new-text .accordion-main .btn:hover{
     background:firebrick!important;
     text-decoration: none!important;
@@ -408,9 +444,7 @@ top: 2rem;
         flex: 1 1 100%;
         margin: 0;
     }
-    .infra-new-text p{
-        text-align: justify;
-    }
+
     .infra-new-text {
         order: 1; /* Change order on small screens */
         flex: 1 1 100%;
@@ -418,7 +452,9 @@ top: 2rem;
         text-align: left;
         margin-top: 20px;
     }
-
+    .infra-new-text p{
+        text-align: justify;
+    }
     .infra-new-carousel .carousel-inner {
         height: auto;
     }
@@ -539,7 +575,7 @@ top: 2rem;
   
   .direction-l .flag:after {
     content: "";
-    position: kgsolute;
+    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
     left: 100%;
     top: 50%;
     height: 0;
@@ -553,7 +589,7 @@ top: 2rem;
   
   .direction-r .flag:after {
     content: "";
-    position: kgsolute;
+    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
     right: 100%;
     top: 50%;
     height: 0;
@@ -632,7 +668,7 @@ top: 2rem;
   
   .direction-l .flag:before,
   .direction-r .flag:before {
-    position: kgsolute;
+    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
     top: -30px;
       left: 50%;
       content: ' ';
@@ -649,7 +685,7 @@ top: 2rem;
   .direction-l .flag:after,
   .direction-r .flag:after {
       content: "";
-      position: kgsolute;
+    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
       left: 50%;
       top: -8px;
       height: 0;

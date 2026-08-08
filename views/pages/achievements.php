@@ -66,23 +66,9 @@ function sj_achieve_list(array $rows): void
 
 <script src="/js/achievements.js"></script>
 <script>
-
-
-    window.addEventListener('DOMContentLoaded', reveal);
-    window.addEventListener('scroll', reveal);
-    function reveal() {
-      var reveals = document.querySelectorAll('.achieve-card-reveal,.achieve-text-reveal,.abt-carousel-reveal');
-      var windowHeight = window.innerHeight;
-      var revealPoint = 150;
-
-      reveals.forEach(function(revealElement) {
-        var revealTop = revealElement.getBoundingClientRect().top;
-
-        if (revealTop < windowHeight - revealPoint) {
-          revealElement.classList.add('active');
-        } else {
-          revealElement.classList.remove('active');
-        }
-      });
-    }
-      </script>
+// Shipped selectors/threshold, now through the shared helper in /js/site.js
+// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
+window.addEventListener('DOMContentLoaded', function () {
+  sjReveal('.achieve-card-reveal,.achieve-text-reveal,.abt-carousel-reveal', 150, true);
+});
+</script>

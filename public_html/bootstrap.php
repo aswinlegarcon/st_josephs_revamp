@@ -1,8 +1,38 @@
 <?php
-// Composer autoloader bootstrap. Required by _libs/load.php before anything else,
-// so SJ\* classes are available everywhere. vendor/ is committed (no Composer on prod).
+// Site bootstrap — required at the top of every page, admin endpoint and the
+// CLI seeder. Replaces _libs/load.php (R2): constants, Composer autoload
+// (SJ\ classes + the global helpers in src/helpers.php), lazy session boot,
+// and the dev-only SQL query counter.
 
-$autoload = \dirname(__DIR__) . '/vendor/autoload.php';
-if (\is_file($autoload)) {
-    require_once $autoload;
+if (!defined('SJ_PUBLIC_ROOT')) {
+    define('SJ_PUBLIC_ROOT', __DIR__); // …/public_html
+}
+
+// Static-asset cache-busting version. Bump this ONE line per deploy instead of
+// the old `?v=time()` (which re-downloaded every asset on every request).
+// Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
+if (!defined('SJ_ASSET_VER')) {
+    define('SJ_ASSET_VER', '20260808.5');
+}
+
+// Composer autoloader: SJ\* classes plus src/helpers.php (the historic global
+// function names — e(), db(), repo_*(), img_tag(), ed_*(), …). vendor/ is
+// committed, so prod needs no Composer run.
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+// Public visitors pay no session cost; the session boots only when the admin
+// cookie is present. Admin pages force-boot their own session with (true).
+sj_session_boot(false);
+
+// Dev-only: append the per-request SQL query count to HTML responses so the
+// ≤12/page budget (CLAUDE.md) is visible. Skips JSON APIs and CLI.
+if (!empty(sj_config()['debug']) && PHP_SAPI !== 'cli') {
+    register_shutdown_function(function () {
+        foreach (headers_list() as $h) {
+            if (stripos($h, 'content-type: application/json') === 0) {
+                return; // never corrupt an API response
+            }
+        }
+        echo "\n<!-- sj-queries: " . db_query_count() . " -->";
+    });
 }

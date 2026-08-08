@@ -1,6 +1,6 @@
 <?php
 // scienceacademy — thin controller (shared academy template, DB-driven since C5).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_academy = repo_academy('scienceacademy');
 if (!$sj_academy) {

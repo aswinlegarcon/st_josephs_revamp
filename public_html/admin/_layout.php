@@ -2,7 +2,7 @@
 // Shared layout for the standalone admin panel: auth guard, sidebar navigation,
 // header/footer render helpers, and the Add-button metadata helper.
 
-require dirname(__DIR__) . '/_libs/load.php';
+require dirname(__DIR__) . '/bootstrap.php';
 sj_session_boot(true);
 if (function_exists('sj_admin_headers')) { sj_admin_headers(); } // security headers (added in S4)
 if (!is_admin()) {

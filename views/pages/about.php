@@ -71,15 +71,9 @@
 </div>
 
 <script>
-  window.addEventListener('DOMContentLoaded', reveal);
-  window.addEventListener('scroll', reveal);
-  function reveal() {
-    var reveals = document.querySelectorAll('.abt-carousel-reveal,.ab-1,.ab-2,.ab-3,.ab-4,.reveal-diary,.reveal-abt-card');
-    var windowHeight = window.innerHeight;
-    reveals.forEach(function (el) {
-      var revealTop = el.getBoundingClientRect().top;
-      if (revealTop < windowHeight - 150) el.classList.add('active');
-      else el.classList.remove('active');
-    });
-  }
+// Shipped selectors/threshold, now through the shared helper in /js/site.js
+// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
+window.addEventListener('DOMContentLoaded', function () {
+  sjReveal('.abt-carousel-reveal,.ab-1,.ab-2,.ab-3,.ab-4,.reveal-diary,.reveal-abt-card', 150, true);
+});
 </script>

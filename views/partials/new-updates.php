@@ -284,24 +284,8 @@
 
 <!-- Custom JavaScript -->
 <script>
-    window.addEventListener('scroll', reveal);
-function reveal()
-{
-    var reveals = document.querySelectorAll('.reveal-update');
-    for(var i=0; i< reveals.length;i++)
-        {
-            var windowheight = window.innerHeight;
-            var revealtop = reveals[i].getBoundingClientRect().top;
-            var revealpoint = 150;
-
-            if(revealtop < windowheight-revealpoint)
-                {
-                    reveals[i].classList.add('active');
-                }
-                else
-                {
-                    reveals[i].classList.remove('active');
-                }
-        }
-}
+// Shipped reveal (scroll-only), now via the shared helper in /js/site.js (R2).
+window.addEventListener('DOMContentLoaded', function () {
+    sjReveal('.reveal-update', 150);
+});
 </script>

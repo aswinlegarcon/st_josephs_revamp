@@ -126,25 +126,11 @@ $sid  = (int)$sj_section['id'];
     <!-- template end -->
 
   <script>
-
-
-window.addEventListener('DOMContentLoaded', reveal);
-window.addEventListener('scroll', reveal);
-function reveal() {
-  var reveals = document.querySelectorAll('.infra-new-reveal,.<?= e($sj_slug) ?>-carousel-reveal,.infrastructure-text-reveal');
-  var windowHeight = window.innerHeight;
-  var revealPoint = 120;
-
-  reveals.forEach(function(revealElement) {
-    var revealTop = revealElement.getBoundingClientRect().top;
-
-    if (revealTop < windowHeight - revealPoint) {
-      revealElement.classList.add('active');
-    } else {
-      revealElement.classList.remove('active');
-    }
-  });
-}
+// Shipped per-section reveal (threshold 120), now through the shared helper
+// in /js/site.js (R2); site.js loads later in the body, hence the wrapper.
+window.addEventListener('DOMContentLoaded', function () {
+  sjReveal('.infra-new-reveal,.<?= e($sj_slug) ?>-carousel-reveal,.infrastructure-text-reveal', 120, true);
+});
   </script>
 <?php if (!empty($sj_show_groups_marks)): ?>
     <?php include $__pp . '/groups.php'; ?>

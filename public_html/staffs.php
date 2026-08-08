@@ -1,6 +1,6 @@
 <?php
 // Staffs — thin controller (single-document BS5 layout, DB-driven since C3).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_page        = repo_page('staffs');
 $sj_hero_slides = $sj_page ? repo_hero_slides((int)$sj_page['id'], is_edit()) : [];

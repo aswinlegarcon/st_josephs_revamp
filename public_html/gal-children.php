@@ -1,6 +1,6 @@
 <?php
 // gal-children — thin controller (shared album template, DB-driven since C9).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_album = repo_album('gal-children', is_edit());
 if (!$sj_album) {
@@ -11,7 +11,7 @@ if (!$sj_album) {
 \SJ\View\Layout::render('album', [
     'title'     => "St.Joseph's MHSS, Ondipudur",
     'bodyClass' => 'gal-children',
-    'styles'    => ['albums/gal-children'],
+    'styles'    => ['album'],
     'sj_slug'   => 'gal-children',
     'sj_album'  => $sj_album,
 ]);

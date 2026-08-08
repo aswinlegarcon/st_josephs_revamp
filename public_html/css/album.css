@@ -1,14 +1,25 @@
-.gal-sports {
+/* album.css - ONE sheet for the ten gal-* album pages (R2).
+   The shipped per-album sheets were clones; .album-container is a class the
+   shared album template now adds beside the per-album gal-*-container class.
+   The only real per-album differences follow at the end, scoped by the
+   original per-album container classes (same specificity, later = wins). */
+/* the body classes the ten album pages already carry */
+.gal-annual, .gal-sports, .gal-children, .gal-expo, .gal-independence,
+.gal-teacher, .gal-grad, .gal-alumni, .gal-expressionz, .gal-spach {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-.gal-sports-container {
+/* only these three shipped sheets carried smooth scrolling */
+.gal-expo, .gal-expressionz, .gal-spach {
+  scroll-behavior: smooth;
+}
+.album-container {
   position: relative;
   min-height: 90vh;
   background: #ddd;
 }
-.gal-sports-container h1 {
+.album-container h1 {
   font-family: "Fjalla One", sans-serif !important;
   font-size: 60px;
   font-weight: bolder;
@@ -18,14 +29,14 @@
   text-align: center;
   text-transform: capitalize;
 }
-.gal-sports-container .image-container {
+.album-container .image-container {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
   padding: 10px;
 }
-.gal-sports-container .image-container .image {
+.album-container .image-container .image {
   height: 250px;
   width: 350px;
   border: 5px solid #2b4b8a;
@@ -33,17 +44,17 @@
   overflow: hidden;
   cursor: pointer;
 }
-.gal-sports-container .image-container .image img {
+.album-container .image-container .image img {
   height: 100%;
   width: 100%;
   object-fit: cover;
   transition: 0.2s linear;
 }
-.gal-sports-container .image-container .image:hover img {
+.album-container .image-container .image:hover img {
   transform: scale(1.1);
 }
 
-.gal-sports-container .popup-image {
+.album-container .popup-image {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,7 +74,7 @@
     opacity: 1;
   }
 }
-.gal-sports-container .popup-image span {
+.album-container .popup-image span {
   position: absolute;
   top: 0;
   right: 10px;
@@ -73,23 +84,23 @@
   cursor: pointer;
   z-index: 2000;
 }
-.gal-sports-container .popup-image span:hover {
+.album-container .popup-image span:hover {
   color: #ffd700;
 }
-.gal-sports-container .btn-group {
+.album-container .btn-group {
   margin-left: 20px;
 }
-.gal-sports-container .btn {
+.album-container .btn {
   background-color: #2b4b8a !important;
   border: 2px solid #fff !important;
   color: #fff !important;
   text-decoration: none;
 }
-.gal-sports-container .btn:hover {
+.album-container .btn:hover {
   background-color: #ffd700 !important;
   color: #333 !important;
 }
-.gal-sports-container .popup-image img {
+.album-container .popup-image img {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -111,7 +122,7 @@
   }
 }
 
-.gal-sports-container .navigation-buttons {
+.album-container .navigation-buttons {
   position: absolute;
   top: 50%;
   padding: 20px;
@@ -121,7 +132,7 @@
   transform: translateY(-50%);
   z-index: 2000;
 }
-.gal-sports-container .navigation-buttons button {
+.album-container .navigation-buttons button {
   background: none !important;
   color: white;
   border: none !important; /* Remove the border */
@@ -130,12 +141,23 @@
   cursor: pointer;
 }
 
-.gal-sports-container .navigation-buttons button:hover {
+.album-container .navigation-buttons button:hover {
   color: #ffd700;
 }
 @media (max-width: 768px) {
-  .gal-sports-container .popup-image img {
+  .album-container .popup-image img {
     max-width: 80%; /* Adjusts the width for mobile view */
     max-height: 80%;
   }
+}
+
+/* ---- per-album deltas (from the shipped per-album sheets) ---- */
+.gal-annual-container h1 {
+  padding-top: 50px;
+}
+.gal-annual-container .btn {
+  font-family: "LeagueSpartan", sans-serif !important;
+}
+.gal-independence-container h1 {
+  color: #333;
 }

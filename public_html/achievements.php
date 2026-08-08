@@ -1,6 +1,6 @@
 <?php
 // Achievements — thin controller (DB-driven since C8).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_page = repo_page('achievements');
 

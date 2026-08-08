@@ -10,7 +10,7 @@
 // ← / → / Esc with typing/modifier/edit-mode guards (FEATURES_PLAN §3–4).
 $sj_container = str_replace('gal-', 'gal-', $sj_slug) . '-container';
 ?>
-<div class="<?= e($sj_container) ?>">
+<div class="album-container <?= e($sj_container) ?>">
     <h1<?= ed_field('gallery_album', $sj_album['id'], 'heading') ?>><?= e($sj_album['heading']) ?></h1>
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group"<?= ed_add('album_year', ['album_id' => (int)$sj_album['id']], 'Add year') ?>>
         <?php foreach ($sj_album['years'] as $yi => $Y): ?>

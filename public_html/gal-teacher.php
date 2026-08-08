@@ -1,6 +1,6 @@
 <?php
 // gal-teacher — thin controller (shared album template, DB-driven since C9).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_album = repo_album('gal-teacher', is_edit());
 if (!$sj_album) {
@@ -11,7 +11,7 @@ if (!$sj_album) {
 \SJ\View\Layout::render('album', [
     'title'     => "St.Joseph's MHSS, Ondipudur",
     'bodyClass' => 'gal-teacher',
-    'styles'    => ['albums/gal-teacher'],
+    'styles'    => ['album'],
     'sj_slug'   => 'gal-teacher',
     'sj_album'  => $sj_album,
 ]);

@@ -7,6 +7,16 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'SJ\\Admin\\Audit' => $baseDir . '/src/Admin/Audit.php',
+    'SJ\\Admin\\Auth' => $baseDir . '/src/Admin/Auth.php',
+    'SJ\\Admin\\Csrf' => $baseDir . '/src/Admin/Csrf.php',
+    'SJ\\Content\\Registry' => $baseDir . '/src/Content/Registry.php',
+    'SJ\\Content\\Repo' => $baseDir . '/src/Content/Repo.php',
+    'SJ\\Content\\Sanitizer' => $baseDir . '/src/Content/Sanitizer.php',
     'SJ\\Core\\Config' => $baseDir . '/src/Core/Config.php',
     'SJ\\Core\\Db' => $baseDir . '/src/Core/Db.php',
+    'SJ\\Media\\Html' => $baseDir . '/src/Media/Html.php',
+    'SJ\\Media\\Pipeline' => $baseDir . '/src/Media/Pipeline.php',
+    'SJ\\View\\EditAttrs' => $baseDir . '/src/View/EditAttrs.php',
+    'SJ\\View\\Layout' => $baseDir . '/src/View/Layout.php',
 );

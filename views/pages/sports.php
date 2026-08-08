@@ -69,23 +69,9 @@ $sj_words = ['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten
 
 <script src="/js/sports.js"></script>
 <script>
-
-
-    window.addEventListener('DOMContentLoaded', reveal);
-    window.addEventListener('scroll', reveal);
-    function reveal() {
-      var reveals = document.querySelectorAll('.sports-card-reveal,.sports-text-reveal,.abt-carousel-reveal');
-      var windowHeight = window.innerHeight;
-      var revealPoint = 150;
-
-      reveals.forEach(function(revealElement) {
-        var revealTop = revealElement.getBoundingClientRect().top;
-
-        if (revealTop < windowHeight - revealPoint) {
-          revealElement.classList.add('active');
-        } else {
-          revealElement.classList.remove('active');
-        }
-      });
-    }
-      </script>
+// Shipped selectors/threshold, now through the shared helper in /js/site.js
+// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
+window.addEventListener('DOMContentLoaded', function () {
+  sjReveal('.sports-card-reveal,.sports-text-reveal,.abt-carousel-reveal', 150, true);
+});
+</script>

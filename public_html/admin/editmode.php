@@ -2,7 +2,7 @@
 // POST {csrf, on, return} → toggle the on-page live-edit mode (O1).
 // Admin-only, CSRF-checked; the return target must be a same-site path
 // (never a full URL — no open redirect).
-require __DIR__ . '/../_libs/load.php';
+require __DIR__ . '/../bootstrap.php';
 sj_session_boot(true);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !is_admin()) {

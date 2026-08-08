@@ -20,7 +20,7 @@
 // Output values never include internals; all input is length-capped and the
 // stored values are inserted via placeholders only (SEC-01).
 
-require __DIR__ . '/../_libs/load.php';
+require __DIR__ . '/../bootstrap.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');

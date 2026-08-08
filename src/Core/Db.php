@@ -4,11 +4,34 @@ namespace SJ\Core;
 
 use PDO;
 use PDOException;
+use PDOStatement;
+
+/**
+ * Dev-only query counters (SJ\Core namespace since R2 — _libs/db.php is gone).
+ * Db::pdo() wires them in when config['debug'] is on so db_query_count() works.
+ */
+class CountingStatement extends PDOStatement
+{
+    public function execute(?array $params = null): bool
+    {
+        $GLOBALS['__sj_qcount'] = ($GLOBALS['__sj_qcount'] ?? 0) + 1;
+        return parent::execute($params);
+    }
+}
+
+class CountingPdo extends PDO
+{
+    public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false
+    {
+        $GLOBALS['__sj_qcount'] = ($GLOBALS['__sj_qcount'] ?? 0) + 1;
+        return $fetchMode === null
+            ? parent::query($query)
+            : parent::query($query, $fetchMode, ...$fetchModeArgs);
+    }
+}
 
 /**
  * PDO singleton. Exceptions on, real prepares, assoc fetches, utf8mb4.
- * When config['debug'] is on, uses the global counting PDO/statement classes
- * (defined in _libs/db.php) so db_query_count() works.
  */
 final class Db
 {
@@ -29,12 +52,12 @@ final class Db
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ];
         if ($debug) {
-            $opts[PDO::ATTR_STATEMENT_CLASS] = [\SjCountingStatement::class];
+            $opts[PDO::ATTR_STATEMENT_CLASS] = [CountingStatement::class];
         }
 
         try {
             self::$pdo = $debug
-                ? new \SjCountingPdo($dsn, $cfg['user'], $cfg['pass'], $opts)
+                ? new CountingPdo($dsn, $cfg['user'], $cfg['pass'], $opts)
                 : new PDO($dsn, $cfg['user'], $cfg['pass'], $opts);
         } catch (PDOException $e) {
             if (\PHP_SAPI === 'cli') {

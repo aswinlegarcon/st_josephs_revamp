@@ -121,18 +121,8 @@
         </div>
     </div>
     <script>
-        window.addEventListener('scroll', function() {
-        var reveals = document.querySelectorAll('.testimonial-reveal');
-        for (var i = 0; i < reveals.length; i++) {
-            var windowHeight = window.innerHeight;
-            var revealTop = reveals[i].getBoundingClientRect().top;
-            var revealPoint = 150;
-
-            if (revealTop < windowHeight - revealPoint) {
-                reveals[i].classList.add('active');
-            } else {
-                reveals[i].classList.remove('active');
-            }
-        }
-    });
-    </script>
+// Shipped reveal (scroll-only), now via the shared helper in /js/site.js (R2).
+window.addEventListener('DOMContentLoaded', function () {
+    sjReveal('.testimonial-reveal', 150);
+});
+</script>

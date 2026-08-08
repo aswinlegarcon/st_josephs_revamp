@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit8702f2e8ea5505b58c7990b6f350f2f5
 {
+    public static $files = array (
+        '4b5c836d6a2aa8d0b9d63d61922842b7' => __DIR__ . '/../..' . '/src/helpers.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'S' =>
         array (
@@ -22,8 +26,18 @@ class ComposerStaticInit8702f2e8ea5505b58c7990b6f350f2f5
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'SJ\\Admin\\Audit' => __DIR__ . '/../..' . '/src/Admin/Audit.php',
+        'SJ\\Admin\\Auth' => __DIR__ . '/../..' . '/src/Admin/Auth.php',
+        'SJ\\Admin\\Csrf' => __DIR__ . '/../..' . '/src/Admin/Csrf.php',
+        'SJ\\Content\\Registry' => __DIR__ . '/../..' . '/src/Content/Registry.php',
+        'SJ\\Content\\Repo' => __DIR__ . '/../..' . '/src/Content/Repo.php',
+        'SJ\\Content\\Sanitizer' => __DIR__ . '/../..' . '/src/Content/Sanitizer.php',
         'SJ\\Core\\Config' => __DIR__ . '/../..' . '/src/Core/Config.php',
         'SJ\\Core\\Db' => __DIR__ . '/../..' . '/src/Core/Db.php',
+        'SJ\\Media\\Html' => __DIR__ . '/../..' . '/src/Media/Html.php',
+        'SJ\\Media\\Pipeline' => __DIR__ . '/../..' . '/src/Media/Pipeline.php',
+        'SJ\\View\\EditAttrs' => __DIR__ . '/../..' . '/src/View/EditAttrs.php',
+        'SJ\\View\\Layout' => __DIR__ . '/../..' . '/src/View/Layout.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

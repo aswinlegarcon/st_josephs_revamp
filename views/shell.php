@@ -53,6 +53,8 @@ $showJumbotron = $showJumbotron ?? false;
 
 <!-- ONE self-hosted Bootstrap 5.3.3 bundle (includes Popper) -->
 <script src="/assets/vendor/bootstrap-5.3.3/js/bootstrap.bundle.min.js?v=<?php echo SJ_ASSET_VER; ?>"></script>
+<!-- shared reveal/blur helpers (R2) — loaded before the per-page scripts -->
+<script src="/js/site.js?v=<?php echo SJ_ASSET_VER; ?>"></script>
 <?php foreach ($scripts as $js): ?>
 <script src="/js/<?= e($js) ?>.js"></script>
 <?php endforeach; ?>

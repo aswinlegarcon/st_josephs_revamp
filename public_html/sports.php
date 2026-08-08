@@ -1,6 +1,6 @@
 <?php
 // Sports — thin controller (DB-driven since C6).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_page       = repo_page('sports');
 $sportsData    = ['suffixes' => ['', '2', '3']]; // shipped reveal-class sequence

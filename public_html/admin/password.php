@@ -2,7 +2,7 @@
 // Forced / self-service password change (PHASES.md S2, SECURITY.md SEC-08).
 // Standalone page (NOT via _layout.php) so the must_change_password guard there
 // cannot cause a redirect loop.
-require dirname(__DIR__) . '/_libs/load.php';
+require dirname(__DIR__) . '/bootstrap.php';
 sj_session_boot(true);
 if (function_exists('sj_admin_headers')) { sj_admin_headers(); } // security headers (added in S4)
 

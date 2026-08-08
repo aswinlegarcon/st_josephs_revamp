@@ -104,26 +104,15 @@ $__pp = dirname(__DIR__) . '/partials';
 
 <script>
 
+// Home reveals — shipped selectors/threshold, now through the shared helper in
+// /js/site.js (R2). The counters below are unique to Home and stay verbatim.
+window.addEventListener('DOMContentLoaded', function () {
+    sjReveal('.ab-1, .span-reveal, .infrastructure-text-reveal, .new-temp-text', 100, true);
+});
+
 window.addEventListener('scroll', function() {
-            reveal();
             incrementCounters();
         });
-
-        function reveal() {
-            var reveals = document.querySelectorAll('.ab-1, .span-reveal, .infrastructure-text-reveal, .new-temp-text');
-            var windowHeight = window.innerHeight;
-
-            reveals.forEach(reveal => {
-                var revealTop = reveal.getBoundingClientRect().top;
-                var revealPoint = 100; // Adjust this value if needed
-
-                if (revealTop < windowHeight - revealPoint) {
-                    reveal.classList.add('active');
-                } else {
-                    reveal.classList.remove('active');
-                }
-            });
-        }
 
         function incrementCounters() {
             const counters = document.querySelectorAll('.counter');
@@ -160,7 +149,7 @@ window.addEventListener('scroll', function() {
             });
         }
 
-        // Initial checks to handle elements already in view on page load
-        reveal();
+        // Initial check to handle counters already in view on page load
+        // (the reveal initial check is sjReveal's initNow above)
         incrementCounters();
 </script>

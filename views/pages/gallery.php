@@ -135,21 +135,9 @@ foreach (array_chunk($sj_albums, 3) as $ri => $chunk): ?>
 <?php endforeach; ?>
 
 <script>
-    window.addEventListener('DOMContentLoaded', reveal);
-    window.addEventListener('scroll', reveal);
-    function reveal() {
-      var reveals = document.querySelectorAll('.gallery-carousel-reveal,.gallery-card-reveal,.gallery-text-reveal,.gallery-card-reveal2,.gallery-card-reveal3,.gallery-card-reveal4,.gallery-card-reveal5');
-      var windowHeight = window.innerHeight;
-      var revealPoint = 150;
-
-      reveals.forEach(function(revealElement) {
-        var revealTop = revealElement.getBoundingClientRect().top;
-
-        if (revealTop < windowHeight - revealPoint) {
-          revealElement.classList.add('active');
-        } else {
-          revealElement.classList.remove('active');
-        }
-      });
-    }
+// Shipped selectors/threshold, now through the shared helper in /js/site.js
+// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
+window.addEventListener('DOMContentLoaded', function () {
+  sjReveal('.gallery-carousel-reveal,.gallery-card-reveal,.gallery-text-reveal,.gallery-card-reveal2,.gallery-card-reveal3,.gallery-card-reveal4,.gallery-card-reveal5', 150, true);
+});
 </script>

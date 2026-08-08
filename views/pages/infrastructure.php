@@ -93,23 +93,9 @@
 <?php endforeach; ?>
 
 <script>
-
-
-    window.addEventListener('DOMContentLoaded', reveal);
-    window.addEventListener('scroll', reveal);
-    function reveal() {
-      var reveals = document.querySelectorAll('.infra-new-reveal,.infrastructure-text-reveal,.abt-carousel-reveal');
-      var windowHeight = window.innerHeight;
-      var revealPoint = 150;
-
-      reveals.forEach(function(revealElement) {
-        var revealTop = revealElement.getBoundingClientRect().top;
-
-        if (revealTop < windowHeight - revealPoint) {
-          revealElement.classList.add('active');
-        } else {
-          revealElement.classList.remove('active');
-        }
-      });
-    }
-      </script>
+// Shipped selectors/threshold, now through the shared helper in /js/site.js
+// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
+window.addEventListener('DOMContentLoaded', function () {
+  sjReveal('.infra-new-reveal,.infrastructure-text-reveal,.abt-carousel-reveal', 150, true);
+});
+</script>

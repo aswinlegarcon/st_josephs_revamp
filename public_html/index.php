@@ -2,7 +2,7 @@
 // Home — thin controller. Gathers data, then renders through the layout engine.
 // R1d: home renders in the universal BS5 shell; the content partials are
 // parametrized, so ALL queries happen here (none inside views).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_page      = repo_page('index');
 $sj_principal = repo_profile('principal');
@@ -22,7 +22,7 @@ $sj_testimonials  = repo_testimonials(is_edit());
     // Baseline head-cascade order: the page's own CSS first, then the section
     // sheets in template order. (home-bs4-remnants.css is linked at the END of
     // the page body by views/pages/home.php — see the note there.)
-    'styles'         => ['index', 'carousel', 'card', 'contact'],
+    'styles'         => ['home'],
     'sj_page'        => $sj_page,
     'sj_principal'   => $sj_principal,
     'sj_features'    => $sj_features,

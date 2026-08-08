@@ -1,6 +1,6 @@
 <?php
 // Infrastructure — thin controller (DB-driven since C7).
-require __DIR__ . '/_libs/load.php';
+require __DIR__ . '/bootstrap.php';
 
 $sj_page = repo_page('infrastructure');
 

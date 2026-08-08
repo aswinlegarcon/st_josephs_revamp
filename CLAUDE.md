@@ -21,7 +21,7 @@ Repo rules for any AI agent working in this codebase. Read this before editing.
 
 ## MANDATORY security rule
 
-Before you mark **any** change complete that touches `public_html/admin/**`, `public_html/_libs/**`, `src/**`, `database/**`, or any page that renders DB content:
+Before you mark **any** change complete that touches `public_html/admin/**`, `public_html/api/**`, `public_html/bootstrap.php`, `src/**`, `database/**`, or any page that renders DB content:
 
 1. Walk the relevant `SEC-*` items in `SECURITY.md` and apply their mitigations.
 2. Affirm **every line** of `SECURITY.md` §4 (the 15-item pre-ship checklist).
@@ -59,7 +59,7 @@ If a task seems to require a prohibited write, say so and propose the editor-too
 
 ## Coding conventions (non-negotiable)
 
-- **SQL:** values only via PDO **placeholders**; table/column **identifiers only from the registry** (`SJ\Content\Registry` / `_libs/registry.php`) or code literals. Never build SQL from request data.
+- **SQL:** values only via PDO **placeholders**; table/column **identifiers only from the registry** (`SJ\Content\Registry`) or code literals. Never build SQL from request data.
 - **Output:** every echoed dynamic value goes through `e()` (htmlspecialchars, ENT_QUOTES, UTF-8). The only exception is columns ending `_html`, which must have passed `sj_sanitize_html()` on write. Never raw-echo anything else.
 - **Rich text:** new rich fields are typed `html` in the registry so the write path sanitizes them; the whitelist is frozen (`b, strong, i, em, br, p, span.hl-gold`).
 - **Mutations:** state changes are **POST + CSRF** only; no mutating GET. Every new admin API file `require`s `admin/api/_bootstrap.php` first (auth + CSRF + JSON).

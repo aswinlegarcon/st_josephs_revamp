@@ -49,6 +49,12 @@
 </div>
 </div>
 
-<script src="/js/card.js"></script>
+<script>
+// Motto/card/text reveals — shipped parameters (was /js/card.js), now through
+// the shared helper in /js/site.js (R2). Scroll-only, as the original.
+window.addEventListener('DOMContentLoaded', function () {
+    sjReveal('.reveal-motto,.reveal-card,.reveal-text', 150);
+});
+</script>
 
   <!-- Cards Ends -->

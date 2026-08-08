@@ -10,14 +10,14 @@ if (PHP_SAPI !== 'cli') {
 }
 
 foreach ([dirname(__DIR__) . '/public_html', '/var/www/html'] as $root) {
-    if (is_file($root . '/_libs/load.php')) {
+    if (is_file($root . '/bootstrap.php')) {
         define('SJ_PUBLIC_ROOT', $root);
-        require $root . '/_libs/load.php';
+        require $root . '/bootstrap.php';
         break;
     }
 }
 if (!defined('SJ_PUBLIC_ROOT')) {
-    fwrite(STDERR, "Cannot locate public_html/_libs/load.php\n");
+    fwrite(STDERR, "Cannot locate public_html/bootstrap.php\n");
     exit(1);
 }
 

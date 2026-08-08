@@ -1,6 +1,6 @@
 <?php
 // Shared guard for every admin API endpoint: session + CSRF + JSON I/O + validation.
-require dirname(__DIR__, 2) . '/_libs/load.php';
+require dirname(__DIR__, 2) . '/bootstrap.php';
 sj_session_boot(true);
 
 header('Content-Type: application/json; charset=utf-8');

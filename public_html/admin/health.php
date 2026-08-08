@@ -2,7 +2,7 @@
 // Deployment smoke-check (PHASES.md X1). Token-gated so it isn't a public info leak.
 //   /admin/health.php?token=<config health_token>
 // Returns JSON; HTTP 200 when everything is green, 503 otherwise.
-require dirname(__DIR__) . '/_libs/load.php';
+require dirname(__DIR__) . '/bootstrap.php';
 sj_session_boot(true);
 if (function_exists('sj_admin_headers')) { sj_admin_headers(); }
 header('Content-Type: application/json; charset=utf-8');
