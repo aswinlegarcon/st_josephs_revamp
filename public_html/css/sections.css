@@ -302,21 +302,23 @@ top: 2rem;
 
 /* high schl stds strt */
 .bg-6{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/photos/high1.jpg') no-repeat;;
+    /* F2: /media/static/* are downscaled full-frame copies of the /photos
+       originals (same framing under the gradient, ~4x smaller) */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/high1.jpg') no-repeat;;
     background-size: cover;
 }
 /* per-page hero background (each shipped sheet hard-coded its own photo).
    background-size is repeated because the shorthand above would reset it. */
 body.highsec .bg-6{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/photos/highsec1.jpg') no-repeat;;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/highsec1.jpg') no-repeat;;
     background-size: cover;
 }
 body.primary .bg-6{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/photos/primary1.jpg') no-repeat;;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/primary1.jpg') no-repeat;;
     background-size: cover;
 }
 body.kg .bg-6{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/photos/kg1.jpg') no-repeat;;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/kg1.jpg') no-repeat;;
     background-size: cover;
 }
 .infra-new {

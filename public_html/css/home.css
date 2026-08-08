@@ -685,7 +685,7 @@ html {
 .products {
   width: 100%;
   background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/photos/asemb1.jpg");
+    url("/media/static/asemb1.jpg"); /* F2: full-frame recompression of /photos/asemb1.jpg */
   background-size: cover;
   text-align: center;
   padding-top: 100px;

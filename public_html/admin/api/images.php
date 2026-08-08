@@ -31,6 +31,8 @@ if ($rows) {
         ['unique_features', 'image_id'], ['update_slides', 'image_id'], ['sports', 'image_id'],
         ['achievements', 'image_id'], ['facilities', 'bg_image_id'],
         ['academies', 'card_image_id'], ['academies', 'bg_image_id'], ['school_sections', 'card_image_id'],
+        // keep in sync with SJ_IMAGE_REFS in image.php (F2 gap fix)
+        ['section_events', 'image_id'], ['gallery_albums', 'card_image_id'],
     ];
     $parts = [];
     $args  = [];

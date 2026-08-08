@@ -55,19 +55,22 @@
 .card:hover {
   box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.2);
 }
+/* F2: the /media/static/*.jpg files are full-frame recompressions of the
+   original PNGs (photographs stored as PNG were ~920 KB each; the JPEG copies
+   are ~78 KB and sit under the same navy gradient). */
 .card1 {
   background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/photos/testimonial1.png");
+    url("/media/static/testimonial1.jpg");
     background-size:100% 100%;
 }
 .card2 {
   background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/photos/testimonial2.png");
+    url("/media/static/testimonial2.jpg");
     background-size:100% 100%;
 }
 .card3 {
   background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/photos/testimonial3.png");
+    url("/media/static/testimonial3.jpg");
     background-size:100% 100%;
 
 }

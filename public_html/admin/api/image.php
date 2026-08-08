@@ -29,6 +29,10 @@ const SJ_IMAGE_REFS = [
     ['academies',       'card_image_id', 'academy card'],
     ['academies',       'bg_image_id',   'academy background'],
     ['school_sections', 'card_image_id', 'grade card'],
+    // F2 gap fix: these two were missing, so deleting an image used by a
+    // section event block or an album card would have broken that slot.
+    ['section_events',  'image_id',      'section event block'],
+    ['gallery_albums',  'card_image_id', 'gallery album card'],
 ];
 
 /** Usage summary for one image: [label => count]. */

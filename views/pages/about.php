@@ -56,7 +56,9 @@
 <!-- cross-navigation teasers -->
 <div class="abt-card-container reveal-abt-card">
   <section class="section">
-    <img src="/photos/achbg.jpg" alt="Achievements">
+    <?php /* F2: /media/static/achbg.jpg is a full-frame recompression of
+             /photos/achbg.jpg (541K -> 164K); same image, same framing. */ ?>
+    <img src="/media/static/achbg.jpg" alt="Achievements">
     <div class="section-content cont-reveal-1">
       <h2>Achievements</h2>
       <p>Our school has consistently excelled in academics, sports, and extracurricular activities, earning numerous awards and accolades.</p>

@@ -31,24 +31,31 @@ final class Pipeline
         return $cache[$key] ?? null;
     }
 
-    /** Rendition rows for one image+preset, keyed by format. */
+    /**
+     * Rendition rows for one image+preset, keyed by format.
+     * F2: the whole table is loaded ONCE per request (a few hundred small
+     * rows) instead of one query per image — an album page renders ~250
+     * photos and would otherwise blow the ≤12-query budget.
+     */
     public static function renditions(int $imageId, string $presetKey, bool $refresh = false): array
     {
-        static $cache = [];
+        static $all = null;
+        if ($all === null) {
+            $all = [];
+            foreach (db()->query('SELECT * FROM image_renditions') as $r) {
+                $all[$r['image_id'] . ':' . $r['preset_key']][$r['format']] = $r;
+            }
+        }
         $k = $imageId . ':' . $presetKey;
         if ($refresh) {
-            unset($cache[$k]);
-        }
-        if (!\array_key_exists($k, $cache)) {
+            unset($all[$k]);
             $st = db()->prepare('SELECT * FROM image_renditions WHERE image_id = ? AND preset_key = ?');
             $st->execute([$imageId, $presetKey]);
-            $out = [];
             foreach ($st->fetchAll() as $r) {
-                $out[$r['format']] = $r;
+                $all[$k][$r['format']] = $r;
             }
-            $cache[$k] = $out;
         }
-        return $cache[$k];
+        return $all[$k] ?? [];
     }
 
     public static function extForMime(string $mime): string
