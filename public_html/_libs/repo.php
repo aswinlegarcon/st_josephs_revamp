@@ -192,6 +192,16 @@ function repo_facilities(bool $includeInactive = false): array
     return $rows;
 }
 
+/** Achievements of one type with images, ordered — one query (C8). */
+function repo_achievements(string $type, bool $includeInactive = false): array
+{
+    $sql = 'SELECT a.*, ' . SJ_IMG_SELECT . ' FROM achievements a LEFT JOIN images i ON i.id = a.image_id
+            WHERE a.type = ?' . ($includeInactive ? '' : ' AND a.is_active = 1') . ' ORDER BY a.position, a.id';
+    $st = db()->prepare($sql);
+    $st->execute([$type]);
+    return array_map('repo_fold_image', $st->fetchAll());
+}
+
 /** Images linked to one owner collection (image_links), ordered — one query (M1). */
 function repo_linked_images(string $ownerType, int $ownerId, string $role = 'carousel'): array
 {

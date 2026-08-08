@@ -20,6 +20,8 @@ $cards = [
         (int)db()->query('SELECT COUNT(*) FROM sports')->fetchColumn() . ' sports'],
     ['facilities', '🏗️', 'Infrastructure', 'The 15 facility showcases with quick-jump nav and carousels.',
         (int)db()->query('SELECT COUNT(*) FROM facilities')->fetchColumn() . ' facilities'],
+    ['achievements', '🏆', 'Achievements', 'The zig-zag achievement and award lists.',
+        (int)db()->query('SELECT COUNT(*) FROM achievements')->fetchColumn() . ' items'],
     ['unique',    '✨', "What's Unique",  'The ESC / Language Academies feature blocks.',
         (int)db()->query('SELECT COUNT(*) FROM unique_features')->fetchColumn() . ' blocks'],
     ['ticker',    '📣', 'News Ticker',    'The scrolling announcement bar with links.',

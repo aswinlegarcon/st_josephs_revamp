@@ -548,6 +548,48 @@ case 'facilities':
     <?php
     break;
 
+/* ================= ACHIEVEMENTS (C8) ================= */
+case 'achievements':
+    $achPage = repo_page('achievements');
+    ?>
+    <h3 class="sj-form-legend">Top carousel</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Photos rotating at the top of the Achievements page.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$achPage['id']], 'Add slide') ?>>＋ Add slide</button>
+    </div>
+    <div class="sj-list" data-list="hero_slide">
+      <?php foreach (repo_hero_slides((int)$achPage['id'], true) as $sl) {
+          panel_row([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'title'  => $sl['caption_title'] ?: '(no caption)',
+              'sub'    => $sl['caption_text'],
+              'active' => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+
+    <?php foreach (['achievement' => 'Achievements list', 'award' => 'Awards list ("given by St.Joseph\'s")'] as $atype => $alabel): ?>
+    <h3 class="sj-form-legend"><?= e($alabel) ?></h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Photos alternate left/right automatically (zig-zag).</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('achievement', ['type' => $atype], 'Add to ' . $alabel) ?>>＋ Add</button>
+    </div>
+    <div class="sj-list" data-list="achievement">
+      <?php foreach (repo_achievements($atype, true) as $A) {
+          panel_row([
+              'entity' => 'achievement', 'id' => $A['id'],
+              'thumb'  => $A['image'] ? img_url($A['image'], 'feature_4x3') : null,
+              'title'  => $A['title'],
+              'sub'    => $A['subtext'],
+              'active' => (bool)$A['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php endforeach; ?>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is

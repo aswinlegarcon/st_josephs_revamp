@@ -29,6 +29,7 @@ function panel_sections(): array
         'academies'    => ['🎓', 'Academies'],
         'sports'       => ['🏅', 'Sports'],
         'facilities'   => ['🏗️', 'Infrastructure'],
+        'achievements' => ['🏆', 'Achievements'],
         'unique'    => ['✨', "What's Unique"],
         'ticker'    => ['📣', 'News Ticker'],
         'updates'   => ['📺', 'New Updates'],

@@ -447,6 +447,29 @@ foreach ($facData['facilities'] as $i => $F) {
 }
 $out[] = 'facilities: ' . $pdo->query('SELECT COUNT(*) FROM facilities')->fetchColumn() . ' rows';
 
+/* ---------- Achievements + awards (C8) ---------- */
+$achData = require __DIR__ . '/seed-data/achievements.php';
+$pdo->prepare('INSERT IGNORE INTO pages (slug, title, heading_html) VALUES (?,?,?)')
+    ->execute(['achievements', "St.Joseph's MHSS, Ondipudur", '']);
+$achPageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'achievements'")->fetchColumn();
+$cnt->execute([$achPageId]);
+if (!$cnt->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO hero_slides (page_id, image_id, caption_title, caption_text, position) VALUES (?,?,?,?,?)');
+    foreach ($achData['hero'] as $i => [$img, $t, $x]) {
+        $st->execute([$achPageId, img_id_by_file($img), $t, $x, $i]);
+    }
+    $out[] = 'achievements hero_slides: seeded ' . count($achData['hero']);
+}
+if (!$pdo->query('SELECT COUNT(*) FROM achievements')->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO achievements (type, title, subtext, image_id, position) VALUES (?,?,?,?,?)');
+    $posByType = [];
+    foreach ($achData['rows'] as $R) {
+        $posByType[$R['type']] = ($posByType[$R['type']] ?? -1) + 1;
+        $st->execute([$R['type'], $R['title'], $R['subtext'], $R['image'] ? img_id_by_file($R['image']) : null, $posByType[$R['type']]]);
+    }
+    $out[] = 'achievements: seeded ' . count($achData['rows']);
+}
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the

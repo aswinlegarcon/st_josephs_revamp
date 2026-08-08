@@ -1,30 +1,54 @@
-<?php // Achievements page body (static content; becomes DB-driven in phase C2). Bootstrap 5 dialect. ?>
+<?php
+// Achievements page body — DB-driven since C8. Variables from the controller:
+// $sj_page, $sj_hero_slides, $sj_achievements, $sj_awards.
+// Items pair up 2-per .achieve-container; the second of each pair is
+// class="item reverse" (photo on the right) — the shipped zig-zag.
+
+/** Render one typed list in the shipped paired zig-zag markup. */
+function sj_achieve_list(array $rows): void
+{
+    foreach (array_chunk($rows, 2) as $pair) {
+        echo '<div class="achieve-container">' . "\n";
+        foreach ($pair as $k => $A) {
+            $rev = $k === 1;
+            ?>
+        <div class="item<?= $rev ? ' reverse' : '' ?><?= empty($A['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('achievement', $A['id'], $A['title']) ?>>
+            <?php if (!$rev): ?>
+            <?= img_tag($A['image'], 'feature_4x3', ['alt' => 'Section Image', 'extra' => trim(ed_img('achievement', $A['id']))]) ?>
+            <div class="icon">
+            <img src="/photos/trophy.png" alt="trophy">
+            </div>
+            <h3<?= ed_field('achievement', $A['id'], 'title') ?>><?= e($A['title']) ?></h3>
+            <p<?= ed_field('achievement', $A['id'], 'subtext') ?>><?= e($A['subtext']) ?></p>
+            <?php else: ?>
+            <div class="icon">
+            <img src="/photos/trophy.png" alt="trophy">
+            </div>
+            <h3<?= ed_field('achievement', $A['id'], 'title') ?>><?= e($A['title']) ?></h3>
+            <p<?= ed_field('achievement', $A['id'], 'subtext') ?>><?= e($A['subtext']) ?></p>
+            <?= img_tag($A['image'], 'feature_4x3', ['alt' => 'Section Image', 'extra' => trim(ed_img('achievement', $A['id']))]) ?>
+            <?php endif; ?>
+        </div>
+            <?php
+        }
+        echo "    </div>\n";
+    }
+}
+?>
 
 <!-- top carousel -->
 <section class="abt-carousel">
 <div id="achievementsHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img class="d-block w-100" src="photos/achbg.jpg" alt="First slide">
+  <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add achievements slide') : '' ?>>
+    <?php foreach ($sj_hero_slides as $i => $s): ?>
+    <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'Achievements slide') ?>>
+      <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => ($i === 0 ? 'First' : ($i === 1 ? 'Second' : 'Third')) . ' slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
       <div class="carousel-caption text-start">
-          <h5 class="abt-carousel-reveal">Our Achievements</h5>
-          <p class="abt-carousel-reveal">About our achievements</p>
+          <h5<?= $i === 0 ? ' class="abt-carousel-reveal"' : '' ?><?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
+          <p<?= $i === 0 ? ' class="abt-carousel-reveal"' : '' ?><?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
       </div>
     </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="photos/achoverall.jpg" alt="Second slide">
-      <div class="carousel-caption text-start">
-      <h5>Our Achievements</h5>
-      <p>About our achievements</p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img class="d-block w-100" src="photos/achcric.jpg" alt="Third slide">
-      <div class="carousel-caption text-start">
-      <h5>Our Achievements</h5>
-      <p>About our achievements</p>
-      </div>
-    </div>
+    <?php endforeach; ?>
   </div>
 </div>
 </section>
@@ -33,136 +57,12 @@
 <div class="home-text">
     <h2  class="span-reveal">The <span>Achievements </span> of St.Joseph's</h2>
 </div>
-<div class="achieve-container">
-        <div class="item">
-            <img src="/photos/achoverall.jpg" alt="Section Image">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Zonal Level Athletics Meet</h3>
-            <p>Overall Winner - 2023</p>
-        </div>
-        <div class="item reverse">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>District Level Athletics Meet</h3>
-            <p>Venue: Karamadai VidhyaVikash -- Overall Runners - 2023</p>
-            <img src="/photos/achdist.jpg" alt="Section Image">
-        </div>
-    </div>
-    <div class="achieve-container">
-        <div class="item">
-            <img src="/photos/achnatyoga.jpg" alt="Section Image">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>National Level Yoga</h3>
-            <p>Medal Winners</p>
-        </div>
-        <div class="item reverse">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>State Level Medal Winners</h3>
-            <p>Appreciate by Commissioner of Police</p>
-            <img src="/photos/achstate.jpg" alt="Section Image">
-        </div>
-    </div>
-    <div class="achieve-container">
-        <div class="item">
-            <img src="/photos/achsai.jpg" alt="Section Image">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Selected for SAI Camp</h3>
-            <p>Banglore - 2024</p>
-        </div>
-        <div class="item reverse">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>National Level Athletic Meet</h3>
-            <p>Gujarat - 2024</p>
-            <img src="/photos/achguj.jpg" alt="Section Image">
-        </div>
-    </div>
-    <div class="achieve-container">
-        <div class="item">
-            <img src="/photos/achyog.jpg" alt="Section Image">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>TamilNadu Sports Yoga Competition</h3>
-            <p>Participated and Won Prizes - 2023</p>
-        </div>
-        <div class="item reverse">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Sri Shakthi College Cricket Trophy</h3>
-            <p>Third Place(3) </p>
-            <img src="/photos/achcric.jpg" alt="Section Image">
-        </div>
-    </div>
-    <div class="achieve-container">
-        <div class="item">
-            <img src="/photos/achmedal.jpg" alt="Section Image">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>District Level Winners</h3>
-            <p>Participated in State 2023</p>
-        </div>
-        <div class="item reverse">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Table Tennis Zonals</h3>
-            <p>Winners - All Category - 2023</p>
-            <img src="/photos/achtt.jpg" alt="Section Image">
-        </div>
-    </div>
+<?php sj_achieve_list($sj_achievements); ?>
 
     <div class="home-text">
     <h2  class="span-reveal">The <span>Awards given by </span> St.Joseph's</h2>
 </div>
-<div class="achieve-container">
-        <div class="item">
-            <img src="/photos/certificate1.jpg" alt="Section Image">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Certificate of Distinction</h3>
-            <p>For Securing 80% in all Subjects</p>
-        </div>
-        <div class="item reverse">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Certificate of Merit</h3>
-            <p>For Securing 60% in all Subjects</p>
-            <img src="/photos/certificate2.jpg" alt="Section Image">
-        </div>
-    </div>
-    <div class="achieve-container">
-        <div class="item">
-            <img src="/photos/certificate3.jpg" alt="Section Image">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Certificate of Achievement</h3>
-            <p>For Intramural Winners</p>
-        </div>
-        <div class="item reverse">
-            <div class="icon">
-            <img src="/photos/trophy.png" alt="trophy">
-            </div>
-            <h3>Certificate of Achievement</h3>
-            <p>For all other Achievements </p>
-            <img src="/photos/certificate4.jpg" alt="Section Image">
-        </div>
-    </div>
+<?php sj_achieve_list($sj_awards); ?>
 
 <script src="/js/achievements.js"></script>
 <script>

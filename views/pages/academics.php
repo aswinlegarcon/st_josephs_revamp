@@ -36,46 +36,18 @@
 <!-- grade-level cards -->
 <section class="academy-card academy-card-reveal">
   <div class="row mt-4">
+    <?php foreach ($sj_sections as $sec): ?>
     <div class="col-md-3">
       <div class="card">
-        <img src="/photos/kg1.jpg" class="card-img-top" alt="...">
+        <?= img_tag($sec['image'], 'card_4x3', ['class' => 'card-img-top', 'alt' => '...', 'extra' => trim(ed_img('school_section', $sec['id'], 'card_image_id'))]) ?>
         <div class="card-body">
-          <h3 class="card-title">Kinder Garten(KG)</h3>
-          <p class="card-text">LKG-UKG</p>
-          <a href="kg.php" class="btn btn-primary">Explore</a>
+          <h3 class="card-title"<?= ed_field('school_section', $sec['id'], 'card_title') ?>><?= e($sec['card_title']) ?></h3>
+          <p class="card-text"<?= ed_field('school_section', $sec['id'], 'card_range') ?>><?= e($sec['card_range']) ?></p>
+          <a href="<?= e($sec['slug']) ?>.php" class="btn btn-primary">Explore</a>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="card">
-        <img src="/photos/primary4.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Primary School</h3>
-          <p class="card-text">1st - 5th</p>
-          <a href="primary.php" class="btn btn-primary">Explore</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card">
-        <img src="/photos/high1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">High School</h3>
-          <p class="card-text">6th - 10th</p>
-          <a href="highschl.php" class="btn btn-primary">Explore</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card">
-        <img src="/photos/highsec1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h3 class="card-title">Higher Secondary</h3>
-          <p class="card-text">11th - 12th</p>
-          <a href="highsec.php" class="btn btn-primary">Explore</a>
-        </div>
-      </div>
-    </div>
+    <?php endforeach; ?>
   </div>
 </section>
 

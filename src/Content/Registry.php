@@ -145,6 +145,16 @@ final class Registry
                     'is_active'        => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
+            'achievement' => [
+                'table' => 'achievements', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'fields' => [
+                    'type'      => ['type' => 'enum', 'values' => ['achievement', 'award'], 'label' => 'List'],
+                    'title'     => ['type' => 'text', 'max' => 150, 'label' => 'Title'],
+                    'subtext'   => ['type' => 'text', 'max' => 255, 'label' => 'Sub-line'],
+                    'image_id'  => ['type' => 'image', 'preset' => 'feature_4x3', 'label' => 'Photo', 'required' => true],
+                    'is_active' => ['type' => 'bool', 'label' => 'Visible on site'],
+                ],
+            ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [
