@@ -27,6 +27,7 @@ function panel_sections(): array
         'testimonials' => ['💬', 'Testimonials'],
         'sections'     => ['🏫', 'School Sections'],
         'academies'    => ['🎓', 'Academies'],
+        'sports'       => ['🏅', 'Sports'],
         'unique'    => ['✨', "What's Unique"],
         'ticker'    => ['📣', 'News Ticker'],
         'updates'   => ['📺', 'New Updates'],

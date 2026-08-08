@@ -154,6 +154,14 @@ function repo_academies(bool $includeInactive = false): array
     return array_map('repo_fold_image', db()->query($sql)->fetchAll());
 }
 
+/** All sports with images, ordered — one query (C6). */
+function repo_sports(bool $includeInactive = false): array
+{
+    $sql = 'SELECT sp.*, ' . SJ_IMG_SELECT . ' FROM sports sp LEFT JOIN images i ON i.id = sp.image_id'
+         . ($includeInactive ? '' : ' WHERE sp.is_active = 1') . ' ORDER BY sp.position, sp.id';
+    return array_map('repo_fold_image', db()->query($sql)->fetchAll());
+}
+
 /** Images linked to one owner collection (image_links), ordered — one query (M1). */
 function repo_linked_images(string $ownerType, int $ownerId, string $role = 'carousel'): array
 {

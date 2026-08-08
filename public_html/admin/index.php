@@ -16,6 +16,8 @@ $cards = [
         (int)db()->query('SELECT COUNT(*) FROM timeline_entries')->fetchColumn() . ' timeline months'],
     ['academies', '🎓', 'Academies', 'The 18 academy pages + their co-curriculum cards.',
         (int)db()->query('SELECT COUNT(*) FROM academies')->fetchColumn() . ' academies'],
+    ['sports',    '🏅', 'Sports', 'The Sports page — hero photos and the nine sport cards.',
+        (int)db()->query('SELECT COUNT(*) FROM sports')->fetchColumn() . ' sports'],
     ['unique',    '✨', "What's Unique",  'The ESC / Language Academies feature blocks.',
         (int)db()->query('SELECT COUNT(*) FROM unique_features')->fetchColumn() . ' blocks'],
     ['ticker',    '📣', 'News Ticker',    'The scrolling announcement bar with links.',

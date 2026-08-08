@@ -396,6 +396,28 @@ foreach ($academies as $slug => $A) {
 }
 $out[] = 'academies: ' . $pdo->query('SELECT COUNT(*) FROM academies')->fetchColumn() . ' rows';
 
+/* ---------- Sports (C6) ----------
+ * Content from database/seed-data/sports.php (extract-sports.php). */
+$sportsData = require __DIR__ . '/seed-data/sports.php';
+$pdo->prepare('INSERT IGNORE INTO pages (slug, title, heading_html) VALUES (?,?,?)')
+    ->execute(['sports', "St.Joseph's MHSS, Ondipudur", '']);
+$sportsPageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'sports'")->fetchColumn();
+$cnt->execute([$sportsPageId]);
+if (!$cnt->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO hero_slides (page_id, image_id, caption_title, caption_text, position) VALUES (?,?,?,?,?)');
+    foreach ($sportsData['hero'] as $i => [$img, $t, $x]) {
+        $st->execute([$sportsPageId, img_id_by_file($img), $t, $x, $i]);
+    }
+    $out[] = 'sports hero_slides: seeded ' . count($sportsData['hero']);
+}
+if (!$pdo->query('SELECT COUNT(*) FROM sports')->fetchColumn()) {
+    $st = $pdo->prepare('INSERT INTO sports (name, training_time, details_html, image_id, position) VALUES (?,?,?,?,?)');
+    foreach ($sportsData['sports'] as $i => $S) {
+        $st->execute([$S['name'], $S['training_time'], $S['details_html'], $S['image'] ? img_id_by_file($S['image']) : null, $i]);
+    }
+    $out[] = 'sports: seeded ' . count($sportsData['sports']);
+}
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the

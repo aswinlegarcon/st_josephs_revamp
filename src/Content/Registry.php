@@ -125,6 +125,16 @@ final class Registry
                     'is_active'       => ['type' => 'bool', 'label' => 'Visible on the co-curriculum grid'],
                 ],
             ],
+            'sport' => [
+                'table' => 'sports', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'fields' => [
+                    'name'          => ['type' => 'text', 'max' => 80,   'label' => 'Sport name'],
+                    'training_time' => ['type' => 'text', 'max' => 80,   'label' => 'Training-time line'],
+                    'details_html'  => ['type' => 'html', 'max' => 65000, 'label' => '"Read More" text'],
+                    'image_id'      => ['type' => 'image', 'preset' => 'card_4x3', 'label' => 'Card photo', 'required' => true],
+                    'is_active'     => ['type' => 'bool', 'label' => 'Visible on site'],
+                ],
+            ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [

@@ -458,6 +458,47 @@ case 'academies':
     <?php
     break;
 
+/* ================= SPORTS (C6) ================= */
+case 'sports':
+    $sportsPage = repo_page('sports');
+    $rows = repo_sports(true);
+    ?>
+    <h3 class="sj-form-legend">Top carousel</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">Photos rotating at the top of the Sports page.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$sportsPage['id']], 'Add sports slide') ?>>＋ Add slide</button>
+    </div>
+    <div class="sj-list" data-list="hero_slide">
+      <?php foreach (repo_hero_slides((int)$sportsPage['id'], true) as $sl) {
+          panel_row([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'title'  => $sl['caption_title'] ?: '(no caption)',
+              'sub'    => $sl['caption_text'],
+              'active' => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+
+    <h3 class="sj-form-legend">Sport cards</h3>
+    <div class="sj-section-head">
+      <p class="sj-lead">The nine sport cards with their "Read More" panels. Order here = order on the site.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('sport', [], 'Add sport') ?>>＋ Add sport</button>
+    </div>
+    <div class="sj-list" data-list="sport">
+      <?php foreach ($rows as $S) {
+          panel_row([
+              'entity' => 'sport', 'id' => $S['id'],
+              'thumb'  => $S['image'] ? img_url($S['image'], 'card_4x3') : null,
+              'title'  => $S['name'],
+              'sub'    => $S['training_time'],
+              'active' => (bool)$S['is_active'], 'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <?php
+    break;
+
 /* ================= SITE SETTINGS (C1) ================= */
 case 'settings':
     // Whitelisted keys only — mirrors admin/api/settings.php. `settings` is
