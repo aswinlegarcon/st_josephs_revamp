@@ -221,3 +221,10 @@ input:focus, select:focus, textarea:focus, .sj-rich:focus { outline: none; borde
 .sj-pick { position: relative; }
 .sj-recrop { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(18,35,63,.8); color: #fff; cursor: pointer; font-size: 14px; line-height: 1; }
 .sj-recrop:hover { background: var(--blue, #2b4b8a); }
+
+/* ---------- M4: media library ---------- */
+.sj-media-bar { display: flex; gap: 16px; align-items: center; }
+.sj-orphan-toggle { white-space: nowrap; font-size: 13px; display: flex; gap: 6px; align-items: center; margin: 0; text-transform: none; letter-spacing: 0; color: var(--text); }
+.sj-usedbadge { position: absolute; left: 6px; top: 6px; background: rgba(18,35,63,.8); color: #fff; font: 600 10.5px/1 'Segoe UI', Arial; padding: 4px 7px; border-radius: 20px; font-style: normal; }
+.sj-usedbadge.free { background: rgba(140,150,170,.85); }
+.sj-danger { color: firebrick; }

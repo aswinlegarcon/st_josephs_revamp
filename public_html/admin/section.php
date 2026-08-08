@@ -226,7 +226,10 @@ case 'media':
          Uploads are auto-cropped to the shape you pick and compressed automatically.</p>
       <button class="sj-btn sj-btn-primary" id="sj-media-upload">⬆️ Upload image</button>
     </div>
-    <input type="text" id="sj-media-search" class="sj-search" placeholder="Search images by file name…">
+    <div class="sj-media-bar">
+      <input type="text" id="sj-media-search" class="sj-search" placeholder="Search images by file name…">
+      <label class="sj-check sj-orphan-toggle"><input type="checkbox" id="sj-media-orphans"> Unused only</label>
+    </div>
     <div class="sj-grid" id="sj-media-grid"></div>
     <button class="sj-btn sj-btn-ghost sj-more" id="sj-media-more">Load more</button>
     <?php

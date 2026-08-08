@@ -13,6 +13,7 @@ $routes = [
     'settings' => 'settings.php', // POST  {values:{key:value,…}} — whitelisted keys only (C1)
     'link'     => 'link.php',     // POST  {action:list|attach|detach|reorder, owner_type,…} (M1)
     'recrop'   => 'recrop.php',   // POST  {image_id, crop_rect} — re-render renditions (M3)
+    'image'    => 'image.php',    // POST  {action:meta|usage|delete, image_id} — media library ops (M4)
 ];
 
 $r = (string)($_GET['r'] ?? '');

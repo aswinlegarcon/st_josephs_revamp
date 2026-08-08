@@ -633,14 +633,58 @@
       });
     }
 
+    /* M4: detail modal — usage list, description edit, guarded delete. */
+    function openImageDetail(it) {
+      var M = openModal(it.label);
+      var img = document.createElement('img');
+      img.className = 'sj-cropimg';
+      img.src = it.thumb;
+      M.body.appendChild(img);
+      var use = el('p', 'sj-hint', it.used ? ('Used in ' + it.used + ' place' + (it.used > 1 ? 's' : '') + ' — loading details…') : 'Not used anywhere.');
+      M.body.appendChild(use);
+      M.body.appendChild(el('label', '', 'Description (alt text)'));
+      var alt = document.createElement('input');
+      alt.type = 'text'; alt.value = it.alt || '';
+      M.body.appendChild(alt);
+      var save = el('button', 'sj-btn sj-btn-primary', '💾 Save description'); save.type = 'button';
+      var del = el('button', 'sj-btn sj-btn-ghost sj-danger', '🗑️ Delete image'); del.type = 'button';
+      del.disabled = it.used > 0;
+      del.title = it.used ? 'Remove it from every place first' : 'Delete permanently';
+      M.foot.appendChild(save); M.foot.appendChild(del);
+      if (it.used) {
+        api('image.php', { action: 'usage', image_id: it.id }).then(function (j) {
+          var parts = [];
+          Object.keys(j.usage).forEach(function (k) { parts.push(j.usage[k] + ' × ' + k); });
+          use.textContent = 'Used in: ' + parts.join(', ');
+        }).catch(function () {});
+      }
+      save.addEventListener('click', function () {
+        api('image.php', { action: 'meta', image_id: it.id, alt_text: alt.value })
+          .then(function () { toast('Description saved ✔'); })
+          .catch(function (err) { toast(err.message, true); });
+      });
+      del.addEventListener('click', function () {
+        if (!confirm('Delete this image permanently? This cannot be undone.')) return;
+        api('image.php', { action: 'delete', image_id: it.id })
+          .then(function () { toast('Deleted'); M.close(); loadMedia(true); })
+          .catch(function (err) { toast(err.message, true); });
+      });
+    }
+
     function loadMedia(reset) {
       if (reset) { mediaGrid.innerHTML = ''; mPage = 0; }
-      fetch('/admin/api/index.php?r=images&q=' + encodeURIComponent(mQ) + '&page=' + mPage)
+      var orphanBox = document.getElementById('sj-media-orphans');
+      fetch('/admin/api/index.php?r=images&q=' + encodeURIComponent(mQ) + '&page=' + mPage
+            + (orphanBox && orphanBox.checked ? '&filter=orphan' : ''))
         .then(function (r) { return r.json(); })
         .then(function (j) {
           j.items.forEach(function (it) {
             var d = el('div', 'sj-pick');
             d.innerHTML = '<img loading="lazy" src="' + esc(it.thumb) + '"><span>' + esc(it.label) + '</span>';
+            var badge = el('em', 'sj-usedbadge', it.used ? ('🔗 ' + it.used) : 'unused');
+            if (!it.used) badge.className += ' free';
+            d.appendChild(badge);
+            d.addEventListener('click', function () { openImageDetail(it); });
             if (!it.legacy && it.preset_key) {
               var rc = el('button', 'sj-recrop', '✂️'); rc.type = 'button'; rc.title = 'Re-crop';
               rc.addEventListener('click', function (e) { e.stopPropagation(); openRecrop(it); });
@@ -657,6 +701,8 @@
       mDeb = setTimeout(function () { mQ = mSearch.value.trim(); loadMedia(true); }, 300);
     });
     mMore.addEventListener('click', function () { mPage++; loadMedia(false); });
+    var mOrphans = document.getElementById('sj-media-orphans');
+    if (mOrphans) mOrphans.addEventListener('change', function () { loadMedia(true); });
     document.getElementById('sj-media-upload').addEventListener('click', function () {
       pickImage(null, { presetChoice: true, startOnUpload: true, title: 'Upload image' })
         .then(function () { loadMedia(true); })
