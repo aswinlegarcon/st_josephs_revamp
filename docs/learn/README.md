@@ -23,6 +23,7 @@ By the end you will understand:
 | 4 | [`04-stage-c-and-d.md`](04-stage-c-and-d.md) | Stages C & D — the Bootstrap-5 front-end revamp + speed/deploy work. |
 | 5 | [`05-stage-e.md`](05-stage-e.md) | Stage E — content moves into the database; the admin panel learns to edit it. |
 | 6 | [`06-stage-f.md`](06-stage-f.md) | Stage F — the live-edit overlay: change the site by clicking on the site. |
+| 7 | [`07-stage-g.md`](07-stage-g.md) | Stage G — CSS consolidation, the last legacy dirs deleted, W3C: 368 → 0 errors, pixel-frozen. |
 
 ## How to study
 
