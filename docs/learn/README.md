@@ -25,6 +25,20 @@ By the end you will understand:
 | 6 | [`06-stage-f.md`](06-stage-f.md) | Stage F — the live-edit overlay: change the site by clicking on the site. |
 | 7 | [`07-stage-g.md`](07-stage-g.md) | Stage G — CSS consolidation, the last legacy dirs deleted, W3C: 368 → 0 errors, pixel-frozen. |
 | 8 | [`08-stage-h.md`](08-stage-h.md) | Stage H — image renditions, **SEO explained in depth**, performance proof, backups & monitoring. |
+| 9 | [`09-request-lifecycle.md`](09-request-lifecycle.md) | **How a request is served**, end to end — one `GET /` traced from DNS to pixels, plus the admin and API variants. |
+| 10 | [`10-admin-panel-internals.md`](10-admin-panel-internals.md) | **Inside the admin panel** — login, password hashing, sessions (where they live on disk), and how an edit reaches a MySQL row. |
+
+## Two ways to read this folder
+
+Docs 1–10 above are the **story**: what exists and how it got here, in order.
+
+The [`topics/`](topics/) folder is the **reference**: 25 documents, one per subject —
+PDO, sessions, CSRF, the registry, images, caching, SEO, Docker, backups and the rest.
+Each answers the same nine questions, including *where we use it*, *why this approach is
+right here*, and *what breaks at 10× scale*. Start with [`topics/README.md`](topics/README.md).
+
+Use the story to understand the project. Use the topics to understand the technology —
+or to check yourself before you change something.
 
 ## How to study
 
