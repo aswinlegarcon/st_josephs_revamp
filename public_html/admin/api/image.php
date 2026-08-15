@@ -33,6 +33,7 @@ const SJ_IMAGE_REFS = [
     // section event block or an album card would have broken that slot.
     ['section_events',  'image_id',      'section event block'],
     ['gallery_albums',  'card_image_id', 'gallery album card'],
+    ['testimonials',    'bg_image_id',   'testimonial card background'], // N2
 ];
 
 /** Usage summary for one image: [label => count]. */

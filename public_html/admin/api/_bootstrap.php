@@ -110,8 +110,15 @@ function api_validate_field(string $entity, string $field, array $def, $value)
             return !empty($value) && $value !== '0' ? 1 : 0;
         case 'image':
             $v = (int)$value;
-            if ($v <= 0 || !repo_image($v)) {
+            $imgRow = $v > 0 ? repo_image($v) : null;
+            if (!$imgRow) {
                 api_fail("Field '$field': image not found");
+            }
+            // N2: make sure the slot's rendition exists the moment the image is
+            // chosen (legacy photos get a fit rendition on first use) — the page
+            // then serves compressed bytes instead of the /photos original.
+            if (!empty($def['preset'])) {
+                media_ensure_rendition($imgRow, $def['preset']);
             }
             return $v;
     }

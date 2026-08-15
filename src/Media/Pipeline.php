@@ -244,9 +244,6 @@ final class Pipeline
     /** Make sure an uploaded image has renditions for $presetKey (lazy generation). */
     public static function ensureRendition(array $img, string $presetKey): bool
     {
-        if (!empty($img['legacy_path'])) {
-            return false; // legacy files are served as-is
-        }
         $id = (int)$img['id'];
         if (self::renditions($id, $presetKey)) {
             return true;
@@ -255,7 +252,17 @@ final class Pipeline
         if ($preset === null) {
             return false;
         }
-        $orig = self::dir() . '/' . $id . '/original.' . self::extForMime((string)$img['mime']);
+        if (!empty($img['legacy_path'])) {
+            // N2: legacy photos now get a rendition generated on FIRST USE in a
+            // slot (the API's image validation calls this on save), under the F2
+            // legacy contract — fit mode only (downscale, never crop), so the
+            // file can sit in any slot without changing geometry. Source is the
+            // original /photos file, which stays untouched.
+            $orig = SJ_PUBLIC_ROOT . $img['legacy_path'];
+            $preset['mode'] = 'fit';
+        } else {
+            $orig = self::dir() . '/' . $id . '/original.' . self::extForMime((string)$img['mime']);
+        }
         if (!\is_file($orig)) {
             return false;
         }

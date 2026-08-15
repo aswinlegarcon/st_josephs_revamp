@@ -110,8 +110,10 @@ final class Repo
 
     public static function testimonials(bool $includeInactive = false): array
     {
-        $sql = 'SELECT * FROM testimonials' . ($includeInactive ? '' : ' WHERE is_active = 1') . ' ORDER BY position, id';
-        return db()->query($sql)->fetchAll();
+        // N2: bg image joined in the same single query (budget-neutral).
+        $sql = 'SELECT t.*, ' . self::IMG_SELECT . ' FROM testimonials t LEFT JOIN images i ON i.id = t.bg_image_id'
+             . ($includeInactive ? '' : ' WHERE t.is_active = 1') . ' ORDER BY t.position, t.id';
+        return \array_map([self::class, 'foldImage'], db()->query($sql)->fetchAll());
     }
 
     /** One school section by slug, with its grade-card image (C4). */

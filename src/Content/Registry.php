@@ -176,9 +176,12 @@ final class Registry
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [
-                    'name_html' => ['type' => 'html', 'max' => 200,   'label' => 'Student name & tag'],
-                    'body_html' => ['type' => 'html', 'max' => 65000, 'label' => 'Testimonial'],
-                    'is_active' => ['type' => 'bool', 'label' => 'Visible on site'],
+                    'name_html'   => ['type' => 'html', 'max' => 200,   'label' => 'Student name & tag'],
+                    'body_html'   => ['type' => 'html', 'max' => 65000, 'label' => 'Testimonial'],
+                    // N2: optional per-card background; empty = the shipped
+                    // card1/2/3 static images keep cycling (pixel-frozen default).
+                    'bg_image_id' => ['type' => 'image', 'preset' => 'feature_4x3', 'label' => 'Card background photo', 'nullable' => true],
+                    'is_active'   => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
             // F3: per-URL search snippet. The row set is fixed (one per public

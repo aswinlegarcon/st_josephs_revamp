@@ -336,6 +336,7 @@ case 'testimonials':
       <?php foreach ($rows as $t) {
           panel_row([
               'entity' => 'testimonial', 'id' => $t['id'],
+              'thumb'  => $t['image'] ? img_url($t['image'], 'card_4x3') : null, // N2: chosen bg
               'title'  => trim(strip_tags($t['name_html'])) ?: '(unnamed)',
               'sub'    => mb_substr(trim(strip_tags($t['body_html'])), 0, 90) . '…',
               'active' => (bool)$t['is_active'], 'canMove' => true,

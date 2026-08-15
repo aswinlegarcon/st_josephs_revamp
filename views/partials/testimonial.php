@@ -11,7 +11,12 @@
         <h1 class="testimonial-reveal">Students Testimonial</h1>
         <div class="testimonial"<?= ed_add('testimonial', [], 'Add testimonial') ?>>
             <?php foreach ($sj_testimonials as $ti => $t): ?>
-            <div class="card card<?= ($ti % 3) + 1 ?><?= empty($t['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('testimonial', $t['id'], 'Testimonial') ?>>
+            <?php // N2: a chosen photo overrides this card's static background with
+                  // the SAME declarations the card1/2/3 CSS rules ship (gradient +
+                  // 100% 100%); no photo → no style attr → CSS static applies. ?>
+            <div class="card card<?= ($ti % 3) + 1 ?><?= empty($t['is_active']) ? ' sj-inactive' : '' ?>"<?=
+                $t['image'] ? ' style="background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)), url(' . e(img_url($t['image'], 'feature_4x3')) . '); background-size:100% 100%;"' : ''
+            ?><?= ed_item('testimonial', $t['id'], 'Testimonial') ?><?= ed_img('testimonial', $t['id'], 'bg_image_id') ?>>
             <img class="quote-icon" src="/photos/quote.png" alt="quote icon">
                 <h2<?= ed_field('testimonial', $t['id'], 'name_html') ?>><?= $t['name_html'] ?></h2>
                 <?php ed_rich('testimonial', $t['id'], 'body_html', $t['body_html']); ?>
