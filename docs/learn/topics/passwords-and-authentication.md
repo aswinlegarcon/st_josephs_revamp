@@ -25,8 +25,9 @@ When a staff member types a username and password at `http://localhost:8090/admi
 compare their password with a stored password — we never stored one. We stored a **hash**: a one-way
 fingerprint made by PHP's `password_hash()`. On login, `password_verify()` re-scrambles what they
 typed and checks it produces that same fingerprint. Around that single comparison sit five defences:
-a CSRF token so the form must be ours, a 15-minute lockout after 5 wrong tries, one identical error
-message for *every* kind of failure, a one-second pause on every failure, and a brand-new session ID
+a CSRF token so the form must be ours, a 15-minute lockout after 5 wrong tries (announced with a
+"wait about N minutes" message once it engages — N1), one identical error message for every failure
+below that threshold, a one-second pause on every failure, and a brand-new session ID
 once you are in. If the account is flagged `must_change_password`, every admin page *and* every API
 call refuses to work until you set a real password. Every success and failure is written to
 `audit_log` — the password never is.
@@ -191,6 +192,13 @@ lifetime rules in `src/Admin/Auth.php:13-15` — 30 minutes idle, 12 hours absol
 15 minutes.
 
 ### 4.3 The failure path, and why every line is deliberate
+
+> **Revised in N1 (2026-08-15):** the failure branch below has since grown lockout
+> *visibility* — once an account locks (or a 5th failure locks it), the message becomes
+> "temporarily locked — wait about N minutes", with a session-scoped shadow counter
+> (`$_SESSION['sj_lf']`) showing the identical text for unknown usernames so the lock
+> message is not a cheap in-session username oracle. Below the threshold everything
+> here still holds. Read the current `login.php` alongside; residual documented in SEC-06.
 
 ```php
 } else {
@@ -366,14 +374,18 @@ outbound e-mail deliverability, one to three staff users, a school budget.
 | **2FA / TOTP** | Genuinely stronger | Needs enrolment UI, recovery codes and a "my phone died" story. Real value — but an *addition*, not a substitute for the fundamentals |
 | **What we built** | bcrypt, lockout, forced change, timeouts, audit, zero cost | One honest gap, below |
 
-**The deliberate trade-off: there is no self-service password reset.** No "forgot my password" link
-exists anywhere in this codebase. That is a choice. A reset flow needs reliable outbound e-mail, and
-on shared hosting mail from a school domain lands in spam often enough that the feature would fail
-exactly when someone is locked out and panicking. Worse, a half-working reset flow is a *new attack
-surface*: a reset link is a temporary password sent over e-mail, so if a staff mailbox is weaker than
-the admin panel, that link becomes the easiest way in. With one to three trusted people in the same
-building the fallback is human — ask the site maintainer to run the reset in section 7. Past a handful
-of users that stops scaling, which is the trigger for section 6.
+**The deliberate trade-off: no E-MAIL reset — recovery is proven another way (N1).** A classic
+reset flow needs reliable outbound e-mail, and on shared hosting mail from a school domain lands in
+spam often enough that the feature would fail exactly when someone is locked out and panicking; a
+half-working reset flow is also a *new attack surface* (a reset link is a temporary password sent to
+whichever mailbox is weakest). Instead, recovery is proven by **filesystem control**: creating
+`config/recovery-token.txt` above the webroot (via the hosting file manager — anyone who can do that
+already owns the site) arms a one-time `public_html/admin/recover.php` page that sets a new password,
+clears any lockout, audits itself and deletes the token file. While the file is absent the page is a
+404 — zero standing attack surface. The login page also now names the lockout ("wait about N
+minutes") instead of leaving the owner guessing — SEC-06's revision documents the small, accepted
+oracle that trade creates. Dev shortcut: `database/reset-admin-password.php` (CLI, one-time temp
+password, forced change). Runbook: `DEPLOY.md` §9; threat notes: `SECURITY.md` SEC-24.
 
 ---
 
@@ -482,10 +494,12 @@ Start with `./run.sh`, then open **http://localhost:8090/admin/**.
 bounces you straight back. Type a new password slowly and watch the checklist tick and the bars change
 colour — that is `password.js` running.
 
-**Experiment 2 — the identical failure message.** Log out, then try (1) a username that does not exist,
-(2) the real username with a wrong password, and (3) step 2 five times followed by the **correct**
-password. All three say exactly `Invalid username or password.` Case 3 proves the lock is real: the
-correct password is refused with no hint that a lock is why. Notice the one-second pause every time.
+**Experiment 2 — failure messages.** Log out, then try (1) a username that does not exist,
+(2) the real username with a wrong password — both say exactly `Invalid username or password.`
+Then (3) fail five times and try the **correct** password: since N1 both the 5th failure and the
+locked-with-correct-password case say "temporarily locked — wait about N minutes" (the lock is real
+*and* announced). Try five failures with a made-up username too — the shadow counter shows the same
+lock message. Notice the one-second pause every time.
 
 **Experiment 3 — read the columns (read-only).** Credentials come from `.env.example`
 (`DB_USER=stjosephs`, `DB_PASS=stjosephs_pw`, `DB_NAME=stjosephs`); the service name `db` is from

@@ -153,20 +153,23 @@ From `src/Content/Registry.php:25-211`. **O**=orderable, **C**=creatable, **D**=
 | `school_section` | `school_sections` | ✔ | – | – | – | `name`, `intro_heading`, `timeline_heading`, `events_heading`, `card_title`, `card_range` (text); `intro_html` (html); `card_image_id` (image `card_4x3`) |
 | `timeline_entry` | `timeline_entries` | ✔ | ✔ | ✔ | `section_id` | `month_label`, `time_label` (text); `events_text` (text, multiline) |
 | `section_event` | `section_events` | ✔ | ✔ | ✔ | `section_id` | `title` (text); `body_html` (html); `image_id` (image `feature_4x3`, nullable) |
-| `academy` | `academies` | ✔ | – | – | – | `banner_title`, `banner_subtitle`, `content_heading`, `card_title`, `card_subtitle` (text); `body_html` (html); `card_image_id` (image `card_4x3`); `bg_image_id` (image `bg_wide`); `is_active` (bool) |
+| `academy` | `academies` | ✔ | ✔ | ✔ | – | `slug` (slug, required, **create-only**); `banner_title`, `banner_subtitle`, `content_heading`, `card_title`, `card_subtitle` (text); `body_html` (html); `card_image_id` (image `card_4x3`, required); `bg_image_id` (image `bg_wide`, required); `is_active` (bool) |
 | `sport` | `sports` | ✔ | ✔ | ✔ | – | `name`, `training_time` (text); `details_html` (html); `image_id` (image `card_4x3`, required); `is_active` (bool) |
 | `facility` | `facilities` | ✔ | ✔ | ✔ | – | `slug` (text, required), `name` (text); `description_html` (html); `bg_image_id` (image `bg_wide`, required); `is_active` (bool) |
 | `achievement` | `achievements` | ✔ | ✔ | ✔ | – | `type` (enum `achievement`/`award`); `title`, `subtext` (text); `image_id` (image `feature_4x3`, required); `is_active` (bool) |
-| `gallery_album` | `gallery_albums` | ✔ | – | – | – | `title`, `heading`, `card_sub` (text); `card_image_id` (image `card_4x3`); `is_active` (bool) |
+| `gallery_album` | `gallery_albums` | ✔ | ✔ | ✔ | – | `slug` (slug, required, **create-only**); `title`, `heading`, `card_sub` (text); `card_image_id` (image `card_4x3`, required); `is_active` (bool) |
 | `album_year` | `album_years` | ✔ | ✔ | ✔ | `album_id` | `year_label` (text); `is_active` (bool) |
-| `testimonial` | `testimonials` | ✔ | ✔ | ✔ | – | `name_html`, `body_html` (html); `is_active` (bool) |
+| `testimonial` | `testimonials` | ✔ | ✔ | ✔ | – | `name_html`, `body_html` (html); `bg_image_id` (image `feature_4x3`, nullable — N2); `is_active` (bool) |
 | `seo_meta` | `seo_meta` | – | – | – | – | `title` (text); `description` (text, multiline) |
 | `mark_year` | `mark_years` | – | ✔ | ✔ | – | `year` (int 2000–2100); `is_active` (bool) |
 | `mark_entry` | `mark_entries` | ✔ | ✔ | ✔ | `year_id` | `standard` (enum `10`/`11`/`12`); `rank_label`, `student_name` (text); `marks_scored`, `marks_total` (int) |
 
-The flags encode *policy*: `academy` is `creatable => false` because a new academy needs its own
-URL stub, "which is a developer task until R2+" (`Registry.php:113-114`); `seo_meta` is edit-only
-because there is one fixed row per public URL (`:184-187`).
+The flags encode *policy*. `academy` and `gallery_album` were `creatable => false` for a long
+time because a new academy needed its own URL stub — a developer task. **N3/N4 solved the URL
+problem** (a generic `/academy.php?slug=…` controller + a `create_only` slug field type +
+`Registry::legacySlugs()` protecting the 18+10 shipped slugs from delete/rename), so both are
+now fully creatable from the panel. `seo_meta` is edit-only because its rows track the URL set
+(auto-inserted/removed when academies/albums are created/deleted).
 
 ### 4.3 The field types, and exactly what each triggers on save
 

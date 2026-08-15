@@ -205,11 +205,18 @@ that a token an attacker might have planted pre-login is worthless.
 
 Four separate defences are packed into fifteen lines:
 
-1. **One message for every failure.** If a wrong username said "no such user" and a wrong
-   password said "wrong password", an attacker could harvest valid usernames without ever
-   guessing a password. That is **username enumeration**. Our message never distinguishes.
-2. **No lock oracle.** A locked account also gets the *same* message. Telling an attacker
-   "this account is locked" confirms the account exists and tells them when to come back.
+1. **One message below the lock threshold.** If a wrong username said "no such user" and a
+   wrong password said "wrong password", an attacker could harvest valid usernames without
+   ever guessing a password. That is **username enumeration**. Below 5 failures, our
+   message never distinguishes.
+2. **The lock is visible — carefully.** (Revised in N1, an owner decision: the original
+   silent lock left the real owner guessing, which actually happened.) After the 5th
+   failure — or any attempt while locked, correct password included — the page says
+   *"temporarily locked… wait about N minutes"*. To keep that text from becoming a cheap
+   username oracle, a **session-scoped shadow counter** (`$_SESSION['sj_lf']`) shows the
+   *identical* message for ANY username string after 5 tries in that session, real or not.
+   The accepted residual (a cross-session probe of an already-locked account) is
+   documented in `SECURITY.md` SEC-06.
 3. **`sleep(1)` on every failure path.** Two purposes. It slows down automated guessing,
    and it flattens timing: `password_verify()` on a real hash takes measurable time while
    "user not found" returns instantly, so without the sleep an attacker could tell the two
@@ -260,9 +267,12 @@ confirmation. On success it writes the new hash, clears the flag, stamps
 `password_changed_at`, calls `sj_audit('password.change')`, and regenerates the session id
 again.
 
-> **There is no "forgot password" e-mail flow.** That is a deliberate trade-off: shared
-> hosting gives no reliable outbound mail, and a broken reset flow is a bigger hole than no
-> reset flow. With one to three staff accounts, recovery is a manual operation — see §7.
+> **There is no "forgot password" e-mail flow** — shared hosting gives no reliable
+> outbound mail, and a broken reset flow is a bigger hole than none. Instead (since N1)
+> recovery is proven by **filesystem control**: creating `config/recovery-token.txt` above
+> the webroot (mPanel file manager) arms a one-time `/admin/recover.php` page that sets a
+> new password, clears any lockout and deletes itself. A 404 otherwise. Dev shortcut:
+> `database/reset-admin-password.php` (CLI). Runbook: `DEPLOY.md` §9; threat notes: SEC-24.
 
 ---
 
@@ -776,7 +786,7 @@ Good documentation names what is missing. Today:
 
 | Gap | Impact | Where it would go |
 |---|---|---|
-| No self-service password reset | manual recovery, by design | needs reliable mail first |
+| ~~No self-service password reset~~ **closed by N1** | token-file recovery flow (`admin/recover.php`) + CLI reset; no e-mail dependency | — |
 | `role` column is unused; `is_admin()` is one boolean | fine for 1–3 trusted staff; no "editor who cannot delete" | the column already exists — the check would go in `_layout.php` and `_bootstrap.php` |
 | No admin screen for `audit_log` | you need database access to read the trail | a read-only panel section |
 | No optimistic locking on writes | two people editing the same field at the same time: last write wins, silently | a `version`/`updated_at` check in `field.php` and `item.php` |
@@ -793,8 +803,10 @@ the moment the site has ten. Knowing which is which is most of engineering judge
 ./run.sh
 ```
 
-1. **Fail a login five times** at <http://localhost:8090/admin/login.php>. Notice the
-   message never changes and never mentions locking. Then look at the row:
+1. **Fail a login five times** at <http://localhost:8090/admin/login.php>. The first four
+   answers are identical; the fifth says "temporarily locked — wait about 15 minutes"
+   (N1). Try five failures with a made-up username too — same lock message, thanks to the
+   shadow counter. Then look at the row:
    `SELECT username, failed_logins, locked_until FROM admin_users;`
 2. **Log in** and open devtools → Application → Cookies. Find `SJADMIN`. Confirm
    `document.cookie` in the console does **not** show it.

@@ -29,6 +29,17 @@ public_html/
 
 ### Page inventory (42 pages)
 
+> **Post-revamp additions (Stage I, 2026-08-15).** The 42 shipped URLs below are
+> unchanged. On top of them the CMS now serves: **`/academy.php?slug=…`** and
+> **`/album.php?slug=…`** — generic controllers for academies/albums *created in the
+> admin panel* (the shipped ones keep their own files; slugs are create-only and the
+> shipped rows are delete-protected; `sitemap.xml` regenerates automatically);
+> **`/admin/recover.php`** — password recovery, a 404 unless armed by a token file above
+> the webroot (DEPLOY.md §9). Two formerly hardcoded areas are now DB-driven with
+> byte-identical defaults: the gallery hub's 15-slide cross-fade slider (image_links on
+> the `gallery` pages row, lazy-loaded) and the home testimonial card backgrounds
+> (`testimonials.bg_image_id`, NULL = the shipped CSS statics).
+
 | Page | Purpose |
 |---|---|
 | `index.php` | Home page — hero carousel, principal welcome, motto/campus cards, counters, uniqueness blocks, updates, toppers, testimonials, contact |

@@ -10,7 +10,7 @@
 
 ## 1. The one-paragraph version
 
-A **database** stores our text and photo records in **tables** — think of one table as one spreadsheet, with named columns and numbered rows. Our site has 27 of them (`grep -c 'CREATE TABLE' database/schema.sql` → 27). Two files describe them. `database/schema.sql` is the **fresh-install** truth: run it on an empty database and you get every table at once. `database/migrations/00N_*.sql` are the **incremental** steps — seven small files, each recording one change made at one moment in the project's history, so a database that *already exists* (production) can catch up without being wiped. Tables start empty, so `database/seed.php` fills them with the site's shipped content: the seven home-page carousel slides, the school's phone number, 41 SEO descriptions. `run.sh` runs the seeder on **every** start, which is only safe because the seeder is **idempotent** — running it again changes nothing.
+A **database** stores our text and photo records in **tables** — think of one table as one spreadsheet, with named columns and numbered rows. Our site has 27 of them (`grep -c 'CREATE TABLE' database/schema.sql` → 27). Two files describe them. `database/schema.sql` is the **fresh-install** truth: run it on an empty database and you get every table at once. `database/migrations/00N_*.sql` are the **incremental** steps — small numbered files (eight at the time of writing), each recording one change made at one moment in the project's history, so a database that *already exists* (production) can catch up without being wiped. Tables start empty, so `database/seed.php` fills them with the site's shipped content: the seven home-page carousel slides, the school's phone number, 41 SEO descriptions. `run.sh` runs the seeder on **every** start, which is only safe because the seeder is **idempotent** — running it again changes nothing.
 
 ---
 
@@ -80,7 +80,7 @@ and its mirror inside the snapshot, `database/schema.sql:256`:
 
 Same column, same type, same default, two files.
 
-### 4.2 All seven migrations
+### 4.2 The migrations (eight at the time of writing — check the folder)
 
 | # | File | What it added | Kind | Phase |
 |---|---|---|---|---|
@@ -91,8 +91,9 @@ Same column, same type, same default, two files.
 | 005 | `005_c4_sections_events_heading.sql` | `school_sections.events_heading` — KG ships "Events of", the other three "Exams and Events of" | `ALTER` | C4 (`PHASES.md:115`) |
 | 006 | `006_c9_album_columns.sql` | `gallery_albums.card_sub` + `.heading` — the hub card and the album page ship *different* title strings | `ALTER` | C9 (`PHASES.md:122`) |
 | 007 | `007.sql` | `seo_meta` — one row per URL slug, holding `title` and `description` | `CREATE TABLE IF NOT EXISTS` | F3 SEO pack (`PHASES.md:143`) |
+| 008 | `008_n2_testimonial_bg.sql` | `testimonials.bg_image_id` — optional per-card background photo (NULL = the shipped CSS static) | `ALTER TABLE … ADD COLUMN` + FK | N2 dynamic testimonial backgrounds |
 
-**Four are naturally re-runnable, three are not.** `CREATE TABLE IF NOT EXISTS` (002, 003, 004, 007) does nothing when the table exists. `ALTER TABLE … ADD COLUMN` (001, 005, 006) has no such escape hatch, and 001 says so at `001_admin_users_roles.sql:7-8`: "MySQL 8 has no `ADD COLUMN IF NOT EXISTS`; if a column already exists the statement errors harmlessly — skip it."
+**Four are naturally re-runnable, four are not.** `CREATE TABLE IF NOT EXISTS` (002, 003, 004, 007) does nothing when the table exists. `ALTER TABLE … ADD COLUMN` (001, 005, 006, 008) has no such escape hatch, and 001 says so at `001_admin_users_roles.sql:7-8`: "MySQL 8 has no `ADD COLUMN IF NOT EXISTS`; if a column already exists the statement errors harmlessly — skip it."
 
 **Migration 001 also carries a data change** (`001_admin_users_roles.sql:16`):
 
@@ -104,7 +105,7 @@ The `WHERE` makes it safe to run twice — after the first run those rows stop m
 
 ### 4.3 The additive-only rule
 
-`CLAUDE.md`: "Migrations are **additive-only** (no destructive DDL)". `DEPLOY.md:45` repeats it. All seven only add — no `DROP TABLE`, no `DROP COLUMN`, no narrowed types (`git grep -n 'DROP' database/migrations/` finds nothing).
+`CLAUDE.md`: "Migrations are **additive-only** (no destructive DDL)". `DEPLOY.md:45` repeats it. All of them only add — no `DROP TABLE`, no `DROP COLUMN`, no narrowed types (`git grep -n 'DROP' database/migrations/` finds nothing).
 
 The justification is what rollback looks like here (`DEPLOY.md:64-68`):
 
@@ -269,7 +270,7 @@ Our constraints: file-upload deploys, no server CLI, a single maintainer, and a 
 
 ## 6. How this scales
 
-**Today:** seven migrations, one maintainer, two environments. The manual process fits in one line of `DEPLOY.md`.
+**Today:** eight migrations (008 added `testimonials.bg_image_id` — N2), one maintainer, two environments. The manual process fits in one line of `DEPLOY.md`.
 
 **At ~70 migrations, with a staging site and two developers,** four specific pains appear: *which ones have run on this database?* (with seven you remember; with seventy nobody does); *did anyone skip one?* (sequential numbers are a convention, not a check); *did two branches both write `008`?* (git merges both files happily); *is `schema.sql` still equal to `schema.sql` + all migrations?* (nothing verifies this, and drift stays invisible until a fresh clone breaks).
 

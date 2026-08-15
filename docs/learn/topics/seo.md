@@ -257,7 +257,10 @@ are content. The registry encodes exactly that split.
 ### 4.7 The two crawler files
 
 A **sitemap** is a machine-readable list of your URLs, so the engine never has to stumble across a
-page by luck. Ours is a static file, `public_html/sitemap.xml`, with 41 `<url>` entries:
+page by luck. Ours is `public_html/sitemap.xml` — 41 `<url>` entries for the shipped pages, and
+since N3/N4 it is **regenerated automatically** (`SJ\Content\Sitemap::regenerate()`) whenever an
+admin creates, deletes or hides an academy or gallery album, appending their
+`/academy.php?slug=…` / `/album.php?slug=…` URLs:
 
 ```xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
