@@ -253,13 +253,13 @@ final class Pipeline
             return false;
         }
         if (!empty($img['legacy_path'])) {
-            // N2: legacy photos now get a rendition generated on FIRST USE in a
-            // slot (the API's image validation calls this on save), under the F2
-            // legacy contract — fit mode only (downscale, never crop), so the
-            // file can sit in any slot without changing geometry. Source is the
-            // original /photos file, which stays untouched.
+            // N2: legacy photos get a rendition generated on FIRST USE in a slot
+            // (the API's image validation calls this on save). N6 (owner rule:
+            // "every image must be cropped for its slot — no outliers"): the
+            // preset's REAL mode applies, so cover slots get a centre crop just
+            // like uploads do. Shipped F2 fit renditions already exist and are
+            // never regenerated here; /photos originals stay untouched.
             $orig = SJ_PUBLIC_ROOT . $img['legacy_path'];
-            $preset['mode'] = 'fit';
         } else {
             $orig = self::dir() . '/' . $id . '/original.' . self::extForMime((string)$img['mime']);
         }

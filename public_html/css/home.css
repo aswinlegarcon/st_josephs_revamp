@@ -399,6 +399,26 @@ html {
   z-index: 0;
 }
 
+/* N6 (owner-approved 2026-08-15): uniform hero geometry. Six of the seven
+   shipped hero photos are already 16:9; the odd one out (3:2) used to GROW the
+   page when its slide appeared and drag the caption with it. Every slide now
+   renders at exactly 16:9 — over-tall photos are centre-cropped by the browser
+   (object-fit), never stretched, and the caption/buttons sit at a stable spot.
+   object-fit:cover also applies at the shipped fixed mobile sizes, so odd
+   photos crop there instead of distorting. */
+.carousel-main .carousel-item img,
+.update-carousel .carousel-item img {
+  object-fit: cover;
+}
+@media (min-width: 901px) {
+  .carousel-main .carousel-item img,
+  .update-carousel .carousel-item img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
 .carousel-caption {
   top: 35%;
 }

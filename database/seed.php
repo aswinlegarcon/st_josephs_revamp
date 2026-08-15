@@ -523,6 +523,31 @@ if (!(int)$sliderCount->fetchColumn()) {
 }
 $out[] = 'gallery hub slider: ' . $pdo->query("SELECT COUNT(*) FROM image_links WHERE owner_type='page' AND role='slider'")->fetchColumn() . ' slides';
 
+/* ---------- Testimonial card backgrounds (N6) ----------
+ * The three shipped card backgrounds existed only as CSS statics (card1/2/3 →
+ * /media/static/testimonialN.jpg), invisible to the panel. Surface them as
+ * real image fields: full-frame FIT renditions of the same source PNGs,
+ * assigned to the three shipped rows in position order — only while the field
+ * is still NULL (admin edits win). Cleared/new rows fall back to the CSS
+ * statics exactly as before. */
+$tRows = $pdo->query('SELECT id FROM testimonials ORDER BY position, id LIMIT 3')->fetchAll(PDO::FETCH_COLUMN);
+foreach ($tRows as $ti => $tid) {
+    $file = 'testimonial' . ($ti + 1) . '.png';
+    $iid  = img_id_by_file($file);
+    $have = $pdo->prepare("SELECT COUNT(*) FROM image_renditions WHERE image_id = ? AND preset_key = 'feature_4x3'");
+    $have->execute([$iid]);
+    if (!(int)$have->fetchColumn()) {
+        // Full frame (fit), like the static it replaces — the card stretches
+        // its background 100% 100%, so the framing must not change.
+        $p = media_preset('feature_4x3');
+        $p['mode'] = 'fit';
+        media_generate(SJ_PUBLIC_ROOT . '/photos/' . $file, (int)$iid, $p);
+    }
+    $pdo->prepare('UPDATE testimonials SET bg_image_id = ? WHERE id = ? AND bg_image_id IS NULL')
+        ->execute([$iid, $tid]);
+}
+$out[] = 'testimonial bgs: ' . $pdo->query('SELECT COUNT(*) FROM testimonials WHERE bg_image_id IS NOT NULL')->fetchColumn() . ' of ' . count($tRows) . ' assigned';
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the
@@ -615,6 +640,10 @@ $fixups = [
     ["UPDATE gallery_albums SET heading = 'Annual Day' WHERE slug = 'gal-annual' AND heading = 'annual Day'"],
     ["UPDATE gallery_albums SET title = 'Sports Achievements' WHERE slug = 'gal-spach' AND title = 'Sports Achivements'"],
     ["UPDATE academies SET body_html = REPLACE(body_html, 'Creativness', 'Creativeness') WHERE body_html LIKE '%Creativness%'"],
+    // N6: the hero slot really is 16:9 (6 of 7 shipped photos already were);
+    // align the preset so the upload crop frame matches the rendered shape.
+    // Key stays 'hero_16x7' (registry references it).
+    ["UPDATE image_presets SET aspect_w = 16, aspect_h = 9, max_h = 1080, label = 'Page hero slide (16:9)' WHERE preset_key = 'hero_16x7' AND aspect_h = 7"],
 ];
 $fixed = 0;
 foreach ($fixups as [$sql]) {

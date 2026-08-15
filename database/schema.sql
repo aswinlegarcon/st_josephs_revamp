@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS album_years (
 
 -- ============ preset + settings seed ============
 INSERT IGNORE INTO image_presets (preset_key, label, max_w, max_h, aspect_w, aspect_h, mode, quality) VALUES
-  ('hero_16x7',     'Page hero slide (16:7)',        1920,  840, 16, 7,  'cover', 80),
+  ('hero_16x7',     'Page hero slide (16:9)',        1920, 1080, 16, 9,  'cover', 80),  -- N6: aspect matches the real slot (key kept for registry stability)
   ('gallery_tile',  'Gallery grid tile (5:7)',        500,  700,  5, 7,  'cover', 82),
   ('gallery_full',  'Gallery lightbox view',         1600, 1200, NULL, NULL, 'fit', 82),
   ('card_4x3',      'Card thumbnail (4:3)',           800,  600,  4, 3,  'cover', 82),

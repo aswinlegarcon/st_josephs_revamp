@@ -64,6 +64,19 @@ top: 2rem;
     transform: translateY(0);
 }
 
+/* N6 (owner-approved 2026-08-15): uniform 16:9 hero — over-tall photos crop
+   (object-fit) instead of growing the page. See home.css note. */
+.kg-carousel .carousel-item img {
+  object-fit: cover;
+}
+@media (min-width: 901px) {
+  .kg-carousel .carousel-item img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
 @media(max-width: 900px) {
     .kg-carousel .carousel-item img {
     width: 1500px!important;
