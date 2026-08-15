@@ -24,3 +24,13 @@
 /* Gold highlight used inside rich-text (replaces old inline gold styles).
    Uses the ink-safe gold so it passes contrast on white. */
 .hl-gold { color: var(--sj-gold-ink); font-weight: 700; }
+
+/* N6 fix — Bootstrap 4→5 drift compensation (CLAUDE.md visual-freeze rule).
+   The shipped design layers a dark gradient over every carousel slide
+   (.carousel-item::before { z-index: 1 }, cloned across the page sheets) and
+   relied on Bootstrap 4's built-in `.carousel-caption { z-index: 10 }` to
+   keep the caption text and buttons ABOVE that veil. Bootstrap 5 removed the
+   caption z-index, silently sinking every caption UNDER the overlay since the
+   R1 migration. Restoring the exact BS4 value here (tokens.css loads on every
+   page) puts all captions back on top — the original rendered result. */
+.carousel-caption { z-index: 10; }

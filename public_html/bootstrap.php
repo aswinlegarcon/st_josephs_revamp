@@ -12,7 +12,7 @@ if (!defined('SJ_PUBLIC_ROOT')) {
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260815.2'); // N6: carousel aspect enforcement css
+    define('SJ_ASSET_VER', '20260815.3'); // N6: caption z-index BS4 compensation
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global
