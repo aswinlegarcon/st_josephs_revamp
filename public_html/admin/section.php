@@ -605,7 +605,17 @@ case 'achievements':
 case 'gallery':
     $albums = repo_albums(true);
     $curAlb = (int)($_GET['album'] ?? ($albums[0]['id'] ?? 0));
+    $galleryPage = repo_page('gallery');
     ?>
+    <div class="sj-section-head">
+      <p class="sj-lead">The Gallery hub page: its centre slideshow, the album cards, and each album's
+         years &amp; photos. New albums get their page automatically at the URL key you choose;
+         the 10 original ones keep their fixed pages and can only be hidden, not deleted.</p>
+      <?php if ($galleryPage): // N4: the hub's cross-fade slideshow ?>
+      <button class="sj-btn sj-btn-ghost" <?= panel_photos_attr('page', (int)$galleryPage['id'], 'slider', 'bg_wide', 'Gallery hub slideshow photos') ?>>🖼️ Hub slideshow</button>
+      <?php endif; ?>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('gallery_album', [], 'Add album') ?>>＋ Add album</button>
+    </div>
     <div class="sj-tabs">
       <?php foreach ($albums as $al): ?>
       <a class="sj-btn <?= (int)$al['id'] === $curAlb ? 'sj-btn-primary' : 'sj-btn-ghost' ?>"
@@ -619,8 +629,10 @@ case 'gallery':
           'entity' => 'gallery_album', 'id' => (int)$al['id'],
           'thumb'  => $al['image'] ? img_url($al['image'], 'card_4x3') : null,
           'title'  => $al['title'],
-          'sub'    => $al['card_sub'] . ' · /' . $al['slug'] . '.php',
+          'sub'    => $al['card_sub'] . ' · ' . album_url($al['slug']),
           'active' => (bool)$al['is_active'],
+          // N4: only admin-created albums are deletable (legacy have fixed pages)
+          'canDelete' => !in_array($al['slug'], \SJ\Content\Registry::legacySlugs()['gallery_album'], true),
       ]); ?>
     </div>
 

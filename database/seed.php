@@ -496,6 +496,33 @@ $out[] = 'gallery_albums: ' . $pdo->query('SELECT COUNT(*) FROM gallery_albums')
        . ' albums, ' . $pdo->query('SELECT COUNT(*) FROM album_years')->fetchColumn() . ' years, '
        . $pdo->query("SELECT COUNT(*) FROM image_links WHERE owner_type='album_year'")->fetchColumn() . ' photos';
 
+/* ---------- Gallery hub slider (N4) ----------
+ * The hub page's 15-image cross-fade slider was hardcoded in the view; it now
+ * renders from image_links (owner = the 'gallery' pages row, role 'slider').
+ * Seeded from the exact shipped list, in the shipped order, only when the
+ * collection is empty — admin edits win forever after (idempotent). */
+$pdo->prepare('INSERT IGNORE INTO pages (slug, title, heading_html) VALUES (?,?,?)')
+    ->execute(['gallery', "St.Joseph's MHSS, Ondipudur", '']);
+$galleryPageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'gallery'")->fetchColumn();
+$sliderCount = $pdo->prepare("SELECT COUNT(*) FROM image_links WHERE owner_type = 'page' AND owner_id = ? AND role = 'slider'");
+$sliderCount->execute([$galleryPageId]);
+if (!(int)$sliderCount->fetchColumn()) {
+    $sliderFiles = [
+        'sportsday1.jpg', 'sportsday10.jpg', 'indday1.jpg', 'indday12.jpg',
+        'childday1.jpg', 'childday4.jpg', 'teachday1.jpg', 'teachday9.jpg',
+        'expressday1.jpg', 'expressday13.jpg', 'expo1.jpg', 'expo18.jpg',
+        'gradday1.jpg', 'gradday11.jpg', 'spach1.jpg',
+    ];
+    $ins = $pdo->prepare("INSERT IGNORE INTO image_links (owner_type, owner_id, role, image_id, position) VALUES ('page', ?, 'slider', ?, ?)");
+    foreach ($sliderFiles as $i => $f) {
+        $iid = img_id_by_file($f);
+        if ($iid) {
+            $ins->execute([$galleryPageId, $iid, $i]);
+        }
+    }
+}
+$out[] = 'gallery hub slider: ' . $pdo->query("SELECT COUNT(*) FROM image_links WHERE owner_type='page' AND role='slider'")->fetchColumn() . ' slides';
+
 /* ---------- Site settings (C1) ----------
  * Values are the EXACT strings shipped in the static pages (visual-freeze):
  * seeding them keeps the rendered output byte-identical while making the

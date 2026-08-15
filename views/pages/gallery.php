@@ -11,21 +11,11 @@
      valid HTML, same cascade position — R3). -->
 <link rel="stylesheet" href="/css/partials/gallery-slider.css?v=<?php echo SJ_ASSET_VER; ?>">
 <div class="container-slider">
-    <div class="slide" style="background-image: url(/photos/sportsday1.jpg); opacity: 1;"></div>
-    <div class="slide" style="background-image: url(/photos/sportsday10.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/indday1.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/indday12.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/childday1.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/childday4.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/teachday1.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/teachday9.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/expressday1.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/expressday13.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/expo1.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/expo18.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/gradday1.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/gradday11.jpg); opacity: 0;"></div>
-    <div class="slide" style="background-image: url(/photos/spach1.jpg); opacity: 0;"></div>
+<?php // N4: slides come from image_links (panel-managed); the shipped markup —
+      // one bg div per photo, first at opacity 1 — is reproduced exactly. ?>
+<?php foreach ($sj_slider_urls as $si => $u): ?>
+    <div class="slide" style="background-image: url(<?= e($u) ?>); opacity: <?= $si === 0 ? '1' : '0' ?>;"></div>
+<?php endforeach; ?>
 </div>
 
 <script>
@@ -49,24 +39,8 @@
         slideTimer = setInterval(showNextSlide, slideInterval);
     });
 
-    // Preload images
-    const images = [
-        '/photos/sportsday1.jpg',
-        '/photos/sportsday10.jpg',
-        '/photos/indday1.jpg',
-        '/photos/indday12.jpg',
-        '/photos/childday1.jpg',
-        '/photos/childday4.jpg',
-        '/photos/teachday1.jpg',
-        '/photos/teachday9.jpg',
-        '/photos/expressday1.jpg',
-        '/photos/expressday13.jpg',
-        '/photos/expo1.jpg',
-        '/photos/expo18.jpg',
-        '/photos/gradday1.jpg',
-        '/photos/gradday11.jpg',
-        '/photos/spach1.jpg'
-    ];
+    // Preload images (N4: same rows as the slides above)
+    const images = <?= json_encode(array_values($sj_slider_urls), JSON_UNESCAPED_SLASHES) ?>;
 
     images.forEach((image) => {
         const img = new Image();
@@ -88,7 +62,7 @@ foreach (array_chunk($sj_albums, 3) as $ri => $chunk): ?>
         <div class="card-body">
           <h3 class="card-title"<?= ed_field('gallery_album', $al['id'], 'title') ?>><?= e($al['title']) ?></h3>
           <p class="card-text"<?= ed_field('gallery_album', $al['id'], 'card_sub') ?>><?= e($al['card_sub']) ?></p>
-          <a href="/<?= e($al['slug']) ?>.php" class="btn btn-primary">More</a>
+          <a href="<?= e(album_url($al['slug'])) ?>" class="btn btn-primary">More</a>
         </div>
       </div>
     </div>
