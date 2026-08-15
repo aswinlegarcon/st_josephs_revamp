@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- St.Joseph's MHSS, Ondipudur — all public URLs (F3). The URL set is fixed
-     (41 pages); hand-maintained, checked by admin/health.php. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://stjosephsondipudur.com/</loc></url>
   <url><loc>https://stjosephsondipudur.com/about.php</loc></url>

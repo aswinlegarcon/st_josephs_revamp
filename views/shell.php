@@ -13,10 +13,15 @@ $showJumbotron = $showJumbotron ?? false;
 // F3 SEO: per-URL title/description/canonical/OG. The slug comes from the
 // entry script's own name (server-set, never request-derived); rows live in
 // seo_meta (admin-editable). Fallbacks keep pages working with no row.
-$sjSlug  = \basename($_SERVER['SCRIPT_NAME'] ?? 'index.php', '.php') ?: 'index';
+// N3/N4: generic controllers (academy.php/album.php) pass $sjSeoSlug (the DB
+// row's slug, not the raw request) + $sjCanonicalPath so each dynamic page
+// keeps its own snippet row and exact canonical URL.
+$sjSlug  = (isset($sjSeoSlug) && $sjSeoSlug !== '')
+    ? $sjSeoSlug
+    : (\basename($_SERVER['SCRIPT_NAME'] ?? 'index.php', '.php') ?: 'index');
 $sjSeo   = repo_seo($sjSlug) ?: [];
 $sjBase  = rtrim(sj_config()['base_url'] ?? 'https://stjosephsondipudur.com', '/');
-$sjCanon = $sjBase . ($sjSlug === 'index' ? '/' : '/' . $sjSlug . '.php');
+$sjCanon = $sjBase . ($sjCanonicalPath ?? ($sjSlug === 'index' ? '/' : '/' . $sjSlug . '.php'));
 $sjTitle = ($sjSeo['title'] ?? '') !== '' ? $sjSeo['title'] : ($title ?? "St.Joseph's MHSS, Ondipudur");
 $sjDesc  = $sjSeo['description'] ?? '';
 ?>

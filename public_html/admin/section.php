@@ -435,9 +435,11 @@ case 'academies':
     $rows = repo_academies(true);
     ?>
     <div class="sj-section-head">
-      <p class="sj-lead">The 18 academy pages (Tamil, Maths, … Band, NCC, Art&nbsp;Expo) and their cards on the
+      <p class="sj-lead">The academy pages (Tamil, Maths, … Band, NCC, Art&nbsp;Expo) and their cards on the
          Co-Curriculum page. Order here = card order on that page. Each academy's photo carousel has its
-         own manager (🖼️). Adding a brand-new academy needs a developer (its page needs a URL).</p>
+         own manager (🖼️). New academies get their page automatically at the URL key you choose;
+         the 18 original ones keep their fixed pages and can only be hidden, not deleted.</p>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('academy', [], 'Add academy') ?>>＋ Add academy</button>
     </div>
     <div class="sj-list" data-list="academy">
       <?php foreach ($rows as $ac) { ?>
@@ -446,7 +448,7 @@ case 'academies':
           <?php else: ?><div class="sj-row-thumb noimg">no image</div><?php endif; ?>
           <div class="sj-row-main">
             <b><?= e($ac['card_title']) ?></b>
-            <span><?= e($ac['card_subtitle']) ?> · /<?= e($ac['slug']) ?>.php</span>
+            <span><?= e($ac['card_subtitle']) ?> · <?= e(academy_url($ac['slug'])) ?></span>
           </div>
           <?php if (!$ac['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
           <div class="sj-row-actions">
@@ -455,6 +457,9 @@ case 'academies':
             <button class="sj-ico" title="Move up" data-act="move" data-dir="-1">↑</button>
             <button class="sj-ico" title="Move down" data-act="move" data-dir="1">↓</button>
             <button class="sj-ico" title="<?= $ac['is_active'] ? 'Hide from co-curriculum grid' : 'Show on co-curriculum grid' ?>" data-act="toggle" data-active="<?= $ac['is_active'] ? 1 : 0 ?>"><?= $ac['is_active'] ? '👁️' : '🚫' ?></button>
+            <?php if (!in_array($ac['slug'], \SJ\Content\Registry::legacySlugs()['academy'], true)): // N3: only admin-created ones ?>
+            <button class="sj-ico danger" title="Delete" data-act="del">🗑️</button>
+            <?php endif; ?>
           </div>
         </div>
       <?php } ?>

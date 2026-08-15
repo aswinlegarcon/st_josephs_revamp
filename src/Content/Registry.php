@@ -110,18 +110,20 @@ final class Registry
                 ],
             ],
             'academy' => [
-                // creatable=false on purpose: a new academy needs its own URL stub
-                // (a thin controller file), which is a developer task until R2+.
-                'table' => 'academies', 'orderable' => true, 'creatable' => false, 'deletable' => false,
+                // N3: creatable — new academies serve at /academy.php?slug=…
+                // (generic controller); the 18 shipped slugs keep their own
+                // files and are delete/rename-protected via legacySlugs().
+                'table' => 'academies', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [
+                    'slug'            => ['type' => 'slug', 'max' => 40,  'label' => 'URL key (lowercase, permanent — e.g. roboticsacademy)', 'required' => true, 'create_only' => true],
                     'banner_title'    => ['type' => 'text', 'max' => 100, 'label' => 'Banner title'],
                     'banner_subtitle' => ['type' => 'text', 'max' => 120, 'label' => 'Banner subtitle'],
                     'content_heading' => ['type' => 'text', 'max' => 100, 'label' => 'Content heading'],
                     'body_html'       => ['type' => 'html', 'max' => 65000, 'label' => 'Write-up'],
                     'card_title'      => ['type' => 'text', 'max' => 100, 'label' => 'Co-curriculum card title'],
                     'card_subtitle'   => ['type' => 'text', 'max' => 120, 'label' => 'Co-curriculum card subtitle'],
-                    'card_image_id'   => ['type' => 'image', 'preset' => 'card_4x3',  'label' => 'Card photo'],
-                    'bg_image_id'     => ['type' => 'image', 'preset' => 'bg_wide',   'label' => 'Page background photo'],
+                    'card_image_id'   => ['type' => 'image', 'preset' => 'card_4x3',  'label' => 'Card photo', 'required' => true],
+                    'bg_image_id'     => ['type' => 'image', 'preset' => 'bg_wide',   'label' => 'Page background photo', 'required' => true],
                     'is_active'       => ['type' => 'bool', 'label' => 'Visible on the co-curriculum grid'],
                 ],
             ],
@@ -156,12 +158,16 @@ final class Registry
                 ],
             ],
             'gallery_album' => [
-                'table' => 'gallery_albums', 'orderable' => true, 'creatable' => false, 'deletable' => false,
+                // N4: creatable — new albums serve at /album.php?slug=… (generic
+                // controller); the 10 shipped gal-* slugs keep their own files
+                // and are delete/rename-protected via legacySlugs().
+                'table' => 'gallery_albums', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 'fields' => [
+                    'slug'          => ['type' => 'slug', 'max' => 40,  'label' => 'URL key (lowercase, permanent — e.g. gal-farewell)', 'required' => true, 'create_only' => true],
                     'title'         => ['type' => 'text', 'max' => 100, 'label' => 'Hub-card title'],
                     'heading'       => ['type' => 'text', 'max' => 100, 'label' => 'Album-page heading'],
                     'card_sub'      => ['type' => 'text', 'max' => 60,  'label' => 'Hub-card sub-line (years)'],
-                    'card_image_id' => ['type' => 'image', 'preset' => 'card_4x3', 'label' => 'Hub-card photo'],
+                    'card_image_id' => ['type' => 'image', 'preset' => 'card_4x3', 'label' => 'Hub-card photo', 'required' => true],
                     'is_active'     => ['type' => 'bool', 'label' => 'Visible on the gallery hub'],
                 ],
             ],
@@ -234,6 +240,31 @@ final class Registry
             'facility'   => 'facilities',
             'album'      => 'gallery_albums',
             'album_year' => 'album_years',
+        ];
+    }
+
+    /**
+     * N3/N4: the slugs whose pages shipped as REAL .php files. They must keep
+     * resolving forever ("every legacy URL keeps working"), so their rows can
+     * never be deleted (item.php guard) and their slugs never change
+     * (create_only). Everything NOT in these lists serves via the generic
+     * /academy.php and /album.php controllers — see academy_url()/album_url().
+     */
+    public static function legacySlugs(): array
+    {
+        return [
+            'academy' => [
+                'abacusacademy', 'artacademy', 'artandexpo', 'band',
+                'communicativeacademy', 'danceacademy', 'englishacademy',
+                'instrumentacademy', 'langacademy', 'martialacademy',
+                'mathsacademy', 'ncc', 'scienceacademy', 'socialacademy',
+                'sportsacademy', 'tamilacademy', 'vocalacademy', 'yogaacademy',
+            ],
+            'gallery_album' => [
+                'gal-alumni', 'gal-annual', 'gal-children', 'gal-expo',
+                'gal-expressionz', 'gal-grad', 'gal-independence', 'gal-spach',
+                'gal-sports', 'gal-teacher',
+            ],
         ];
     }
 }

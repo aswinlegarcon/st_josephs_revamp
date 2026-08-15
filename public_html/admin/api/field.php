@@ -12,6 +12,11 @@ $def = $reg['fields'][$field] ?? null;
 if ($def === null || $id <= 0) {
     api_fail('Unknown field');
 }
+// N3: create-only fields (slugs = URLs) can never be edited afterwards —
+// renaming would break the page's address, links and SEO row.
+if (!empty($def['create_only'])) {
+    api_fail("Field '$field' is set at creation and cannot be changed");
+}
 $value = api_validate_field($entity, $field, $def, $in['value'] ?? null);
 
 $st = db()->prepare("UPDATE {$reg['table']} SET `$field` = ? WHERE id = ?");
@@ -25,4 +30,8 @@ if (!$st->rowCount()) {
     }
 }
 sj_audit('field.save', $entity, $id, $field);
+// N3/N4: hiding/showing a URL-bearing row changes the public URL set.
+if ($field === 'is_active' && in_array($entity, ['academy', 'gallery_album'], true)) {
+    \SJ\Content\Sitemap::regenerate();
+}
 api_out(['value' => $value]);

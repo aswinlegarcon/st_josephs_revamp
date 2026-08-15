@@ -52,7 +52,7 @@ foreach (array_chunk($sj_academies, 3) as $ri => $chunk): ?>
             <div class="card-body">
             <h3 class="card-title"<?= ed_field('academy', $ac['id'], 'card_title') ?>><?= e($ac['card_title']) ?></h3>
             <p class="card-text"<?= ed_field('academy', $ac['id'], 'card_subtitle') ?>><?= e($ac['card_subtitle']) ?></p>
-            <a class="btn btn-primary btn-lg" href="<?= e($ac['slug']) ?>.php" role="button" aria-label="Read more about <?= e($ac['name']) ?>">Read more</a>
+            <a class="btn btn-primary btn-lg" href="<?= e(academy_url($ac['slug'])) ?>" role="button" aria-label="Read more about <?= e($ac['name']) ?>">Read more</a>
             </div>
           </div>
         </div>

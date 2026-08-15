@@ -70,6 +70,16 @@ function api_validate_field(string $entity, string $field, array $def, $value)
         api_fail("Field '$field' cannot be empty");
     }
     switch ($t) {
+        case 'slug':
+            // N3: URL keys for admin-created pages. Lowercased, strictly
+            // [a-z0-9-], must start alphanumeric, ≤40 (column width). The value
+            // is only ever used as a DB lookup / query-string value — never a
+            // filesystem path (SEC-11) — but strictness keeps URLs sane.
+            $v = strtolower(trim((string)$value));
+            if (!preg_match('/^[a-z0-9][a-z0-9-]{0,39}$/', $v)) {
+                api_fail("Field '$field': use only lowercase letters, numbers and dashes (max 40, no leading dash)");
+            }
+            return $v;
         case 'text':
             $v = trim(strip_tags((string)$value));
             if (isset($def['max']) && mb_strlen($v) > $def['max']) {

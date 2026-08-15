@@ -22,6 +22,9 @@ switch ($action) {
         $fields = [];
         $thumbs = [];
         foreach ($reg['fields'] as $name => $def) {
+            if (!empty($def['create_only'])) {
+                continue; // N3: never offered in edit modals (immutable after create)
+            }
             $values[$name] = $row[$name] ?? null;
             if ($def['type'] === 'image' && !empty($row[$name])) {
                 $imgRow = repo_image((int)$row[$name]);
@@ -79,9 +82,34 @@ switch ($action) {
 
         $names = array_keys($cols);
         $sql = "INSERT INTO `$table` (`" . implode('`,`', $names) . "`) VALUES (" . implode(',', array_fill(0, count($names), '?')) . ")";
-        $pdo->prepare($sql)->execute(array_values($cols));
+        try {
+            $pdo->prepare($sql)->execute(array_values($cols));
+        } catch (PDOException $e) {
+            if ((int)($e->errorInfo[1] ?? 0) === 1062) { // duplicate UNIQUE (slug)
+                api_fail('That URL key is already in use — pick another');
+            }
+            throw $e;
+        }
         $newId = (int)$pdo->lastInsertId();
         sj_audit('item.create', $entity, $newId);
+        // N3/N4: a new academy/album is a new public URL — give it a search
+        // snippet row (admin-editable afterwards; INSERT IGNORE = never
+        // overwrites) and refresh the sitemap.
+        if ($entity === 'academy' && isset($cols['slug'])) {
+            $pdo->prepare('INSERT IGNORE INTO seo_meta (slug, title, description) VALUES (?,?,?)')->execute([
+                $cols['slug'],
+                mb_substr(($cols['banner_title'] ?: $cols['card_title']) . " | St.Joseph's MHSS, Ondipudur", 0, 160),
+                mb_substr((string)($cols['card_subtitle'] ?? ''), 0, 300),
+            ]);
+            \SJ\Content\Sitemap::regenerate();
+        } elseif ($entity === 'gallery_album' && isset($cols['slug'])) {
+            $pdo->prepare('INSERT IGNORE INTO seo_meta (slug, title, description) VALUES (?,?,?)')->execute([
+                $cols['slug'],
+                mb_substr(($cols['heading'] ?: $cols['title']) . " — Photo Gallery | St.Joseph's MHSS", 0, 160),
+                mb_substr('Photos from ' . $cols['title'] . " at St.Joseph's MHSS, Ondipudur.", 0, 300),
+            ]);
+            \SJ\Content\Sitemap::regenerate();
+        }
         api_out(['id' => $newId]);
     }
 
@@ -98,6 +126,9 @@ switch ($action) {
             if ($def === null) {
                 api_fail("Unknown field '$name'");
             }
+            if (!empty($def['create_only'])) {
+                api_fail("Field '$name' is set at creation and cannot be changed"); // N3
+            }
             $sets[] = "`$name` = ?";
             $vals[] = api_validate_field($entity, $name, $def, $value);
         }
@@ -112,8 +143,44 @@ switch ($action) {
             api_fail('Entity cannot be deleted');
         }
         $id = (int)($in['id'] ?? 0);
+
+        // N3/N4: the shipped academies/albums have their own .php files — the
+        // row deleting would leave a live URL answering "content not seeded".
+        // Their slugs are a code literal (Registry::legacySlugs) and protected.
+        $legacy = \SJ\Content\Registry::legacySlugs()[$entity] ?? null;
+        $slug   = null;
+        if ($legacy !== null) {
+            $st = $pdo->prepare("SELECT slug FROM `$table` WHERE id = ?");
+            $st->execute([$id]);
+            $slug = $st->fetchColumn() ?: null;
+            if ($slug !== null && in_array($slug, $legacy, true)) {
+                api_fail('This one has a fixed page on the site and cannot be deleted — hide it instead');
+            }
+        }
+
+        // N4: polymorphic children first (no FK covers image_links / album_years).
+        if ($entity === 'gallery_album') {
+            $yr = $pdo->prepare("SELECT id FROM album_years WHERE album_id = ?");
+            $yr->execute([$id]);
+            foreach ($yr->fetchAll(PDO::FETCH_COLUMN) as $yid) {
+                $pdo->prepare("DELETE FROM image_links WHERE owner_type = 'album_year' AND owner_id = ?")->execute([(int)$yid]);
+            }
+            $pdo->prepare("DELETE FROM album_years WHERE album_id = ?")->execute([$id]);
+            $pdo->prepare("DELETE FROM image_links WHERE owner_type = 'album' AND owner_id = ?")->execute([$id]);
+        } elseif ($entity === 'academy') {
+            $pdo->prepare("DELETE FROM image_links WHERE owner_type = 'academy' AND owner_id = ?")->execute([$id]);
+        } elseif ($entity === 'album_year') {
+            $pdo->prepare("DELETE FROM image_links WHERE owner_type = 'album_year' AND owner_id = ?")->execute([$id]);
+        }
+
         $pdo->prepare("DELETE FROM `$table` WHERE id = ?")->execute([$id]);
-        sj_audit('item.delete', $entity, $id);
+        sj_audit('item.delete', $entity, $id, (string)($slug ?? ''));
+
+        // The URL set changed: drop the snippet row, refresh the sitemap.
+        if ($slug !== null && in_array($entity, ['academy', 'gallery_album'], true)) {
+            $pdo->prepare('DELETE FROM seo_meta WHERE slug = ?')->execute([$slug]);
+            \SJ\Content\Sitemap::regenerate();
+        }
         api_out();
     }
 }

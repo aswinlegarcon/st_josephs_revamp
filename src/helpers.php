@@ -265,6 +265,25 @@ function repo_academy(string $slug): ?array
     return Repo::academy($slug);
 }
 
+/**
+ * N3: public URL for an academy — the 18 shipped slugs keep their own .php
+ * files; admin-created ones serve via the generic /academy.php controller.
+ */
+function academy_url(string $slug): string
+{
+    return in_array($slug, Registry::legacySlugs()['academy'], true)
+        ? '/' . $slug . '.php'
+        : '/academy.php?slug=' . rawurlencode($slug);
+}
+
+/** N4: same rule for gallery albums (gal-*.php vs /album.php?slug=…). */
+function album_url(string $slug): string
+{
+    return in_array($slug, Registry::legacySlugs()['gallery_album'], true)
+        ? '/' . $slug . '.php'
+        : '/album.php?slug=' . rawurlencode($slug);
+}
+
 function repo_academies(bool $includeInactive = false): array
 {
     return Repo::academies($includeInactive);
