@@ -19,10 +19,10 @@
       openForm({
         title: meta.label || 'Add',
         fields: meta.fields,
-        submitLabel: '＋ Add',
+        submitLabel: 'Add',
         onSubmit: function (data) {
           return api('item.php', { action: 'create', entity: meta.entity, data: data, preset: meta.preset || {} })
-            .then(function () { toast('Added ✔'); location.reload(); });
+            .then(function () { toast('Added'); location.reload(); });
         }
       });
       return;
@@ -55,8 +55,8 @@
           image_id: +document.getElementById('sj-principal-img').value || null
         }
       }).then(function () {
-        toast('Saved ✔ — live on the site');
-        document.getElementById('sj-principal-msg-state').textContent = 'Saved ✔';
+        toast('Saved — live on the site');
+        document.getElementById('sj-principal-msg-state').textContent = 'Saved';
         actBtn.disabled = false;
       }).catch(function (err) { toast(err.message, true); actBtn.disabled = false; });
       return;
@@ -77,7 +77,7 @@
           thumbs: j.thumbs || {},
           onSubmit: function (data) {
             return api('item.php', { action: 'update', entity: entity, id: id, data: data })
-              .then(function () { toast('Saved ✔'); location.reload(); });
+              .then(function () { toast('Saved'); location.reload(); });
           }
         });
       }).catch(function (err) { toast(err.message, true); });
@@ -146,7 +146,7 @@
       var ids = Array.prototype.slice.call(list.querySelectorAll('[data-row^="' + entity + ':"]'))
         .map(function (n) { return +n.getAttribute('data-row').split(':')[1]; });
       api('order.php', { entity: entity, ids: ids })
-        .then(function () { toast('Order saved ✔'); })
+        .then(function () { toast('Order saved'); })
         .catch(function (err) { toast(err.message, true); location.reload(); });
     });
     // make rows of orderable lists draggable
@@ -164,7 +164,7 @@
     var M = openModal(cfg.label || 'Manage photos');
     var grid = el('div', 'sj-photogrid');
     M.body.appendChild(grid);
-    var add = el('button', 'sj-btn sj-btn-primary', '＋ Add photo'); add.type = 'button';
+    var add = el('button', 'sj-btn sj-btn-primary', SJUI.icon('plus', 14) + ' Add photo'); add.type = 'button';
     var done = el('button', 'sj-btn sj-btn-ghost', 'Done'); done.type = 'button';
     M.foot.appendChild(add); M.foot.appendChild(done);
     done.addEventListener('click', function () { M.close(); if (cfg.onClose) cfg.onClose(); });
@@ -188,14 +188,14 @@
           t.appendChild(rm);
           grid.appendChild(t);
         });
-        if (!j.links.length) grid.appendChild(el('p', 'sj-hint', 'No photos yet — press “＋ Add photo”.'));
+        if (!j.links.length) grid.appendChild(el('p', 'sj-hint', 'No photos yet — press “Add photo”.'));
       }).catch(function (err) { toast(err.message, true); });
     }
 
     add.addEventListener('click', function () {
       pickImage(cfg.preset || null).then(function (p) {
         api('link.php', Object.assign({ action: 'attach', image_id: p.id }, base))
-          .then(function () { toast('Added ✔'); refresh(); })
+          .then(function () { toast('Added'); refresh(); })
           .catch(function (err) { toast(err.message, true); });
       }).catch(function () {});
     });
@@ -225,7 +225,7 @@
       var ids = Array.prototype.slice.call(grid.querySelectorAll('.sj-phototile'))
         .map(function (n) { return +n.getAttribute('data-link'); });
       api('link.php', Object.assign({ action: 'reorder', link_ids: ids }, base))
-        .then(function () { toast('Order saved ✔'); })
+        .then(function () { toast('Order saved'); })
         .catch(function (err) { toast(err.message, true); refresh(); });
     });
 
@@ -250,12 +250,12 @@
     function openRecrop(it) {
       var meta = presetMeta(it.preset_key);
       if (!meta || meta.mode !== 'cover' || !window.Cropper) { toast('This image has no crop shape', true); return; }
-      var M = openModal('✂️ Re-crop — ' + it.label);
+      var M = openModal('Re-crop — ' + it.label);
       var img = document.createElement('img');
       img.className = 'sj-cropimg';
       img.src = it.orig;
       M.body.appendChild(img);
-      var save = el('button', 'sj-btn sj-btn-primary', '💾 Save crop'); save.type = 'button';
+      var save = el('button', 'sj-btn sj-btn-primary', SJUI.icon('check', 14) + ' Save crop'); save.type = 'button';
       M.foot.appendChild(save);
       var initial;
       if (it.crop_rect) {
@@ -273,7 +273,7 @@
         save.disabled = true;
         api('recrop.php', { image_id: it.id, crop_rect: Math.max(0, d.x) + ',' + Math.max(0, d.y) + ',' + d.width + ',' + d.height })
           .then(function () {
-            toast('Re-cropped ✔ — every page shows the new crop');
+            toast('Re-cropped — every page shows the new crop');
             cr.destroy(); M.close(); loadMedia(true);
           })
           .catch(function (err) { toast(err.message, true); save.disabled = false; });
@@ -293,8 +293,8 @@
       var alt = document.createElement('input');
       alt.type = 'text'; alt.value = it.alt || '';
       M.body.appendChild(alt);
-      var save = el('button', 'sj-btn sj-btn-primary', '💾 Save description'); save.type = 'button';
-      var del = el('button', 'sj-btn sj-btn-ghost sj-danger', '🗑️ Delete image'); del.type = 'button';
+      var save = el('button', 'sj-btn sj-btn-primary', SJUI.icon('check', 14) + ' Save description'); save.type = 'button';
+      var del = el('button', 'sj-btn sj-danger', SJUI.icon('trash', 14) + ' Delete image'); del.type = 'button';
       del.disabled = it.used > 0;
       del.title = it.used ? 'Remove it from every place first' : 'Delete permanently';
       M.foot.appendChild(save); M.foot.appendChild(del);
@@ -307,7 +307,7 @@
       }
       save.addEventListener('click', function () {
         api('image.php', { action: 'meta', image_id: it.id, alt_text: alt.value })
-          .then(function () { toast('Description saved ✔'); })
+          .then(function () { toast('Description saved'); })
           .catch(function (err) { toast(err.message, true); });
       });
       del.addEventListener('click', function () {
@@ -333,7 +333,7 @@
             d.appendChild(badge);
             d.addEventListener('click', function () { openImageDetail(it); });
             if (!it.legacy && it.preset_key) {
-              var rc = el('button', 'sj-recrop', '✂️'); rc.type = 'button'; rc.title = 'Re-crop';
+              var rc = el('button', 'sj-recrop', SJUI.icon('crop', 14)); rc.type = 'button'; rc.title = 'Re-crop';
               rc.addEventListener('click', function (e) { e.stopPropagation(); openRecrop(it); });
               d.appendChild(rc);
             }
@@ -356,5 +356,105 @@
         .catch(function () {});
     });
     loadMedia(true);
+  }
+
+  /* ---------------- admin accounts (N7 — owners only) ---------------- */
+  var adminsList = document.getElementById('sj-admins');
+  if (adminsList) {
+    function tempModal(username, temp) {
+      var M = openModal('Temporary password — ' + username);
+      M.body.appendChild(el('p', 'sj-hint',
+        'Copy this now and hand it over securely. It is shown ONCE and must be changed at first sign-in.'));
+      var box = el('div', '', '<input type="text" readonly value="' + esc(temp) + '" style="font-family:monospace">');
+      M.body.appendChild(box);
+      var copy = el('button', 'sj-btn sj-btn-primary', SJUI.icon('copy', 14) + ' Copy');
+      copy.type = 'button';
+      copy.addEventListener('click', function () {
+        box.querySelector('input').select();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(temp);
+        } else {
+          document.execCommand('copy');
+        }
+        toast('Copied to clipboard');
+      });
+      M.foot.appendChild(copy);
+    }
+
+    function renderAdmins() {
+      api('admins.php', { action: 'list' }).then(function (j) {
+        adminsList.innerHTML = '';
+        j.items.forEach(function (a) {
+          var row = el('div', 'sj-row');
+          var chips = '<span class="sj-badge' + (a.role === 'owner' ? ' gold' : '') + '">' + esc(a.role) + '</span>';
+          if (a.locked) chips += ' <span class="sj-badge red">Locked</span>';
+          if (a.pending) chips += ' <span class="sj-badge">Awaiting first sign-in</span>';
+          row.innerHTML =
+            '<span class="sj-avatar">' + esc((a.display_name || '?').charAt(0).toUpperCase()) + '</span>' +
+            '<div class="sj-row-main"><b>' + esc(a.display_name) + (a.is_me ? ' (you)' : '') + '</b>' +
+            '<span>@' + esc(a.username) + ' · last sign-in: ' + esc(a.last_login || 'never') + '</span></div>' +
+            chips + '<div class="sj-row-actions"></div>';
+          var acts = row.querySelector('.sj-row-actions');
+          function ico(name, title, danger, fn) {
+            var b = el('button', 'sj-ico' + (danger ? ' danger' : ''), SJUI.icon(name, 16));
+            b.type = 'button'; b.title = title; b.setAttribute('aria-label', title);
+            b.addEventListener('click', fn);
+            acts.appendChild(b);
+          }
+          if (a.locked) {
+            ico('unlock', 'Unlock account', false, function () {
+              api('admins.php', { action: 'unlock', id: a.id })
+                .then(function () { toast('Unlocked'); renderAdmins(); })
+                .catch(function (e2) { toast(e2.message, true); });
+            });
+          }
+          ico('key', 'Reset password (new temporary)', false, function () {
+            if (!confirm('Generate a new temporary password for @' + a.username + '?')) return;
+            api('admins.php', { action: 'reset', id: a.id })
+              .then(function (r) { tempModal(a.username, r.temp_password); renderAdmins(); })
+              .catch(function (e2) { toast(e2.message, true); });
+          });
+          if (!a.is_me) {
+            ico('shield', a.role === 'owner' ? 'Make editor' : 'Make owner', false, function () {
+              var to = a.role === 'owner' ? 'editor' : 'owner';
+              if (!confirm('Change @' + a.username + ' to ' + to + '?')) return;
+              api('admins.php', { action: 'role', id: a.id, role: to })
+                .then(function () { toast('Role updated'); renderAdmins(); })
+                .catch(function (e2) { toast(e2.message, true); });
+            });
+            ico('trash', 'Delete account', true, function () {
+              if (!confirm('Delete @' + a.username + ' permanently?')) return;
+              api('admins.php', { action: 'delete', id: a.id })
+                .then(function () { toast('Deleted'); renderAdmins(); })
+                .catch(function (e2) { toast(e2.message, true); });
+            });
+          }
+          adminsList.appendChild(row);
+        });
+      }).catch(function (e2) {
+        adminsList.innerHTML = '';
+        adminsList.appendChild(el('p', 'sj-hint', esc(e2.message)));
+      });
+    }
+
+    document.getElementById('sj-admin-new').addEventListener('click', function () {
+      openForm({
+        title: 'New admin account',
+        fields: [
+          { name: 'username', label: 'Username (lowercase, 3–30)', type: 'text', required: true },
+          { name: 'display_name', label: 'Display name', type: 'text', required: true },
+          { name: 'role', label: 'Account role — owner: full control · editor: content only', type: 'text', required: true }
+        ],
+        values: { role: 'editor' },
+        submitLabel: 'Create account',
+        onSubmit: function (data) {
+          return api('admins.php', {
+            action: 'create', username: data.username, display_name: data.display_name, role: data.role
+          }).then(function (r) { tempModal(data.username, r.temp_password); renderAdmins(); });
+        }
+      });
+    });
+
+    renderAdmins();
   }
 })();

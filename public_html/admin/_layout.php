@@ -5,7 +5,9 @@
 require dirname(__DIR__) . '/bootstrap.php';
 sj_session_boot(true);
 if (function_exists('sj_admin_headers')) { sj_admin_headers(); } // security headers (added in S4)
-if (!is_admin()) {
+// N7: sj_admin_role() also re-verifies the account still exists — a deleted
+// admin's surviving session dies here on its next request.
+if (!is_admin() || sj_admin_role() === '') {
     header('Location: /admin/login.php');
     exit;
 }
@@ -15,30 +17,34 @@ if (!empty($_SESSION['must_change_pw'])) {
     exit;
 }
 
-/** Sections shown in the sidebar (slug => [icon, label]). */
+/** Sections shown in the sidebar (slug => [icon name, label]) — N7: SVG icons via sj_icon(). */
 function panel_sections(): array
 {
-    return [
-        'dashboard' => ['🏠', 'Dashboard'],
-        'hero'      => ['🎠', 'Hero Carousel'],
-        'principal' => ['👤', 'Principal'],
-        'aboutpage' => ['📖', 'About Page'],
-        'staffspage'   => ['🧑‍🏫', 'Staffs Page'],
-        'testimonials' => ['💬', 'Testimonials'],
-        'sections'     => ['🏫', 'School Sections'],
-        'academies'    => ['🎓', 'Academies'],
-        'sports'       => ['🏅', 'Sports'],
-        'facilities'   => ['🏗️', 'Infrastructure'],
-        'achievements' => ['🏆', 'Achievements'],
-        'gallery'      => ['🖼️', 'Gallery Albums'],
-        'unique'    => ['✨', "What's Unique"],
-        'ticker'    => ['📣', 'News Ticker'],
-        'updates'   => ['📺', 'New Updates'],
-        'marks'     => ['🏆', 'Top Marks'],
-        'media'     => ['🖼️', 'Media Library'],
-        'seo'       => ['🔍', 'SEO'],
-        'settings'  => ['⚙️', 'Site Settings'],
+    $s = [
+        'dashboard' => ['home', 'Dashboard'],
+        'hero'      => ['image', 'Hero Carousel'],
+        'principal' => ['user', 'Principal'],
+        'aboutpage' => ['book', 'About Page'],
+        'staffspage'   => ['users', 'Staffs Page'],
+        'testimonials' => ['quote', 'Testimonials'],
+        'sections'     => ['layers', 'School Sections'],
+        'academies'    => ['award', 'Academies'],
+        'sports'       => ['flag', 'Sports'],
+        'facilities'   => ['building', 'Infrastructure'],
+        'achievements' => ['trophy', 'Achievements'],
+        'gallery'      => ['images', 'Gallery Albums'],
+        'unique'    => ['star', "What's Unique"],
+        'ticker'    => ['bell', 'News Ticker'],
+        'updates'   => ['monitor', 'New Updates'],
+        'marks'     => ['chart', 'Top Marks'],
+        'media'     => ['folder', 'Media Library'],
+        'seo'       => ['search', 'SEO'],
+        'settings'  => ['sliders', 'Site Settings'],
     ];
+    if (sj_admin_role() === 'owner') {
+        $s['admins'] = ['shield', 'Admin Accounts']; // N7 — owners only
+    }
+    return $s;
 }
 
 /** data-panel-add attribute: registry-driven field metadata for the Add modal. */
@@ -100,14 +106,14 @@ $__presets = db()->query('SELECT preset_key, label, max_w, max_h, aspect_w, aspe
   <nav>
     <?php foreach ($sections as $slug => [$icon, $label]):
         $href = $slug === 'dashboard' ? '/admin/' : '/admin/section.php?s=' . $slug; ?>
-      <a class="<?= $slug === $active ? 'on' : '' ?>" href="<?= e($href) ?>"><span class="i"><?= $icon ?></span><?= e($label) ?></a>
+      <a class="<?= $slug === $active ? 'on' : '' ?>" href="<?= e($href) ?>" title="<?= e($label) ?>"><span class="i"><?= sj_icon($icon) ?></span><span class="t"><?= e($label) ?></span></a>
     <?php endforeach; ?>
   </nav>
   <div class="sj-side-foot">
-    <a href="/index.php" target="_blank">🌐 View website</a>
+    <a href="/index.php" target="_blank" title="View website"><?= sj_icon('globe', 16) ?><span>View website</span></a>
     <form method="post" action="/admin/logout.php">
       <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-      <button type="submit" class="sj-logout">🚪 Log out</button>
+      <button type="submit" class="sj-logout" title="Log out"><?= sj_icon('logout', 16) ?><span>Log out</span></button>
     </form>
   </div>
 </aside>
@@ -115,8 +121,8 @@ $__presets = db()->query('SELECT preset_key, label, max_w, max_h, aspect_w, aspe
   <header class="sj-topbar">
     <h1><?= e($title) ?></h1>
     <div class="sj-topbar-right">
-      <a class="sj-btn sj-btn-ghost" href="/index.php" target="_blank">Preview site ↗</a>
-      <span class="sj-user">👤 <?= e($_SESSION['admin_name'] ?? 'admin') ?></span>
+      <a class="sj-btn sj-btn-ghost sj-btn-sm" href="/index.php" target="_blank"><?= sj_icon('external', 15) ?> Preview site</a>
+      <span class="sj-user"><span class="sj-avatar"><?= e(mb_strtoupper(mb_substr($_SESSION['admin_name'] ?? 'A', 0, 1))) ?></span><?= e($_SESSION['admin_name'] ?? 'admin') ?></span>
     </div>
   </header>
   <div class="sj-content">

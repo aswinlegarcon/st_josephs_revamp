@@ -14,6 +14,8 @@ $routes = [
     'link'     => 'link.php',     // POST  {action:list|attach|detach|reorder, owner_type,…} (M1)
     'recrop'   => 'recrop.php',   // POST  {image_id, crop_rect} — re-render renditions (M3)
     'image'    => 'image.php',    // POST  {action:meta|usage|delete, image_id} — media library ops (M4)
+    'stats'    => 'stats.php',    // GET   dashboard vitals (N7)
+    'admins'   => 'admins.php',   // POST  {action:list|create|reset|unlock|role|delete} — owners only (N7)
 ];
 
 $r = (string)($_GET['r'] ?? '');

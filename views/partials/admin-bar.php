@@ -5,7 +5,7 @@ $sjCurrentPath = strtok((string)($_SERVER['REQUEST_URI'] ?? '/'), '?') ?: '/';
 ?>
 <div class="sjov-bar<?= is_edit() ? ' editing' : '' ?>" id="sjov-bar">
   <span class="sjov-brand">SJ Admin</span>
-  <span class="sjov-state"><?= is_edit() ? '✏️ Edit mode — click any outlined text or photo' : 'Viewing as a visitor' ?></span>
+  <span class="sjov-state"><?= is_edit() ? sj_icon('edit', 13) . ' Edit mode — click any outlined text or photo' : 'Viewing as a visitor' ?></span>
   <span class="sjov-actions">
     <a class="sjov-link" href="/admin/">Dashboard</a>
     <form method="post" action="/admin/editmode.php" class="sjov-form">
@@ -13,7 +13,7 @@ $sjCurrentPath = strtok((string)($_SERVER['REQUEST_URI'] ?? '/'), '?') ?: '/';
       <input type="hidden" name="return" value="<?= e($sjCurrentPath) ?>">
       <input type="hidden" name="on" value="<?= is_edit() ? '0' : '1' ?>">
       <button type="submit" class="sjov-btn<?= is_edit() ? ' on' : '' ?>">
-        <?= is_edit() ? '✔ Done editing' : '✏️ Edit this page' ?>
+        <?= is_edit() ? sj_icon('check', 13) . ' Done editing' : sj_icon('edit', 13) . ' Edit this page' ?>
       </button>
     </form>
   </span>

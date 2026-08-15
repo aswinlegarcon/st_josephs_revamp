@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
             $_SESSION['admin_id']       = (int)$user['id'];
             $_SESSION['admin_name']     = $user['display_name'];
+            $_SESSION['admin_role']     = (string)($user['role'] ?? 'owner'); // N7
             $_SESSION['edit_mode']      = 0;
             $_SESSION['must_change_pw'] = (int)($user['must_change_password'] ?? 0);
             $_SESSION['login_at']       = time();

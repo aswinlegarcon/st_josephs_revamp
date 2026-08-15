@@ -199,3 +199,92 @@ Drop each line into the master template's `[SCREEN-SPECIFIC SCENE]` (and `[SCREE
 - `public_html/admin/_layout.php` — sidebar/topbar shell
 - `public_html/admin/section.php` — per-section editors
 - `public_html/_libs/edit.php` — overlay `data-edit-*` emitters
+
+---
+
+# v2 — "Professional" revamp (N7, 2026-08-15) — THE CURRENT SPEC
+
+Owner brief: high-class feel, real transitions and button effects, perfect
+editing controls, **no emojis — professional icons**, a live view of site
+availability/speed/memory, and an area to create admin accounts.
+
+## 1. Principles
+1. **Same brand, higher finish.** Navy `#2b4b8a`/`#1a355d`, gold accents,
+   Segoe UI (+ Fjalla One only for big numbers) stay per CLAUDE.md. What
+   changes is craft: spacing rhythm, borders, depth, motion.
+2. **Motion is feedback, not decoration.** 140–220 ms ease-out; things move
+   ≤4 px. Buttons lift on hover and press on click; modals fade+scale from
+   .96; toasts slide; rows raise; numbers count up. Everything honours
+   `prefers-reduced-motion` (all transitions collapse to none).
+3. **Icons, not emoji.** A single inline-SVG icon set (Feather-style, 24-box,
+   `stroke: currentColor`, width 2, round caps) emitted by `sj_icon()` (PHP)
+   and `SJUI.icon()` (JS). Inline SVG over PNG on purpose: crisp at every
+   DPI, inherits color (states for free), zero extra requests, CSP-clean.
+   Every icon-only control carries `aria-label` + `title`.
+4. **No hook renames.** All `sj-*` classes and `data-*` contracts that
+   panel.js/sj-ui.js rely on keep their names — v2 restyles, never rewires.
+
+## 2. Tokens (authoritative)
+```
+--blue #2b4b8a  --dark #1a355d  --navy-ink #12233f  --gold #ffd700
+--bg #eef1f7    --card #fff     --text #26303f      --mut #64748b
+--line #e2e7f0  --line-strong #cbd5e1
+--ok #2e7d32    --warn #b26a00  --red #c62828
+--ring 0 0 0 3px rgba(43,75,138,.25)          (focus ring, every control)
+--shadow-1 0 1px 2px rgba(18,35,63,.06)       (resting cards)
+--shadow-2 0 8px 24px rgba(18,35,63,.12)      (hover / modals)
+--r-sm 8px  --r-md 12px  --r-lg 16px          (radii)
+--t-fast 140ms  --t-med 200ms  ease           (motion)
+```
+
+## 3. Components
+- **Buttons** `.sj-btn`: primary = navy gradient, hover `translateY(-1px)` +
+  shadow-2, active `translateY(0) scale(.98)`; ghost = white w/ border;
+  danger = red fill on confirm surfaces. Icon buttons `.sj-ico`: 34px round
+  square, transparent → tinted hover, icon inherits color; danger hover red.
+- **Inputs** (text/textarea/select): 40 px, `--line-strong` border, white bg,
+  focus = navy border + `--ring`; labels 11 px uppercase `--mut`; invalid =
+  red border + hint. Bool fields render as a **toggle switch** (the checkbox
+  stays the real input — pure CSS skin).
+- **List rows** `.sj-row`: white card rows, 12 px radius, hover = raise 1 px +
+  shadow + action buttons fade from 55%→100% opacity; drag = tilt 1° and
+  shadow-2; hidden rows keep the "Hidden" badge (slate).
+- **Modals**: backdrop `rgba(18,35,63,.55)` + 4 px blur; panel `--r-lg`,
+  shadow-2, enters fade+scale(.96→1) 180 ms; titles are plain text + icon.
+- **Toasts**: bottom-right stack, icon by type (check/alert), slide-up in,
+  auto-dismiss 2.6 s, reduced-motion = opacity only.
+- **Image picker/upload**: tile grid, hover = zoom 1.03 + navy overlay +
+  check; dropzone with dashed border that ignites on dragover; crop stage
+  unchanged (Cropper.js) inside the v2 modal.
+- **Tabs** `.sj-tabs`: pill buttons; active = navy fill. Sidebar: active item
+  = navy pill + 3 px gold left bar; icons 18 px at 70% → 100% on hover.
+
+## 4. Screens
+- **Dashboard** = 4 zones: (1) greeting header (name, date, quick actions);
+  (2) **Site vitals** — live tiles fed by `?r=stats` polled every 20 s by
+  `dashboard.js`: Availability (endpoint reachability + HTTP status), Speed
+  (measured round-trip ms + 20-sample sparkline), Server memory (used/total
+  bar, from `/proc/meminfo` when readable), PHP peak, Disk (conic donut),
+  Database + media size, OPcache hit-rate, last backup age. Server-rendered
+  initial values; skeleton shimmer while polling; count-up on change.
+  (3) content cards (existing links, now icon + count-up); (4) **Recent
+  activity** — last 8 `audit_log` rows as a friendly feed.
+- **Admin accounts** (new section `admins`, owners only): list rows (avatar
+  initial, username, role chip, last login, locked badge) + actions —
+  create (modal: username, display name, role; server generates a one-time
+  temp password shown ONCE with a copy button, `must_change_password=1`),
+  reset password, unlock, change role, delete. Guards: never yourself,
+  never the last owner. Editors don't see the section and the API 403s.
+- **Login / password / recover**: same card language — focus rings, lifted
+  button, no emoji.
+
+## 5. Security posture (unchanged, extended)
+`admin_users` stays OUT of the registry; accounts go through a dedicated
+`?r=admins` endpoint (auth + CSRF via `_bootstrap`, plus `role='owner'`
+gate). Passwords are always server-generated temporaries — never chosen or
+echoed after first display, never audited. Every action audited
+(`admin.create/reset/unlock/role/delete`, detail = target username).
+`?r=stats` is GET, admin-only, returns sizes/counters only — no paths, no
+versions of anything an attacker could map, no secrets. Deleted admins are
+cut off on their NEXT request: `_bootstrap`/`_layout` re-verify the session's
+admin row each request (also live-updates role changes).

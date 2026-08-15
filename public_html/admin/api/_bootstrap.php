@@ -22,6 +22,11 @@ function api_fail(string $msg, int $code = 400): void
 if (!is_admin()) {
     api_fail('Not authenticated', 401);
 }
+// N7: re-verify the account still exists (kills the session of a deleted
+// admin on their next request; also live-refreshes the session role).
+if (sj_admin_role() === '') {
+    api_fail('Not authenticated', 401);
+}
 
 // Block all content APIs until the forced password change is done (SEC-08).
 if (!empty($_SESSION['must_change_pw'])) {

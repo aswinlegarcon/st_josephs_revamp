@@ -20,10 +20,33 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  /* N7: professional inline-SVG icons (Feather-style) — the JS twin of the
+     PHP sj_icon() helper. No emojis anywhere in the admin UI. */
+  var ICONS = {
+    check: '<polyline points="20 6 9 17 4 12"/>',
+    alert: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    camera: '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+    upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+    crop: '<path d="M6.13 1L6 16a2 2 0 0 0 2 2h15"/><path d="M1 6.13L16 6a2 2 0 0 1 2 2v15"/>',
+    trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+    plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+    key: '<path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>',
+    copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+    unlock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+    user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'
+  };
+  function icon(name, size) {
+    var body = ICONS[name];
+    if (!body) return '';
+    var s = size || 16;
+    return '<svg class="sj-svg" width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+      ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + '</svg>';
+  }
   function toast(msg, isErr) {
-    var t = el('div', 'sj-toast' + (isErr ? ' err' : ''), esc(msg));
+    var t = el('div', 'sj-toast' + (isErr ? ' err' : ''), icon(isErr ? 'alert' : 'check') + '<span>' + esc(msg) + '</span>');
     document.body.appendChild(t);
-    setTimeout(function () { t.remove(); }, isErr ? 3800 : 1800);
+    setTimeout(function () { t.remove(); }, isErr ? 3800 : 2200);
   }
   function api(path, payload) {
     // Route through the front controller: 'item.php' -> index.php?r=item
@@ -219,7 +242,7 @@
           if (cropper) { cropper.destroy(); cropper = null; }
           cropHost.innerHTML = '';
           if (!file.files.length || !window.Cropper || !meta || meta.mode !== 'cover' || !meta.aspect_w) return;
-          cropHost.appendChild(el('label', '', '✂️ Choose the crop (locked to the slot shape)'));
+          cropHost.appendChild(el('label', '', icon('crop', 13) + ' Choose the crop (locked to the slot shape)'));
           var img = document.createElement('img');
           img.className = 'sj-cropimg';
           img.src = URL.createObjectURL(file.files[0]);
@@ -232,7 +255,7 @@
         file.addEventListener('change', mountCropper);
         pane.querySelectorAll('select').forEach(function (s) { s.addEventListener('change', mountCropper); });
         pane.appendChild(el('div', 'sj-upnote',
-          '✂️ Uploads are <b>cropped to the exact shape this spot needs</b> (drag the box above to choose ' +
+          'Uploads are <b>cropped to the exact shape this spot needs</b> (drag the box above to choose ' +
           'what stays) and lightly <b>compressed</b> (JPEG + WebP) — cards and slides always stay uniform and fast.'));
         var go = el('button', 'sj-btn sj-btn-primary', 'Upload'); go.type = 'button';
         go.style.marginTop = '14px';
@@ -252,7 +275,7 @@
             .then(function (r) { return r.json(); })
             .then(function (j) {
               if (!j.ok) throw new Error(j.error || 'Upload failed');
-              toast('Uploaded ✔');
+              toast('Uploaded');
               done({ id: j.image_id, thumb: j.url });
             })
             .catch(function (e) { toast(e.message, true); go.disabled = false; go.textContent = 'Upload'; });
@@ -300,14 +323,14 @@
       var img = thumb ? el('img') : el('div', 'sj-noimg', 'no image');
       if (thumb) img.src = thumb;
       var chosenId = value ? Number(value) : null;
-      var btn = el('button', 'sj-btn sj-btn-ghost', chosenId ? '📷 Change image' : '📷 Choose image');
+      var btn = el('button', 'sj-btn sj-btn-ghost', icon('camera', 15) + (chosenId ? ' Change image' : ' Choose image'));
       btn.type = 'button';
       btn.addEventListener('click', function () {
         pickImage(f.preset).then(function (p) {
           chosenId = p.id;
           var ni = el('img'); ni.src = p.thumb;
           holder.replaceChild(ni, holder.firstChild);
-          btn.textContent = '📷 Change image';
+          btn.innerHTML = icon('camera', 15) + ' Change image';
         }).catch(function () {});
       });
       holder.appendChild(img); holder.appendChild(btn);
@@ -369,6 +392,7 @@
     CSRF: CSRF,
     el: el,
     esc: esc,
+    icon: icon,
     toast: toast,
     api: api,
     presets: SJ_PRESETS,

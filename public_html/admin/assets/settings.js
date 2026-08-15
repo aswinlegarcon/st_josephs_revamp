@@ -28,9 +28,9 @@
       body: JSON.stringify({ values: values })
     }).then(function (r) { return r.json(); }).then(function (j) {
       if (!j.ok) throw new Error(j.error || 'Save failed');
-      note.textContent = '✔ Saved — the site is updated.';
+      note.textContent = 'Saved — the site is updated.';
     }).catch(function (err) {
-      note.textContent = '✖ ' + err.message;
+      note.textContent = 'Error: ' + err.message;
     }).then(function () {
       btn.disabled = false;
     });
