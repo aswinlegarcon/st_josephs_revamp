@@ -2,6 +2,7 @@
 # Real credentials NEVER go in git. The production config lives above the
 # webroot at /config/config.php (see SECURITY.md SEC-22 / PHASES.md S1).
 /config/config.php
+/config/recovery-token.txt
 config.local.php
 *.local.php
 .env

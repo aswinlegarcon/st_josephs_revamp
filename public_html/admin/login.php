@@ -33,25 +33,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['login_at']       = time();
             $_SESSION['last_seen']      = time();
             $_SESSION['last_regen']     = time();
-            unset($_SESSION['csrf']);
+            unset($_SESSION['csrf'], $_SESSION['sj_lf']);
             csrf_token(); // fresh token post-login
             if (function_exists('sj_audit')) { sj_audit('login.ok'); } // S4
             header('Location: ' . (!empty($_SESSION['must_change_pw']) ? '/admin/password.php' : '/admin/'));
             exit;
         } else {
-            // Every failure (unknown user, wrong password, OR locked) responds
-            // identically — no username enumeration, no "locked" oracle (SEC-06).
-            // Increment the counter only for a real, not-yet-locked account, and
-            // PERSIST it (never reset to 0 on lock) so lockouts actually hold.
-            if ($user && !$locked) {
-                $fails = (int)$user['failed_logins'] + 1;
-                $lock  = $fails >= 5 ? date('Y-m-d H:i:s', time() + 15 * 60) : null;
-                db()->prepare('UPDATE admin_users SET failed_logins = ?, locked_until = ? WHERE id = ?')
-                    ->execute([$fails, $lock, $user['id']]);
+            // N1: the lockout is now VISIBLE (owner decision — SECURITY.md
+            // SEC-06/SEC-24). When the account is locked (or this failure locks
+            // it) the message says so, with the minutes remaining, so the real
+            // owner is never left guessing after exhausting the 5 tries. A
+            // session-scoped SHADOW counter shows the exact same message for
+            // unknown usernames after 5 tries, so within a session the lock
+            // text cannot be used to confirm a username exists. Wrong-password
+            // and unknown-user still share one generic message; DB counter
+            // semantics are unchanged from S3 (persisted, reset on success).
+            $lockedUntilTs = null;
+            if ($user) {
+                if ($locked) {
+                    $lockedUntilTs = strtotime($user['locked_until']);
+                } else {
+                    $fails = (int)$user['failed_logins'] + 1;
+                    $lock  = $fails >= 5 ? date('Y-m-d H:i:s', time() + 15 * 60) : null;
+                    db()->prepare('UPDATE admin_users SET failed_logins = ?, locked_until = ? WHERE id = ?')
+                        ->execute([$fails, $lock, $user['id']]);
+                    if ($lock !== null) {
+                        $lockedUntilTs = time() + 15 * 60;
+                    }
+                }
+            }
+            // Shadow counter: per session, per (last-tried) username string.
+            $lf = $_SESSION['sj_lf'] ?? ['u' => '', 'n' => 0, 'until' => 0];
+            if (!hash_equals($lf['u'], $username)) {
+                $lf = ['u' => $username, 'n' => 0, 'until' => 0];
+            }
+            $lf['n']++;
+            if ($lf['n'] >= 5 && !$lf['until']) {
+                $lf['until'] = time() + 15 * 60;
+            }
+            $_SESSION['sj_lf'] = $lf;
+            if ($lockedUntilTs === null && $lf['until'] > time()) {
+                $lockedUntilTs = $lf['until'];
             }
             if (function_exists('sj_audit')) { sj_audit('login.fail', null, null, mb_substr($username, 0, 50)); } // S4
             sleep(1); // uniform delay on all failure paths (also masks bcrypt timing)
-            $error = 'Invalid username or password.';
+            if ($lockedUntilTs !== null && $lockedUntilTs > time()) {
+                $mins  = max(1, (int)ceil(($lockedUntilTs - time()) / 60));
+                $error = 'Too many failed sign-in attempts — this account is temporarily locked. '
+                       . 'Please wait about ' . $mins . ' minute' . ($mins === 1 ? '' : 's') . ' and try again.';
+            } else {
+                $error = 'Invalid username or password.';
+            }
         }
     }
 }
@@ -98,6 +130,9 @@ $csrf = csrf_token();
     <input id="password" name="password" type="password" required>
     <button type="submit">Sign in</button>
     <a class="back" href="/index.php">← Back to website</a>
+    <?php if (is_file(dirname(SJ_PUBLIC_ROOT) . '/config/recovery-token.txt')): // N1: shown only while recovery is armed ?>
+    <a class="back" style="margin-left:14px" href="/admin/recover.php">Forgot password?</a>
+    <?php endif; ?>
   </form>
 </body>
 </html>

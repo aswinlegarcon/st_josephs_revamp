@@ -134,3 +134,37 @@ Two **UptimeRobot** monitors (free tier, 5-min interval):
 Outage behaviour verified in dev: DB stopped → health returned 503 within one
 request; DB restarted → 200. PHP errors land in the host's `error_log` (mPanel
 → Error Log); the admin dashboard's health strip mirrors disk/backup status.
+
+## 9. Admin password recovery (N1)
+
+Two situations, two tools. Both clear any lockout; both are written to
+`audit_log`. (A locked account also announces itself now: after 5 failed
+tries the login page says "temporarily locked — wait about N minutes".)
+
+**Forgot the password on PRODUCTION (no SSH):**
+
+1. mPanel → **File Manager** → go to the `config/` directory **above**
+   `public_html/` (the one that holds `config.php`).
+2. Create a file named exactly **`recovery-token.txt`** containing one line:
+   a random token of **24+ characters** (mash the keyboard or use a password
+   generator — it is used once and thrown away).
+3. Open `https://stjosephsondipudur.com/admin/recover.php` (a "Forgot
+   password?" link also appears on the login page while the file exists).
+4. Enter the admin username, the exact token, and a new password (≥ 12 chars).
+5. On success the page deletes the token file itself — **verify in File
+   Manager that `recovery-token.txt` is gone** (the page warns in red if it
+   could not delete it). The page then 404s again; recovery is disarmed.
+
+Notes: the endpoint is a 404 whenever the file is absent or shorter than
+16 chars, so it is zero attack surface in normal operation. Never commit the
+token file (gitignored). Full threat notes: SECURITY.md **SEC-24**.
+
+**Forgot the password in DEV (Docker):**
+
+```bash
+docker compose exec web php database/reset-admin-password.php admin
+```
+
+Prints a one-time temporary password (lockout cleared,
+`must_change_password = 1` — the next sign-in forces a proper change).
+Never reset the live owner's password for testing.
