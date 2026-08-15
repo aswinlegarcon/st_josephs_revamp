@@ -2,7 +2,7 @@
 
 .footer {
   background: linear-gradient(rgba(43, 75, 138, 0.8), rgba(26, 53, 93, 0.8)),
-    url("/photos/schname.jpg");
+    url("/media/static/schname.jpg"); /* N5: optimized copy (5536px scan → 1920) */
   background-size: cover;
   color: white;
   padding: 30px 0;

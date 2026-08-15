@@ -238,7 +238,7 @@ html {
 
 .newtemp-body {
   background: linear-gradient(rgba(43, 75, 138, 0.8), rgba(26, 53, 93, 0.8)),
-    url("/photos/schname.jpg");
+    url("/media/static/schname.jpg"); /* N5: optimized copy (5536px scan → 1920) */
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -585,7 +585,7 @@ html {
   border-radius: 20px;
   padding: 65px;
   background: linear-gradient(rgba(43, 75, 138, 0.9), rgba(26, 53, 93, 0.9)),
-    url("/photos/schname.jpg");
+    url("/media/static/schname.jpg"); /* N5: optimized copy (5536px scan → 1920) */
   background-size: cover;
 
   box-shadow: 0px 0px 40px 0px rgba(255, 255, 255, 0.05);

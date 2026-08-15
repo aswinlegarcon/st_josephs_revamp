@@ -11,10 +11,15 @@
      valid HTML, same cascade position — R3). -->
 <link rel="stylesheet" href="/css/partials/gallery-slider.css?v=<?php echo SJ_ASSET_VER; ?>">
 <div class="container-slider">
-<?php // N4: slides come from image_links (panel-managed); the shipped markup —
-      // one bg div per photo, first at opacity 1 — is reproduced exactly. ?>
+<?php // N4: slides come from image_links (panel-managed). N5: only the first
+      // slide carries its background inline — the shipped page force-loaded
+      // all 15 photos (~3.7 MB) before anything was shown; the rest now sit in
+      // data-bg and are applied by the script two fades ahead, so the visible
+      // slideshow is identical while the initial payload is one image. ?>
 <?php foreach ($sj_slider_urls as $si => $u): ?>
-    <div class="slide" style="background-image: url(<?= e($u) ?>); opacity: <?= $si === 0 ? '1' : '0' ?>;"></div>
+    <div class="slide"<?= $si === 0
+        ? ' style="background-image: url(' . e($u) . '); opacity: 1;"'
+        : ' style="opacity: 0;" data-bg="' . e($u) . '"' ?>></div>
 <?php endforeach; ?>
 </div>
 
@@ -23,9 +28,22 @@
     let currentSlide = 0;
     const slideInterval = 2000; // 3 seconds
 
+    // N5: lazy backgrounds — apply a slide's photo (from data-bg) just ahead
+    // of its turn instead of downloading all of them up front.
+    function ensureBg(i) {
+        const s = slides[i % slides.length];
+        if (s && !s.style.backgroundImage && s.dataset.bg) {
+            s.style.backgroundImage = 'url(' + s.dataset.bg + ')';
+        }
+    }
+    ensureBg(1); // the first fade's target is ready before the timer fires
+    ensureBg(2);
+
     function showNextSlide() {
         slides[currentSlide].style.opacity = 0;
         currentSlide = (currentSlide + 1) % slides.length;
+        ensureBg(currentSlide);
+        ensureBg(currentSlide + 1); // stay one fade ahead
         slides[currentSlide].style.opacity = 1;
     }
 
@@ -39,13 +57,8 @@
         slideTimer = setInterval(showNextSlide, slideInterval);
     });
 
-    // Preload images (N4: same rows as the slides above)
-    const images = <?= json_encode(array_values($sj_slider_urls), JSON_UNESCAPED_SLASHES) ?>;
-
-    images.forEach((image) => {
-        const img = new Image();
-        img.src = image;
-    });
+    // N5: the shipped eager preload of every photo is gone — ensureBg() above
+    // fetches each slide one fade ahead instead.
 </script>
 
 <!-- album card grid -->

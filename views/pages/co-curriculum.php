@@ -4,7 +4,7 @@
 <div id="coCurriculumHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img class="d-block w-100" src="/photos/band1.jpg" alt="First slide">
+      <img class="d-block w-100" src="/photos/band1.jpg" alt="First slide"><?php /* N5 audit: original kept — every recompression came out LARGER (193→200+ KB) */ ?>
       <div class="carousel-caption text-start">
           <h5 class="abt-carousel-reveal">Our Co-Curriculum</h5>
           <p class="abt-carousel-reveal">About our co-curriculum</p>

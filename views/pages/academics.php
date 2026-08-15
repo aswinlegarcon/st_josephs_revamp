@@ -4,21 +4,21 @@
   <div id="academicsHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img class="d-block w-100" src="/photos/kg1.jpg" alt="First slide">
+        <img class="d-block w-100" src="/media/static/kg1.jpg" alt="First slide"><?php /* N5: optimized copy (1.3 MB → 236 KB); same frame, aspect preserved */ ?>
         <div class="carousel-caption text-start highsec-carousel-reveal">
           <h5>Academics</h5>
           <p>Embrace the challenges of learning, for they are stepping stones towards your academic success.</p>
         </div>
       </div>
       <div class="carousel-item">
-        <img class="d-block w-100" src="/photos/high1.jpg" alt="Second slide">
+        <img class="d-block w-100" src="/media/static/high1.jpg" alt="Second slide">
         <div class="carousel-caption text-start">
           <h5>Academics</h5>
           <p>Embrace the challenges of learning, for they are stepping stones towards your academic success.</p>
         </div>
       </div>
       <div class="carousel-item">
-        <img class="d-block w-100" src="/photos/highsec1.jpg" alt="Third slide">
+        <img class="d-block w-100" src="/media/static/highsec1.jpg" alt="Third slide">
         <div class="carousel-caption text-start">
           <h5>Academics</h5>
           <p>Embrace the challenges of learning, for they are stepping stones towards your academic success.</p>

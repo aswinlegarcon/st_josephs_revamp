@@ -66,7 +66,7 @@
     </div>
   </section>
   <section class="section">
-    <img src="/photos/schname.jpg" alt="Infrastructure">
+    <img src="/media/static/schname.jpg" alt="Infrastructure"><?php /* N5: optimized copy of the 5536px scan; same frame */ ?>
     <div class="section-content cont-reveal-1">
       <h2>Infrastructure</h2>
       <p>Our classrooms are aesthetically designed and integrated with smart boards and well-furnished desks with an aim to provide quality education with modern facilities.</p>

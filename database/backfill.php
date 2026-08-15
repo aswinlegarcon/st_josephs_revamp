@@ -58,6 +58,7 @@ $fkMap = [
 $linkRoleMap = [
     'photos'   => 'gallery_full',
     'carousel' => 'content_slide',
+    'slider'   => 'bg_wide',       // N4/N5: the gallery hub cross-fade slideshow
 ];
 
 $pairs = []; // image_id => set of preset keys
@@ -143,6 +144,12 @@ $statics = [
     ['/photos/testimonial1.png',  'testimonial1.jpg',  1000, 80],
     ['/photos/testimonial2.png',  'testimonial2.jpg',  1000, 80],
     ['/photos/testimonial3.png',  'testimonial3.jpg',  1000, 80],
+    // N5 audit: hardcoded <img>/CSS refs that never went through the pipeline.
+    // schname is a 5536px scan squeezed to 181 KB — 1920 wide recompresses to
+    // 74 KB. (band1 was tried and REVERTED: its 193 KB original beats every
+    // recompression — 1600/q70 → 238 KB, q58 → 200 KB. The german.jpg lesson:
+    // an efficiently-compressed source can only inflate. It stays original.)
+    ['/photos/schname.jpg',       'schname.jpg',       1920, 74],
 ];
 $sMade = $sSkipped = 0;
 $sDir = SJ_PUBLIC_ROOT . '/media/static';
