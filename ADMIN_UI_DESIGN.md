@@ -285,6 +285,10 @@ gate). Passwords are always server-generated temporaries — never chosen or
 echoed after first display, never audited. Every action audited
 (`admin.create/reset/unlock/role/delete`, detail = target username).
 `?r=stats` is GET, admin-only, returns sizes/counters only — no paths, no
-versions of anything an attacker could map, no secrets. Deleted admins are
+versions of anything an attacker could map, no secrets. It is also a
+**passive** endpoint (`SJ_PASSIVE_REQUEST`): its poll must never renew the
+session, or an unattended open dashboard would stay signed in forever
+(SECURITY.md SEC-07 regression note). Any future polling endpoint must
+declare the same constant. Deleted admins are
 cut off on their NEXT request: `_bootstrap`/`_layout` re-verify the session's
 admin row each request (also live-updates role changes).

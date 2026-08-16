@@ -441,8 +441,14 @@ docker compose exec web cat /tmp/sess_<paste-your-SJADMIN-value-here>
 in devtools and reload: same redirect, but this time the lazy boot never opened a session at all.
 
 **6. Force the real idle timeout.** Log in, leave the tab untouched for 31 minutes, reload. Same login redirect — now
-triggered by the clock check at `Auth.php:53` rather than a missing cookie. There is no shortcut that avoids editing
-code; the comparison uses live `time()` against `last_seen`.
+triggered by the clock check in `Auth::boot()` rather than a missing cookie. There is no shortcut that avoids editing
+code; the comparison uses live `time()` against `last_seen`. (Faster route on the dev stack: edit the session file's
+`last_seen` directly — `docker compose exec -u www-data web php -r '…'` — then make one request.)
+
+> **Careful — "leave the tab untouched" is not the same as "make no requests".** If the page is polling in the
+> background, every poll used to count as activity and the idle timeout never fired; an open dashboard stayed signed in
+> for ten hours. Background endpoints now declare `SJ_PASSIVE_REQUEST` so their requests are *checked* against the
+> timeouts but never *renew* them. See `SECURITY.md` SEC-07.
 
 **7. Watch the API disagree politely.** While logged out, `curl -i http://localhost:8090/admin/api/images.php` returns
 `401` with `{"ok":false,"error":"Not authenticated"}` — the JSON branch at `api/_bootstrap.php:22-24`. Same missing

@@ -12,7 +12,7 @@ if (!defined('SJ_PUBLIC_ROOT')) {
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260815.4'); // N7: admin panel v2 (css/js/icons)
+    define('SJ_ASSET_VER', '20260815.6'); // N7-fix: passive-poll session fix (dashboard.js)
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global

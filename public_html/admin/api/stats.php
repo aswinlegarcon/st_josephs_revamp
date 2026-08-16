@@ -3,6 +3,12 @@
 // GET like images.php so no CSRF needed). Returns sizes and counters ONLY —
 // no filesystem paths, no software versions beyond PHP's, no secrets (SEC-20
 // spirit: status, never content). Polled by admin/assets/dashboard.js.
+//
+// PASSIVE: this is a background heartbeat, not human activity. Session
+// timeouts are still enforced on it, but it must not refresh `last_seen` —
+// otherwise an open dashboard tab would keep a session alive indefinitely
+// (SECURITY.md SEC-07). Must be defined BEFORE the bootstrap boots the session.
+define('SJ_PASSIVE_REQUEST', true);
 require __DIR__ . '/_bootstrap.php';
 
 $t0 = microtime(true);

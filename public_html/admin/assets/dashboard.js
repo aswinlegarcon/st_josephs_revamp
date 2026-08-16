@@ -33,11 +33,21 @@
     ctx.fill();
   }
 
+  function expired() {
+    // N7-fix: the vitals poll is passive, so an unattended tab DOES time out
+    // after 30 idle minutes. Say so plainly and send the user to sign in
+    // again, instead of leaving stale numbers on screen.
+    setNum($('v-avail'), '<span class="sj-dot bad"></span>Signed out');
+    $('v-avail-sub').textContent = 'session expired — returning to sign-in…';
+    setTimeout(function () { location.href = '/admin/login.php'; }, 1500);
+  }
+
   function poll() {
     var t0 = performance.now();
     fetch('/admin/api/index.php?r=stats', { headers: { 'Accept': 'application/json' } })
       .then(function (r) {
         var ms = Math.round(performance.now() - t0);
+        if (r.status === 401) { expired(); throw new Error('expired'); }
         if (!r.ok) throw new Error('HTTP ' + r.status);
         samples.push(ms);
         if (samples.length > 20) samples.shift();
@@ -84,12 +94,17 @@
           $('v-opcache-sub').textContent = 'OPcache not available';
         }
       })
-      .catch(function () {
+      .catch(function (e) {
+        if (e && e.message === 'expired') return; // already handled
         setNum($('v-avail'), '<span class="sj-dot bad"></span>Problem');
         $('v-avail-sub').textContent = 'the admin API did not respond — check the site';
       });
   }
 
-  poll();
-  setInterval(poll, 20000);
+  poll();                       // the page was just opened: always draw real numbers
+  // Repeating heartbeat only while the tab is actually being looked at — a
+  // background tab neither wakes the server nor pretends to be activity.
+  setInterval(function () { if (!document.hidden) poll(); }, 20000);
+  // ...and refresh the moment the operator returns to the tab.
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) poll(); });
 })();

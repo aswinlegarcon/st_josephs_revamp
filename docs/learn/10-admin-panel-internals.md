@@ -433,6 +433,15 @@ gone, so `is_admin()` returns `false`, and every caller's *existing* behaviour f
 naturally: `_layout.php` redirects to login, the API returns `401` JSON, a public page
 renders as a visitor. Three correct outcomes, zero special-case code.
 
+**A trap worth remembering — "activity" is not the same as "a request".** The dashboard
+polls a vitals endpoint every 20 seconds. Each poll ran the code above, which set
+`last_seen = now`, so an open dashboard tab kept renewing the session and the 30-minute
+idle timeout could *never* fire — the owner was still signed in after ten hours. The fix:
+a background heartbeat defines `SJ_PASSIVE_REQUEST` before the bootstrap, and
+`Auth::boot()` then still **enforces** both timeouts but does **not** treat the request as
+activity. If you ever add a polling endpoint, declare that constant — otherwise you switch
+the idle timeout off for everyone without touching a single line of the timeout code.
+
 ### 2.5 Destroying one
 
 [`src/Admin/Auth.php:66-74`](../../src/Admin/Auth.php):

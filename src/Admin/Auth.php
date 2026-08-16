@@ -46,6 +46,12 @@ final class Auth
         // Enforce idle + absolute timeouts and periodic id rotation for logged-in admins.
         // On expiry the session is destroyed so is_admin() becomes false and each caller's
         // existing behaviour fires (panel → login redirect, API → 401 JSON, public → visitor).
+        //
+        // N7-fix: a request that no human made (the dashboard's background vitals
+        // poll, a monitoring hit) still gets its timeouts ENFORCED, but must not
+        // count as ACTIVITY — otherwise an unattended open tab refreshes
+        // last_seen forever and the 30-minute idle timeout can never fire. Such
+        // endpoints define SJ_PASSIVE_REQUEST before including the bootstrap.
         if (!empty($_SESSION['admin_id'])) {
             $now   = \time();
             $last  = $_SESSION['last_seen'] ?? $now;
@@ -53,6 +59,9 @@ final class Auth
             if (($now - $last) > self::SESSION_IDLE_MAX || ($now - $start) > self::SESSION_ABS_MAX) {
                 self::kill();
                 return;
+            }
+            if (\defined('SJ_PASSIVE_REQUEST') && SJ_PASSIVE_REQUEST) {
+                return; // read-only heartbeat: no touch of last_seen, no id rotation
             }
             $_SESSION['last_seen'] = $now;
             if (($now - ($_SESSION['last_regen'] ?? 0)) > self::SESSION_REGEN) {

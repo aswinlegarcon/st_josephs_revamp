@@ -2,6 +2,9 @@
 // Deployment smoke-check (PHASES.md X1). Token-gated so it isn't a public info leak.
 //   /admin/health.php?token=<config health_token>
 // Returns JSON; HTTP 200 when everything is green, 503 otherwise.
+// PASSIVE (N7-fix): a monitoring endpoint is never human activity — it must
+// not keep an admin session alive (SECURITY.md SEC-07). Timeouts still apply.
+define('SJ_PASSIVE_REQUEST', true);
 require dirname(__DIR__) . '/bootstrap.php';
 sj_session_boot(true);
 if (function_exists('sj_admin_headers')) { sj_admin_headers(); }
