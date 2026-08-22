@@ -12,13 +12,22 @@ $sj_f_copy    = repo_setting('footer_copyright', "© 2024 St.Joseph's MHSS, Ondi
 ?>
 <footer class="footer">
   <div class="container">
+    <div class="footer-brand">
+      <img src="/photos/logo-main.png" alt="">
+      <div>
+        <b>St.Joseph's Matric. Hr. Sec. School</b>
+        <span>Ondipudur, Coimbatore &ndash; 641016</span>
+      </div>
+    </div>
     <div class="footer-sections">
       <div class="footer-column">
         <h2>Useful Links</h2>
         <ul>
           <li><a href="/index.php">Home</a></li>
           <li><a href="/about.php">About</a></li>
+          <li><a href="/academics.php">Academics</a></li>
           <li><a href="/gallery.php">Gallery</a></li>
+          <li><a href="/index.php#contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-column">

@@ -6,7 +6,9 @@
 // field/item APIs can never touch arbitrary settings rows.
 require __DIR__ . '/_bootstrap.php';
 
-/** key => [max length, validator] — the ONLY editable settings. */
+/** key => [max length, validator, allowEmpty?] — the ONLY editable settings.
+ *  allowEmpty (J2): '' is stored as-is and means "feature off" — used by the
+ *  optional keys whose consumers hide themselves when blank. */
 $SETTING_KEYS = [
     'contact_email'         => [160, 'email'],
     'contact_phone'         => [40,  'text'],
@@ -22,6 +24,7 @@ $SETTING_KEYS = [
     'jumbotron_btn'         => [40,  'text'],
     'footer_copyright'      => [160, 'text'],
     'marks_years_shown'     => [2,   'int'],
+    'whatsapp_number'       => [15,  'digits', true], // J2: floating WhatsApp button; blank hides it
 ];
 
 $in     = api_input();
@@ -36,9 +39,17 @@ foreach ($values as $key => $value) {
         api_fail('Unknown setting');
     }
     [$max, $type] = $SETTING_KEYS[$key];
+    $allowEmpty = $SETTING_KEYS[$key][2] ?? false;
     $value = trim((string)$value);
+    if ($value === '' && $allowEmpty) {
+        $clean[$key] = ''; // feature off — stored empty on purpose
+        continue;
+    }
     if ($value === '' || mb_strlen($value) > $max) {
         api_fail("'$key' must be 1–$max characters");
+    }
+    if ($type === 'digits' && !preg_match('/^\d{8,15}$/', $value)) {
+        api_fail("'$key' must be 8–15 digits (country code + number, no spaces)");
     }
     if ($type === 'email' && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
         api_fail("'$key' must be a valid email address");

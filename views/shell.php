@@ -88,6 +88,7 @@ $sjDesc  = $sjSeo['description'] ?? '';
 <?= $content ?>
 
 <?php if ($showJumbotron) include $__p . '/jumbotron.php'; ?>
+<?php include $__p . '/floating-cta.php'; // Stage J: admissions + WhatsApp quick actions ?>
 <?php include $__p . '/footer.php'; ?>
 
 <!-- ONE self-hosted Bootstrap 5.3.3 bundle (includes Popper) -->

@@ -12,7 +12,7 @@ if (!defined('SJ_PUBLIC_ROOT')) {
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260823.1'); // J1: Global Campus foundation (tokens v2, site.css, site.js, fonts)
+    define('SJ_ASSET_VER', '20260823.2'); // J2: shell chrome (mega nav, footer, band, floating CTA)
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global

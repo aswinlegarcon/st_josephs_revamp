@@ -1,10 +1,11 @@
-/* Back-to-top button styles (moved verbatim from the partial's <style> block
-   in R3 — body link, same document position, cascade unchanged). */
-html { scroll-behavior: smooth; }
-.go-top-btn { position: fixed; width: 50px; background: #2b4b8a; bottom: 40px; right: 50px;
-  text-decoration: none; text-align: center; line-height: 50px; color: white; font-size: 18px;
-  border-radius: 50%; z-index: 700; }
-.go-top-btn:hover { background: #FFD700; color: black; }
-.reveal-btn { transition: 1.3s; opacity: 0; visibility: hidden; }
+/* Back-to-top button — Stage J re-skin. Moved to the bottom-LEFT corner (the
+   floating quick-actions stack owns bottom-right now — PUBLIC_UI_DESIGN.md §5). */
+html { scroll-behavior: smooth; } /* pre-J1 rule; the site.css reduced-motion kill-switch overrides it */
+.go-top-btn { position: fixed; width: 48px; background: var(--sj-navy); bottom: 30px; left: 24px;
+  text-decoration: none; text-align: center; line-height: 48px; color: white; font-size: 17px;
+  border-radius: 50%; z-index: 700; box-shadow: var(--sj-shadow-1);
+  transition: background .2s ease, color .2s ease, transform .2s ease; }
+.go-top-btn:hover { background: var(--sj-gold); color: var(--sj-navy-dark); transform: translateY(-3px); }
+.reveal-btn { transition: opacity .4s ease, visibility .4s ease; opacity: 0; visibility: hidden; }
 .reveal-btn.active { opacity: 1; visibility: visible; }
-@media (max-width: 768px) { .go-top-btn { bottom: 30px; right: 30px; } }
+@media (max-width: 768px) { .go-top-btn { bottom: 18px; left: 14px; } }

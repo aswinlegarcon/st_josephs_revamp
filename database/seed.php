@@ -567,6 +567,9 @@ $settings = [
     'jumbotron_btn'         => 'Learn more',
     'footer_copyright'      => "© 2024 St.Joseph's MHSS, Ondipudur. All Rights Reserved.",
     'marks_years_shown'     => '3',
+    // J2: floating WhatsApp button — digits with country code; empty = hidden.
+    // (A dedicated key: the school landline above can't receive WhatsApp.)
+    'whatsapp_number'       => '',
 ];
 $insSet = $pdo->prepare('INSERT IGNORE INTO settings (skey, svalue) VALUES (?,?)');
 $newSet = 0;

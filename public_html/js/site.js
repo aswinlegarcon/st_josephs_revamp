@@ -139,6 +139,25 @@ function sjNavScroll() {
   apply();
 }
 
+// Desktop hover-intent for the mega menu (≥992px, fine pointers only):
+// pointerenter opens the Bootstrap dropdown, pointerleave closes it after a
+// short grace period. Click/Esc/keyboard (Bootstrap's own handling) stays the
+// baseline, so touch and keyboard users lose nothing.
+function sjMegaHover() {
+  if (!window.bootstrap) return;
+  if (!window.matchMedia('(min-width: 992px) and (pointer: fine)').matches) return;
+  document.querySelectorAll('.sj-nav .nav-item.dropdown').forEach(function (item) {
+    var toggle = item.querySelector('[data-bs-toggle="dropdown"]');
+    if (!toggle) return;
+    var dd = bootstrap.Dropdown.getOrCreateInstance(toggle);
+    var timer = null;
+    item.addEventListener('pointerenter', function () { clearTimeout(timer); dd.show(); });
+    item.addEventListener('pointerleave', function () {
+      timer = setTimeout(function () { dd.hide(); }, 140);
+    });
+  });
+}
+
 // Auto-wire the Stage J pieces present on the page. Counters are scoped to
 // [data-sj-counters] containers (J3+ markup) so the legacy inline counter
 // script on the un-migrated Home page is never double-driven.
@@ -146,4 +165,5 @@ document.addEventListener('DOMContentLoaded', function () {
   sjRevealIO('.sj-reveal');
   sjCounters('[data-sj-counters] .counter[data-target]');
   sjNavScroll();
+  sjMegaHover();
 });

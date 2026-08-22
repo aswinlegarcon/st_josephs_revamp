@@ -850,6 +850,7 @@ case 'settings':
         'Social & misc' => [
             'facebook_url'      => ['Facebook URL', 'Must start with https://'],
             'youtube_url'       => ['YouTube URL', 'Must start with https://'],
+            'whatsapp_number'   => ['WhatsApp number', 'Digits with country code (e.g. 919876543210) for the floating WhatsApp button on the website. Leave blank to hide the button.'],
             'footer_copyright'  => ['Footer copyright line', ''],
             'marks_years_shown' => ['Top-Marks years shown', 'How many recent years the home/highsec toppers board shows (1–10).'],
         ],
