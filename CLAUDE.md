@@ -4,7 +4,7 @@ Repo rules for any AI agent working in this codebase. Read this before editing.
 
 ## Project
 
-- **What:** a 42-page school website (St. Joseph's MHSS, Ondipudur) being migrated from flat PHP to a MySQL-backed CMS with an admin panel. Same visual design, cleaner code, future-proof.
+- **What:** a 42-page school website (St. Joseph's MHSS, Ondipudur), migrated from flat PHP to a MySQL-backed CMS with an admin panel (complete), now undergoing the owner-commissioned **Stage J public redesign** ("Global Campus" — `PUBLIC_UI_DESIGN.md`).
 - **Stack:** PHP 8.3, MySQL 8, PDO. **No framework** — structured plain PHP with Composer PSR-4 (`SJ\` → `src/`). GD for images. Bootstrap 5.3.3 self-hosted (target state).
 - **Dev workflow:** Docker. `./run.sh` builds/starts the stack, waits for DB, runs the seeder, and prints URLs (public `:8090/`, admin `:8090/admin/`). `./run.sh stop` / `./run.sh reset`. There is **no PHP/MySQL on the host** — always work through Docker.
 - **Prod:** MilesWeb shared hosting (mPanel, no cPanel/SSH). Deploy = file upload; `vendor/` is committed. Docker never runs in prod.
@@ -17,6 +17,7 @@ Repo rules for any AI agent working in this codebase. Read this before editing.
 | `PHASES.md` | The roadmap — architecture + the ordered, shippable phases. Follow it; update phase status as you go. |
 | `SECURITY.md` | **Normative** security catalog. Its §4 checklist is mandatory (see below). |
 | `ADMIN_UI_DESIGN.md` | Admin UI design system + image-generation briefs. |
+| `PUBLIC_UI_DESIGN.md` | **Public site design system** ("Global Campus", Stage J) — the rendering authority for migrated pages. |
 | `DYNAMIC_MIGRATION_PLAN.md`, `FEATURES_PLAN.md` | Legacy reference (schema DDL, image pipeline, seed inventory). Their "locked decisions" are **superseded** by `PHASES.md` §0. |
 
 ## MANDATORY security rule
@@ -29,19 +30,38 @@ Before you mark **any** change complete that touches `public_html/admin/**`, `pu
 
 Never skip this because a change "looks small". A one-line echo or a new endpoint is exactly where XSS/CSRF/SQLi land.
 
-## MANDATORY visual-freeze rule (no styling changes)
+## MANDATORY visual-fidelity rule (Stage J era)
 
-Until the full code migration **and** the admin-panel workflow are complete, **do not change how any page looks.** The only work permitted now is **code revamp, performance optimisation, and admin-panel/CMS conversion.** The visual design is frozen.
+**History:** from the start of the migration until 2026-08-23 this section was a hard
+visual FREEZE (pixel-identical to git `6bd0d11` / the live site) — its precondition
+(migration + admin workflow complete) was met, and the owner explicitly commissioned
+the Stage J public redesign, which retired the freeze. The freeze-era discipline
+(compensate for framework drift, don't "fix" quirky-but-shipped CSS) still applies
+to any page Stage J has not yet reached.
 
-Concretely:
+The rules now:
 
-1. **Pixel-identical.** Every converted or refactored page must render **exactly** like the pre-revamp production site (baseline: git commit `6bd0d11` and live `https://stjosephsondipudur.com/`). Fonts, colours, spacing, backgrounds, sizes, borders, hover states — all unchanged.
-2. **Compensate for framework drift.** When a code change would otherwise move the pixels (e.g. the Bootstrap 4→5 migration drops `.jumbotron`, renames classes, or changes default paddings), you **must add compensating CSS so the rendered result stays identical.** Migrating the code is allowed; letting the look drift is not.
-3. **Don't "fix" quirky-but-shipped CSS.** If the original has an invalid/odd declaration the browser ignores (e.g. `.navbar { background: linear( … ) }`, which is invalid → ignored → the navbar renders as `.bg-light` grey), **keep it as-is.** Reproduce the original's *rendered result*, not your idea of correct code. "Correcting" it silently redesigns the page.
-4. **Allowed only when the appearance is unchanged:** HTML dialect changes (`data-*`→`data-bs-*`, `ml-auto`→`ms-auto`), dead-link / duplicate-id bug fixes, and dead-code removal.
-5. **Intentional visual changes need explicit user approval first** — even improvements. Never slip a redesign in under a refactor.
+1. **The rendering authority is `PUBLIC_UI_DESIGN.md`** ("Global Campus"). Pages that
+   Stage J has migrated must render per that spec — fidelity to the spec replaces
+   fidelity to the old baseline.
+2. **Un-migrated pages must not drift.** Until their Stage J phase lands (see the
+   PHASES.md Stage J table), pages may show ONLY the approved J1 foundation changes
+   (fonts/tokens). Everything else stays as shipped, including quirky CSS.
+3. **Visual changes outside the approved system still need explicit owner approval
+   first** — the redesign approval covers `PUBLIC_UI_DESIGN.md`, not carte blanche.
+   Never slip an off-spec change in under a refactor.
+4. **Admin lockstep.** The admin panel's live-preview recipes (panel.css `--veil`,
+   `.sj-prev-cap-*`, `.sj-prev-tm*`) mirror public visuals — update them in the SAME
+   phase that changes the public recipe they mirror.
+5. **Immutable geometry.** Image-preset aspect ratios and the `img_tag()` legacy
+   contract (bare `<img>`, no dims) survive the redesign — changing them re-crops or
+   re-flows real content.
 
-Before marking complete **any** change that touches a rendered page, view, partial, or CSS: compare against the baseline (git `6bd0d11` / live site), then affirm **`Visual-freeze: PASS`** in your completion summary — or list each spot that intentionally changed, with a one-line reason **and** the user sign-off that approved it.
+Before marking complete **any** change that touches a rendered page, view, partial, or
+CSS: verify against `PUBLIC_UI_DESIGN.md` (migrated pages) or the no-drift rule
+(un-migrated pages), then affirm **`Visual-fidelity: PASS`** in your completion
+summary — listing any spot that deviates from the spec, with a one-line reason and
+the owner sign-off that approved it.
 
 ## MANDATORY file-writing rule (this is a monitored corporate endpoint)
 
@@ -72,14 +92,14 @@ If a task seems to require a prohibited write, say so and propose the editor-too
 ## Theme tokens (match, don't invent)
 
 - Navy `#2b4b8a` / `#1a355d`; gold `#ffd700`. **Never gold text/icons on white** — use `#8a6d00` (`--gold-ink`).
-- Fonts: public — Fjalla One (headings), Dancing Script (accent words), League Spartan (body); admin (since N8 "Prospectus", owner-approved) — Segoe UI body with **self-hosted** Fjalla One for titles/stat numbers and Dancing Script for sparing flourishes (`public_html/assets/fonts/` — the admin CSP blocks Google Fonts).
+- Fonts: public (since Stage J "Global Campus", owner-approved) — Fjalla One (headings/display), **Manrope** (body), Dancing Script (ONE flourish line per hero, nothing more); admin (since N8 "Prospectus", owner-approved) — Segoe UI body with **self-hosted** Fjalla One for titles/stat numbers and Dancing Script for sparing flourishes (`public_html/assets/fonts/` — the admin CSP blocks Google Fonts).
 - Full admin token/component spec: `ADMIN_UI_DESIGN.md`.
 
 ## Verification habits
 
 - Run the change in the real app via `./run.sh`; exercise the edited area in the browser (create → edit → reorder → delete for content; upload for media).
 - Seeder must stay **idempotent** — running it twice changes nothing.
-- No console 404s; no duplicate element IDs. **Visual diff vs. the pre-revamp baseline must be zero** (see the visual-freeze rule) — any intentional visual change requires prior user sign-off.
+- No console 404s; no duplicate element IDs. **Visual fidelity per the visual-fidelity rule** — migrated pages match `PUBLIC_UI_DESIGN.md`, un-migrated pages don't drift; off-spec changes require prior owner sign-off.
 - For anything security-relevant, run the SEC item's "Agent verification" step.
 
 ## Deploy cautions
