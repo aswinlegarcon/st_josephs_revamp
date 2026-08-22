@@ -1,0 +1,8 @@
+Self-hosted webfonts for the ADMIN PANEL only (the public site keeps its
+Google Fonts link — the admin's CSP allows same-origin fonts only).
+
+- fjalla-one.woff2      Fjalla One v16 (latin) — (c) Sorkin Type Co
+- dancing-script.woff2  Dancing Script v29 (latin, variable 400-700) — (c) Impallari Type
+
+Both are licensed under the SIL Open Font License 1.1 (https://openfontlicense.org).
+Downloaded once from fonts.gstatic.com (N8, 2026-08-22).

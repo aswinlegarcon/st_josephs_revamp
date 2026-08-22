@@ -132,7 +132,14 @@
       if (!over || over === dragging || over.parentNode !== dragging.parentNode) return;
       e.preventDefault();
       var rect = over.getBoundingClientRect();
-      var before = e.clientY < rect.top + rect.height / 2;
+      // N8: grid-aware midpoint — when the dragged card and the target sit on
+      // the same visual row (2-col preview grids), decide by X; otherwise by Y
+      // exactly as before. Vertical lists never share a row-top, so their
+      // behavior is unchanged.
+      var sameRow = Math.abs(rect.top - dragging.getBoundingClientRect().top) < rect.height / 2;
+      var before = sameRow
+        ? e.clientX < rect.left + rect.width / 2
+        : e.clientY < rect.top + rect.height / 2;
       over.parentNode.insertBefore(dragging, before ? over : over.nextSibling);
     });
     document.addEventListener('dragend', function () {
@@ -328,7 +335,7 @@
           j.items.forEach(function (it) {
             var d = el('div', 'sj-pick');
             d.innerHTML = '<img loading="lazy" src="' + esc(it.thumb) + '"><span>' + esc(it.label) + '</span>';
-            var badge = el('em', 'sj-usedbadge', it.used ? ('🔗 ' + it.used) : 'unused');
+            var badge = el('em', 'sj-usedbadge', it.used ? (SJUI.icon('link', 11) + ' ' + it.used) : 'unused');
             if (!it.used) badge.className += ' free';
             d.appendChild(badge);
             d.addEventListener('click', function () { openImageDetail(it); });

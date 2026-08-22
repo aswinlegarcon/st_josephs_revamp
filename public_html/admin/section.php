@@ -41,6 +41,98 @@ function panel_row(array $o): void
     <?php
 }
 
+/**
+ * N8: branded page header band. $stats = [[count, label], …] chips;
+ * $actionsHtml = pre-rendered buttons (built from code literals + escaped attrs).
+ */
+function panel_page_head(string $icon, string $title, string $desc, array $stats = [], string $actionsHtml = ''): void
+{
+    ?>
+    <div class="sj-page-head">
+      <div class="sj-page-head-icon"><?= sj_icon($icon, 24) ?></div>
+      <div>
+        <div class="sj-page-title"><?= e($title) ?></div>
+        <?php if ($desc !== ''): ?><div class="sj-page-desc"><?= e($desc) ?></div><?php endif; ?>
+        <?php if ($stats): ?>
+        <div class="sj-page-stats">
+          <?php foreach ($stats as [$n, $lab]): ?>
+          <span class="sj-stat"><b><?= e($n) ?></b> <?= e($lab) ?></span>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+      </div>
+      <?php if ($actionsHtml !== ''): ?><div class="sj-page-head-actions"><?= $actionsHtml ?></div><?php endif; ?>
+    </div>
+    <?php
+}
+
+/**
+ * N8: live-preview editor card — the visual sibling of panel_row(). SAME
+ * data contract (data-row on the card, identical data-act buttons, direct
+ * child of the data-list container) so panel.js edit/move/toggle/del and
+ * drag-reorder work untouched. $o keys: entity,id,active,canMove,canDelete
+ * (like panel_row) + variant('hero'|'tm'|'card'), aspect('16x9'|'4x3'|'4x5'),
+ * img(url|null), cap_title/cap_text (hero), tm_name_html/tm_body_html
+ * (testimonial — PRE-SANITIZED _html columns, echoed raw exactly like the
+ * public partial), title/sub (foot line), extraActionsHtml (photo-manager
+ * buttons / delete guards, pre-rendered).
+ */
+function panel_preview_card(array $o): void
+{
+    $variant = $o['variant'] ?? 'card';
+    $aspect  = $o['aspect'] ?? '16x9';
+    ?>
+    <div class="sj-row sj-prev sj-prev--<?= e($variant) ?><?= isset($o['active']) && !$o['active'] ? ' off' : '' ?>" data-row="<?= e($o['entity']) ?>:<?= (int)$o['id'] ?>">
+      <figure class="sj-prev-media sj-prev-<?= e($aspect) ?>">
+        <?php if (!empty($o['img'])): ?><img src="<?= e($o['img']) ?>" alt="" loading="lazy">
+        <?php elseif ($variant !== 'tm'): ?><span class="sj-prev-noimg">no image yet</span><?php endif; ?>
+        <?php if ($variant === 'hero' || $variant === 'tm'): ?><span class="sj-prev-veil"></span><?php endif; ?>
+        <?php if ($variant === 'hero'): ?>
+        <figcaption class="sj-prev-cap">
+          <span class="sj-prev-cap-title"><?= e($o['cap_title'] ?? '') ?></span>
+          <?php if (($o['cap_text'] ?? '') !== ''): ?><span class="sj-prev-cap-text"><?= e($o['cap_text']) ?></span><?php endif; ?>
+        </figcaption>
+        <?php elseif ($variant === 'tm'): ?>
+        <img class="sj-prev-quote" src="/photos/quote.png" alt="">
+        <div class="sj-prev-tm">
+          <h4 class="sj-prev-tmname"><?= $o['tm_name_html'] ?? '' ?></h4>
+          <div class="sj-prev-tmbody"><?= $o['tm_body_html'] ?? '' ?></div>
+        </div>
+        <?php endif; ?>
+        <?php if (isset($o['active']) && !$o['active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
+      </figure>
+      <div class="sj-prev-foot">
+        <div class="sj-row-main">
+          <b><?= e($o['title'] ?? '') ?></b>
+          <?php if (($o['sub'] ?? '') !== ''): ?><span><?= e($o['sub']) ?></span><?php endif; ?>
+        </div>
+        <div class="sj-row-actions">
+          <?= $o['extraActionsHtml'] ?? '' ?>
+          <button class="sj-ico" title="Edit" aria-label="Edit" data-act="edit"><?= sj_icon('edit', 16) ?></button>
+          <?php if (!empty($o['canMove'])): ?>
+            <button class="sj-ico" title="Move up" aria-label="Move up" data-act="move" data-dir="-1"><?= sj_icon('up', 16) ?></button>
+            <button class="sj-ico" title="Move down" aria-label="Move down" data-act="move" data-dir="1"><?= sj_icon('down', 16) ?></button>
+          <?php endif; ?>
+          <?php if (isset($o['active'])): ?>
+            <button class="sj-ico" title="<?= $o['active'] ? 'Hide from site' : 'Show on site' ?>" aria-label="<?= $o['active'] ? 'Hide from site' : 'Show on site' ?>" data-act="toggle" data-active="<?= $o['active'] ? 1 : 0 ?>"><?= sj_icon($o['active'] ? 'eye' : 'eye-off', 16) ?></button>
+          <?php endif; ?>
+          <?php if ($o['canDelete'] ?? true): ?>
+          <button class="sj-ico danger" title="Delete" aria-label="Delete" data-act="del"><?= sj_icon('trash', 16) ?></button>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+    <?php
+}
+
+/** N8: dashed empty state with a Dancing Script line. */
+function panel_empty(string $msg, string $icon = 'image'): void
+{
+    ?>
+    <div class="sj-empty"><?= sj_icon($icon, 34) ?><i>Nothing here yet</i><?= e($msg) ?></div>
+    <?php
+}
+
 panel_header($s, $label); // N7: $icon is an sj_icon() name now, not a printable prefix
 
 switch ($s) {
@@ -49,22 +141,29 @@ switch ($s) {
 case 'hero':
     $page = repo_page('index');
     $slides = repo_hero_slides((int)$page['id'], true);
-    ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">Slides of the big banner at the top of the Home page. Order here = order on the site.
-         Images are auto-cropped to the banner shape (16:7) — use photos at least 1600px wide for best quality.</p>
+    $live = count(array_filter($slides, static fn ($x) => !empty($x['is_active'])));
+    ob_start(); ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$page['id']], 'Add hero slide') ?>><?= sj_icon('plus', 15) ?> Add hero slide</button>
-    </div>
-    <div class="sj-list" data-list="hero_slide">
+    <?php
+    panel_page_head('image', 'Hero Carousel',
+        'Each card below is a live miniature of its slide — the caption sits exactly where visitors see it. '
+        . 'Drag cards (or use the arrows) to reorder; photos are auto-cropped to the banner shape (16:9), so use images at least 1600px wide.',
+        [[count($slides), 'slides'], [$live, 'live on the site']], ob_get_clean());
+    ?>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
       <?php foreach ($slides as $sl) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'hero_slide', 'id' => $sl['id'],
-              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
-              'title'  => $sl['caption_title'] ?: '(no caption)',
-              'sub'    => $sl['caption_text'],
-              'active' => (bool)$sl['is_active'], 'canMove' => true,
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'],
+              'cap_text'  => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'sub'       => $sl['button_label'] ? 'Button: ' . $sl['button_label'] : '',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
           ]);
-      } ?>
+      }
+      if (!$slides) { panel_empty('Add the first slide of the home banner.'); } ?>
     </div>
     <?php
     break;
@@ -73,8 +172,9 @@ case 'hero':
 case 'principal':
     $p = repo_profile('principal');
     ?>
-    <p class="sj-lead">This block appears on the Home page (and the same data powers the About page after
-       the full migration). Edit and press <b>Save changes</b>.</p>
+    <?php panel_page_head('user', 'Principal',
+        'This block appears on the Home page and powers the About page too — one edit updates both. Edit below and press Save changes.',
+        [[1, 'shared profile']]); ?>
     <div class="sj-form-card" id="sj-principal" data-entity="profile" data-id="<?= (int)$p['id'] ?>">
       <div class="sj-form-grid">
         <div class="sj-form-side">
@@ -108,22 +208,24 @@ case 'principal':
 /* ================= WHAT'S UNIQUE ================= */
 case 'unique':
     $rows = repo_unique_features(true);
-    ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">The feature blocks in the "What's Unique?" section of the Home page.
-         Blocks alternate image-left / image-right automatically.</p>
+    ob_start(); ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('unique_feature', [], 'Add block') ?>><?= sj_icon('plus', 15) ?> Add block</button>
-    </div>
-    <div class="sj-list" data-list="unique_feature">
+    <?php
+    panel_page_head('star', "What's Unique", 'The feature blocks in the "What\'s Unique?" section of the Home page. Blocks alternate image-left / image-right automatically.',
+        [[count($rows), 'blocks']], ob_get_clean());
+    ?>
+    <div class="sj-list sj-cardgrid" data-list="unique_feature">
       <?php foreach ($rows as $r) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'unique_feature', 'id' => $r['id'],
-              'thumb'  => $r['image'] ? img_url($r['image'], 'feature_4x3') : null,
+              'variant' => 'card', 'aspect' => '4x3',
+              'img'    => $r['image'] ? img_url($r['image'], 'feature_4x3') : null,
               'title'  => $r['title'],
               'sub'    => mb_substr(trim(strip_tags($r['body_html'])), 0, 90) . '…',
               'active' => (bool)$r['is_active'], 'canMove' => true,
           ]);
-      } ?>
+      }
+      if (!$rows) { panel_empty('Add the first feature block.', 'star'); } ?>
     </div>
     <?php
     break;
@@ -131,11 +233,12 @@ case 'unique':
 /* ================= NEWS TICKER ================= */
 case 'ticker':
     $rows = repo_ticker(true);
-    ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">The scrolling announcement bar. Each item is a short text that links to a video or page.</p>
+    ob_start(); ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('ticker_item', [], 'Add announcement') ?>><?= sj_icon('plus', 15) ?> Add announcement</button>
-    </div>
+    <?php
+    panel_page_head('bell', 'News Ticker', 'The scrolling announcement bar. Each item is a short text that links to a video or page.',
+        [[count($rows), 'items'], [count(array_filter($rows, static fn ($x) => !empty($x['is_active']))), 'live']], ob_get_clean());
+    ?>
     <div class="sj-list" data-list="ticker_item">
       <?php foreach ($rows as $r) {
           panel_row([
@@ -152,21 +255,24 @@ case 'ticker':
 /* ================= NEW UPDATES ================= */
 case 'updates':
     $rows = repo_update_slides(true);
-    ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">Slides of the "New Updates" video carousel. Images are auto-cropped to 16:9.</p>
+    ob_start(); ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('update_slide', [], 'Add update slide') ?>><?= sj_icon('plus', 15) ?> Add update slide</button>
-    </div>
-    <div class="sj-list" data-list="update_slide">
+    <?php
+    panel_page_head('monitor', 'New Updates', 'Slides of the "New Updates" video carousel on the Home page. Images are auto-cropped to 16:9 — each card below previews its slide.',
+        [[count($rows), 'slides']], ob_get_clean());
+    ?>
+    <div class="sj-list sj-cardgrid" data-list="update_slide">
       <?php foreach ($rows as $r) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'update_slide', 'id' => $r['id'],
-              'thumb'  => $r['image'] ? img_url($r['image'], 'update_16x9') : null,
+              'variant' => 'card', 'aspect' => '16x9',
+              'img'    => $r['image'] ? img_url($r['image'], 'update_16x9') : null,
               'title'  => $r['title'],
               'sub'    => $r['subtitle'],
               'active' => (bool)$r['is_active'], 'canMove' => true,
           ]);
-      } ?>
+      }
+      if (!$rows) { panel_empty('Add the first update slide.', 'monitor'); } ?>
     </div>
     <?php
     break;
@@ -176,18 +282,19 @@ case 'marks':
     $years = db()->query('SELECT * FROM mark_years ORDER BY year DESC')->fetchAll();
     $entSt = db()->prepare('SELECT * FROM mark_entries WHERE year_id = ? ORDER BY FIELD(standard,"12","11","10"), position, id');
     ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">Board-exam toppers. The website shows the <b>latest 3 visible years</b>.
-         Each year holds 10th / 11th / 12th standard entries.</p>
+    <?php ob_start(); ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('mark_year', [], 'Add year') ?>><?= sj_icon('plus', 15) ?> Add year</button>
-    </div>
+    <?php
+    panel_page_head('chart', 'Top Marks', 'Board-exam toppers. The website shows the latest 3 visible years; each year holds 10th / 11th / 12th standard entries.',
+        [[count($years), 'years']], ob_get_clean());
+    ?>
     <?php foreach ($years as $y):
         $entSt->execute([$y['id']]);
         $entries = $entSt->fetchAll();
     ?>
     <div class="sj-yearcard<?= $y['is_active'] ? '' : ' off' ?>" data-row="mark_year:<?= (int)$y['id'] ?>">
       <div class="sj-yearhead">
-        <b>🗓️ <?= e($y['year']) ?></b>
+        <b><?= sj_icon('calendar', 16) ?> <?= e($y['year']) ?></b>
         <?php if (!$y['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
         <div class="sj-row-actions">
           <button class="sj-btn sj-btn-ghost sj-btn-sm" <?= panel_add_attr('mark_entry', ['year_id' => (int)$y['id']], 'Add topper — ' . $y['year']) ?>><?= sj_icon('plus', 15) ?> Add topper</button>
@@ -223,11 +330,13 @@ case 'marks':
 /* ================= MEDIA LIBRARY ================= */
 case 'media':
     ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">Every image available to the website — the original photo collection plus your uploads.
-         Uploads are auto-cropped to the shape you pick and compressed automatically.</p>
-      <button class="sj-btn sj-btn-primary" id="sj-media-upload">⬆️ Upload image</button>
-    </div>
+    <?php ob_start(); ?>
+      <button class="sj-btn sj-btn-primary" id="sj-media-upload"><?= sj_icon('upload', 15) ?> Upload image</button>
+    <?php
+    panel_page_head('folder', 'Media Library',
+        'Every image available to the website — the original photo collection plus your uploads. Uploads are auto-cropped to the shape you pick and compressed automatically.',
+        [[(int)db()->query('SELECT COUNT(*) FROM images')->fetchColumn(), 'images']], ob_get_clean());
+    ?>
     <div class="sj-media-bar">
       <input type="text" id="sj-media-search" class="sj-search" placeholder="Search images by file name…">
       <label class="sj-check sj-orphan-toggle"><input type="checkbox" id="sj-media-orphans"> Unused only</label>
@@ -242,23 +351,23 @@ case 'aboutpage':
     $aboutPage  = repo_page('about');
     $aboutSlides = $aboutPage ? repo_hero_slides((int)$aboutPage['id'], true) : [];
     ?>
-    <p class="sj-lead">Everything on the <b>About</b> page: the top photo carousel and the four content
-       blocks. The <b>Principal</b> block is shared with the Home page — edit it in its own
-       <a href="/admin/section.php?s=principal">Principal</a> section (one edit updates both pages).</p>
-
-    <h3 class="sj-form-legend">Top carousel</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">Photos rotating at the top of the About page (auto-cropped to the banner shape).</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$aboutPage['id']], 'Add about slide') ?>><?= sj_icon('plus', 15) ?> Add slide</button>
-    </div>
-    <div class="sj-list" data-list="hero_slide">
+    <?php
+    panel_page_head('book', 'About Page',
+        'Everything on the About page: the top photo carousel and the content blocks. The Principal block is shared with the Home page — edit it in its own Principal section (one edit updates both pages).',
+        [[count($aboutSlides), 'banner slides'], [3, 'content blocks']]);
+    ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('hero_slide', ['page_id' => (int)$aboutPage['id']], 'Add about slide') ?>><?= sj_icon('plus', 14) ?> Add slide</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Top carousel <?= $addBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
       <?php foreach ($aboutSlides as $sl) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'hero_slide', 'id' => $sl['id'],
-              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
-              'title'  => $sl['caption_title'] ?: '(no caption)',
-              'sub'    => $sl['caption_text'],
-              'active' => (bool)$sl['is_active'], 'canMove' => true,
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'], 'cap_text' => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
           ]);
       } ?>
     </div>
@@ -286,21 +395,23 @@ case 'staffspage':
     $staffsPage   = repo_page('staffs');
     $staffsSlides = $staffsPage ? repo_hero_slides((int)$staffsPage['id'], true) : [];
     ?>
-    <p class="sj-lead">Everything on the <b>Staffs</b> page: the top photo carousel and the three text blocks.</p>
-
-    <h3 class="sj-form-legend">Top carousel</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">Photos rotating at the top of the Staffs page.</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$staffsPage['id']], 'Add staffs slide') ?>><?= sj_icon('plus', 15) ?> Add slide</button>
-    </div>
-    <div class="sj-list" data-list="hero_slide">
+    <?php
+    panel_page_head('users', 'Staffs Page',
+        'Everything on the Staffs page: the top photo carousel and the three text blocks.',
+        [[count($staffsSlides), 'banner slides'], [3, 'content blocks']]);
+    ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('hero_slide', ['page_id' => (int)$staffsPage['id']], 'Add staffs slide') ?>><?= sj_icon('plus', 14) ?> Add slide</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Top carousel <?= $addBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
       <?php foreach ($staffsSlides as $sl) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'hero_slide', 'id' => $sl['id'],
-              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
-              'title'  => $sl['caption_title'] ?: '(no caption)',
-              'sub'    => $sl['caption_text'],
-              'active' => (bool)$sl['is_active'], 'canMove' => true,
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'], 'cap_text' => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
           ]);
       } ?>
     </div>
@@ -326,22 +437,27 @@ case 'staffspage':
 /* ================= TESTIMONIALS (C3) ================= */
 case 'testimonials':
     $rows = repo_testimonials(true);
-    ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">The "Students Testimonial" cards on the Home page. Order here = order on the site;
-         the three background styles repeat automatically.</p>
+    ob_start(); ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('testimonial', [], 'Add testimonial') ?>><?= sj_icon('plus', 15) ?> Add testimonial</button>
-    </div>
-    <div class="sj-list" data-list="testimonial">
+    <?php
+    panel_page_head('quote', 'Testimonials',
+        'Each card below is rendered exactly like the site — navy veil, gold name, white rule. Order here = order on the site.',
+        [[count($rows), 'cards']], ob_get_clean());
+    ?>
+    <div class="sj-list sj-cardgrid" data-list="testimonial">
       <?php foreach ($rows as $t) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'testimonial', 'id' => $t['id'],
-              'thumb'  => $t['image'] ? img_url($t['image'], 'card_4x3') : null, // N2: chosen bg
+              'variant' => 'tm', 'aspect' => '4x3',
+              'img'  => $t['image'] ? img_url($t['image'], 'feature_4x3') : null, // N2 bg (same preset the site uses)
+              'tm_name_html' => $t['name_html'],   // pre-sanitized _html — echoed raw like the public partial
+              'tm_body_html' => $t['body_html'],
               'title'  => trim(strip_tags($t['name_html'])) ?: '(unnamed)',
-              'sub'    => mb_substr(trim(strip_tags($t['body_html'])), 0, 90) . '…',
+              'sub'    => $t['image'] ? 'Custom background' : 'Default background',
               'active' => (bool)$t['is_active'], 'canMove' => true,
           ]);
-      } ?>
+      }
+      if (!$rows) { panel_empty('Add the first student testimonial.', 'quote'); } ?>
     </div>
     <?php
     break;
@@ -356,6 +472,11 @@ case 'sections':
     $secPage   = repo_page($cur);
     $secSlides = $secPage ? repo_hero_slides((int)$secPage['id'], true) : [];
     ?>
+    <?php
+    panel_page_head('layers', 'School Sections',
+        'KG, Primary, High School and Higher Secondary — each tab edits that page\'s banner, intro, timeline and event blocks.',
+        [[count($allSections), 'sections'], [count($secSlides), $S['name'] . ' slides']]);
+    ?>
     <div class="sj-tabs">
       <?php foreach ($allSections as $sRow): ?>
       <a class="sj-btn <?= $sRow['slug'] === $cur ? 'sj-btn-primary' : 'sj-btn-ghost' ?>"
@@ -363,19 +484,19 @@ case 'sections':
       <?php endforeach; ?>
     </div>
 
-    <h3 class="sj-form-legend">Top carousel</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">Photos rotating at the top of the <?= e($S['name']) ?> page.</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$secPage['id']], 'Add slide') ?>><?= sj_icon('plus', 15) ?> Add slide</button>
-    </div>
-    <div class="sj-list" data-list="hero_slide">
+    <?php ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('hero_slide', ['page_id' => (int)$secPage['id']], 'Add slide') ?>><?= sj_icon('plus', 14) ?> Add slide</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Top carousel <?= $addBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
       <?php foreach ($secSlides as $sl) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'hero_slide', 'id' => $sl['id'],
-              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
-              'title'  => $sl['caption_title'] ?: '(no caption)',
-              'sub'    => $sl['caption_text'],
-              'active' => (bool)$sl['is_active'], 'canMove' => true,
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'], 'cap_text' => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
           ]);
       } ?>
     </div>
@@ -433,36 +554,33 @@ case 'sections':
 /* ================= ACADEMIES (C5) ================= */
 case 'academies':
     $rows = repo_academies(true);
-    ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">The academy pages (Tamil, Maths, … Band, NCC, Art&nbsp;Expo) and their cards on the
-         Co-Curriculum page. Order here = card order on that page. Each academy's photo carousel has its
-         own manager (the image button). New academies get their page automatically at the URL key you choose;
-         the 18 original ones keep their fixed pages and can only be hidden, not deleted.</p>
+    ob_start(); ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('academy', [], 'Add academy') ?>><?= sj_icon('plus', 15) ?> Add academy</button>
-    </div>
-    <div class="sj-list" data-list="academy">
-      <?php foreach ($rows as $ac) { ?>
-        <div class="sj-row<?= $ac['is_active'] ? '' : ' off' ?>" data-row="academy:<?= (int)$ac['id'] ?>">
-          <?php if ($ac['image']): ?><img class="sj-row-thumb" src="<?= e(img_url($ac['image'], 'card_4x3')) ?>" alt="">
-          <?php else: ?><div class="sj-row-thumb noimg">no image</div><?php endif; ?>
-          <div class="sj-row-main">
-            <b><?= e($ac['card_title']) ?></b>
-            <span><?= e($ac['card_subtitle']) ?> · <?= e(academy_url($ac['slug'])) ?></span>
-          </div>
-          <?php if (!$ac['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
-          <div class="sj-row-actions">
-            <button class="sj-ico" title="Carousel photos" <?= panel_photos_attr('academy', (int)$ac['id'], 'carousel', 'content_slide', $ac['card_title'] . ' — carousel photos') ?>><?= sj_icon('image', 16) ?></button>
-            <button class="sj-ico" title="Edit" data-act="edit" aria-label="Edit"><?= sj_icon('edit', 16) ?></button>
-            <button class="sj-ico" title="Move up" data-act="move" data-dir="-1" aria-label="Move up"><?= sj_icon('up', 16) ?></button>
-            <button class="sj-ico" title="Move down" data-act="move" data-dir="1" aria-label="Move down"><?= sj_icon('down', 16) ?></button>
-            <button class="sj-ico" title="<?= $ac['is_active'] ? 'Hide from co-curriculum grid' : 'Show on co-curriculum grid' ?>" data-act="toggle" data-active="<?= $ac['is_active'] ? 1 : 0 ?>"><?= $ac['is_active'] ? sj_icon('eye', 16) : sj_icon('eye-off', 16) ?></button>
-            <?php if (!in_array($ac['slug'], \SJ\Content\Registry::legacySlugs()['academy'], true)): // N3: only admin-created ones ?>
-            <button class="sj-ico danger" title="Delete" data-act="del"><?= sj_icon('trash', 16) ?></button>
-            <?php endif; ?>
-          </div>
-        </div>
-      <?php } ?>
+    <?php
+    panel_page_head('award', 'Academies',
+        'The academy pages and their cards on the Co-Curriculum page — each card below previews the grid card. '
+        . 'Order here = card order on the site. New academies get their page automatically at the URL key you choose; '
+        . 'the 18 original ones keep their fixed pages and can only be hidden, not deleted.',
+        [[count($rows), 'academies'], [count(array_filter($rows, static fn ($x) => !empty($x['is_active']))), 'on the grid']],
+        ob_get_clean());
+    ?>
+    <div class="sj-list sj-cardgrid" data-list="academy">
+      <?php foreach ($rows as $ac) {
+          ob_start(); ?>
+            <button class="sj-ico" title="Carousel photos" aria-label="Carousel photos" <?= panel_photos_attr('academy', (int)$ac['id'], 'carousel', 'content_slide', $ac['card_title'] . ' — carousel photos') ?>><?= sj_icon('image', 16) ?></button>
+          <?php
+          panel_preview_card([
+              'entity' => 'academy', 'id' => $ac['id'],
+              'variant' => 'card', 'aspect' => '4x3',
+              'img'    => $ac['image'] ? img_url($ac['image'], 'card_4x3') : null,
+              'title'  => $ac['card_title'],
+              'sub'    => $ac['card_subtitle'] . ' · ' . academy_url($ac['slug']),
+              'active' => (bool)$ac['is_active'], 'canMove' => true,
+              // N3 guard: the 18 shipped academies keep their fixed pages
+              'canDelete' => !in_array($ac['slug'], \SJ\Content\Registry::legacySlugs()['academy'], true),
+              'extraActionsHtml' => ob_get_clean(),
+          ]);
+      } ?>
     </div>
     <?php
     break;
@@ -471,34 +589,37 @@ case 'academies':
 case 'sports':
     $sportsPage = repo_page('sports');
     $rows = repo_sports(true);
-    ?>
-    <h3 class="sj-form-legend">Top carousel</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">Photos rotating at the top of the Sports page.</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$sportsPage['id']], 'Add sports slide') ?>><?= sj_icon('plus', 15) ?> Add slide</button>
-    </div>
-    <div class="sj-list" data-list="hero_slide">
-      <?php foreach (repo_hero_slides((int)$sportsPage['id'], true) as $sl) {
-          panel_row([
+    $heroSlides = repo_hero_slides((int)$sportsPage['id'], true);
+    panel_page_head('flag', 'Sports',
+        'The Sports page — its rotating top banner and the sport cards with their "Read More" panels. Order here = order on the site.',
+        [[count($heroSlides), 'banner slides'], [count($rows), 'sport cards']]);
+    ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('hero_slide', ['page_id' => (int)$sportsPage['id']], 'Add sports slide') ?>><?= sj_icon('plus', 14) ?> Add slide</button>
+    <?php $addSlideBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Top carousel <?= $addSlideBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
+      <?php foreach ($heroSlides as $sl) {
+          panel_preview_card([
               'entity' => 'hero_slide', 'id' => $sl['id'],
-              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
-              'title'  => $sl['caption_title'] ?: '(no caption)',
-              'sub'    => $sl['caption_text'],
-              'active' => (bool)$sl['is_active'], 'canMove' => true,
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'], 'cap_text' => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
           ]);
       } ?>
     </div>
 
-    <h3 class="sj-form-legend">Sport cards</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">The nine sport cards with their "Read More" panels. Order here = order on the site.</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('sport', [], 'Add sport') ?>><?= sj_icon('plus', 15) ?> Add sport</button>
-    </div>
-    <div class="sj-list" data-list="sport">
+    <?php ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('sport', [], 'Add sport') ?>><?= sj_icon('plus', 14) ?> Add sport</button>
+    <?php $addSportBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Sport cards <?= $addSportBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="sport">
       <?php foreach ($rows as $S) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'sport', 'id' => $S['id'],
-              'thumb'  => $S['image'] ? img_url($S['image'], 'card_4x3') : null,
+              'variant' => 'card', 'aspect' => '4x3',
+              'img'    => $S['image'] ? img_url($S['image'], 'card_4x3') : null,
               'title'  => $S['name'],
               'sub'    => $S['training_time'],
               'active' => (bool)$S['is_active'], 'canMove' => true,
@@ -511,50 +632,47 @@ case 'sports':
 /* ================= INFRASTRUCTURE (C7) ================= */
 case 'facilities':
     $infraPage = repo_page('infrastructure');
-    ?>
-    <h3 class="sj-form-legend">Top carousel</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">Photos rotating at the top of the Infrastructure page.</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$infraPage['id']], 'Add slide') ?>><?= sj_icon('plus', 15) ?> Add slide</button>
-    </div>
-    <div class="sj-list" data-list="hero_slide">
-      <?php foreach (repo_hero_slides((int)$infraPage['id'], true) as $sl) {
-          panel_row([
+    $heroSlides = repo_hero_slides((int)$infraPage['id'], true);
+    $facilities = repo_facilities(true);
+    panel_page_head('building', 'Infrastructure',
+        'The Infrastructure page — its rotating top banner and the facility showcases. Order here = order (and the quick-jump buttons) on the page.',
+        [[count($heroSlides), 'banner slides'], [count($facilities), 'facilities']]);
+    ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('hero_slide', ['page_id' => (int)$infraPage['id']], 'Add slide') ?>><?= sj_icon('plus', 14) ?> Add slide</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Top carousel <?= $addBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
+      <?php foreach ($heroSlides as $sl) {
+          panel_preview_card([
               'entity' => 'hero_slide', 'id' => $sl['id'],
-              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
-              'title'  => $sl['caption_title'] ?: '(no caption)',
-              'sub'    => $sl['caption_text'],
-              'active' => (bool)$sl['is_active'], 'canMove' => true,
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'], 'cap_text' => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
           ]);
       } ?>
     </div>
 
-    <h3 class="sj-form-legend">Facility showcases</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">The 15 facility sections. Order here = order (and quick-jump buttons) on the page.
-         Each facility's photo carousel has its own manager (the image button).</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('facility', [], 'Add facility') ?>><?= sj_icon('plus', 15) ?> Add facility</button>
-    </div>
-    <div class="sj-list" data-list="facility">
-      <?php foreach (repo_facilities(true) as $F) { ?>
-        <div class="sj-row<?= $F['is_active'] ? '' : ' off' ?>" data-row="facility:<?= (int)$F['id'] ?>">
-          <?php if ($F['image']): ?><img class="sj-row-thumb" src="<?= e(img_url($F['image'], 'bg_wide')) ?>" alt="">
-          <?php else: ?><div class="sj-row-thumb noimg">no image</div><?php endif; ?>
-          <div class="sj-row-main">
-            <b><?= e($F['name']) ?></b>
-            <span><?= count($F['carousel']) ?> carousel photos</span>
-          </div>
-          <?php if (!$F['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
-          <div class="sj-row-actions">
-            <button class="sj-ico" title="Carousel photos" <?= panel_photos_attr('facility', (int)$F['id'], 'carousel', 'content_slide', $F['name'] . ' — carousel photos') ?>><?= sj_icon('image', 16) ?></button>
-            <button class="sj-ico" title="Edit" data-act="edit" aria-label="Edit"><?= sj_icon('edit', 16) ?></button>
-            <button class="sj-ico" title="Move up" data-act="move" data-dir="-1" aria-label="Move up"><?= sj_icon('up', 16) ?></button>
-            <button class="sj-ico" title="Move down" data-act="move" data-dir="1" aria-label="Move down"><?= sj_icon('down', 16) ?></button>
-            <button class="sj-ico" title="<?= $F['is_active'] ? 'Hide from site' : 'Show on site' ?>" data-act="toggle" data-active="<?= $F['is_active'] ? 1 : 0 ?>"><?= $F['is_active'] ? sj_icon('eye', 16) : sj_icon('eye-off', 16) ?></button>
-            <button class="sj-ico danger" title="Delete" data-act="del"><?= sj_icon('trash', 16) ?></button>
-          </div>
-        </div>
-      <?php } ?>
+    <?php ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('facility', [], 'Add facility') ?>><?= sj_icon('plus', 14) ?> Add facility</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Facility showcases <?= $addBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="facility">
+      <?php foreach ($facilities as $F) {
+          ob_start(); ?>
+            <button class="sj-ico" title="Carousel photos" aria-label="Carousel photos" <?= panel_photos_attr('facility', (int)$F['id'], 'carousel', 'content_slide', $F['name'] . ' — carousel photos') ?>><?= sj_icon('image', 16) ?></button>
+          <?php
+          panel_preview_card([
+              'entity' => 'facility', 'id' => $F['id'],
+              'variant' => 'card', 'aspect' => '16x9',
+              'img'    => $F['image'] ? img_url($F['image'], 'bg_wide') : null,
+              'title'  => $F['name'],
+              'sub'    => count($F['carousel']) . ' carousel photos',
+              'active' => (bool)$F['is_active'], 'canMove' => true,
+              'extraActionsHtml' => ob_get_clean(),
+          ]);
+      } ?>
     </div>
     <?php
     break;
@@ -562,35 +680,38 @@ case 'facilities':
 /* ================= ACHIEVEMENTS (C8) ================= */
 case 'achievements':
     $achPage = repo_page('achievements');
-    ?>
-    <h3 class="sj-form-legend">Top carousel</h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">Photos rotating at the top of the Achievements page.</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$achPage['id']], 'Add slide') ?>><?= sj_icon('plus', 15) ?> Add slide</button>
-    </div>
-    <div class="sj-list" data-list="hero_slide">
-      <?php foreach (repo_hero_slides((int)$achPage['id'], true) as $sl) {
-          panel_row([
+    $heroSlides = repo_hero_slides((int)$achPage['id'], true);
+    panel_page_head('trophy', 'Achievements',
+        'The Achievements page — its rotating top banner plus the two zig-zag lists (achievements and awards). Photos alternate left/right automatically.',
+        [[count($heroSlides), 'banner slides']]);
+    ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('hero_slide', ['page_id' => (int)$achPage['id']], 'Add slide') ?>><?= sj_icon('plus', 14) ?> Add slide</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Top carousel <?= $addBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
+      <?php foreach ($heroSlides as $sl) {
+          panel_preview_card([
               'entity' => 'hero_slide', 'id' => $sl['id'],
-              'thumb'  => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
-              'title'  => $sl['caption_title'] ?: '(no caption)',
-              'sub'    => $sl['caption_text'],
-              'active' => (bool)$sl['is_active'], 'canMove' => true,
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'], 'cap_text' => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
           ]);
       } ?>
     </div>
 
     <?php foreach (['achievement' => 'Achievements list', 'award' => 'Awards list ("given by St.Joseph\'s")'] as $atype => $alabel): ?>
-    <h3 class="sj-form-legend"><?= e($alabel) ?></h3>
-    <div class="sj-section-head">
-      <p class="sj-lead">Photos alternate left/right automatically (zig-zag).</p>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('achievement', ['type' => $atype], 'Add to ' . $alabel) ?>><?= sj_icon('plus', 15) ?> Add</button>
-    </div>
-    <div class="sj-list" data-list="achievement">
+    <?php ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('achievement', ['type' => $atype], 'Add to ' . $alabel) ?>><?= sj_icon('plus', 14) ?> Add</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend"><?= e($alabel) ?> <?= $addBtn ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="achievement">
       <?php foreach (repo_achievements($atype, true) as $A) {
-          panel_row([
+          panel_preview_card([
               'entity' => 'achievement', 'id' => $A['id'],
-              'thumb'  => $A['image'] ? img_url($A['image'], 'feature_4x3') : null,
+              'variant' => 'card', 'aspect' => '4x3',
+              'img'    => $A['image'] ? img_url($A['image'], 'feature_4x3') : null,
               'title'  => $A['title'],
               'sub'    => $A['subtext'],
               'active' => (bool)$A['is_active'], 'canMove' => true,
@@ -607,15 +728,16 @@ case 'gallery':
     $curAlb = (int)($_GET['album'] ?? ($albums[0]['id'] ?? 0));
     $galleryPage = repo_page('gallery');
     ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">The Gallery hub page: its centre slideshow, the album cards, and each album's
-         years &amp; photos. New albums get their page automatically at the URL key you choose;
-         the 10 original ones keep their fixed pages and can only be hidden, not deleted.</p>
+    <?php ob_start(); ?>
       <?php if ($galleryPage): // N4: the hub's cross-fade slideshow ?>
-      <button class="sj-btn sj-btn-ghost" <?= panel_photos_attr('page', (int)$galleryPage['id'], 'slider', 'bg_wide', 'Gallery hub slideshow photos') ?>><?= sj_icon('image', 15) ?>Hub slideshow</button>
+      <button class="sj-btn sj-btn-ghost" <?= panel_photos_attr('page', (int)$galleryPage['id'], 'slider', 'bg_wide', 'Gallery hub slideshow photos') ?>><?= sj_icon('image', 15) ?> Hub slideshow</button>
       <?php endif; ?>
       <button class="sj-btn sj-btn-primary" <?= panel_add_attr('gallery_album', [], 'Add album') ?>><?= sj_icon('plus', 15) ?> Add album</button>
-    </div>
+    <?php
+    panel_page_head('images', 'Gallery Albums',
+        'The Gallery hub page: its centre slideshow, the album cards, and each album\'s years & photos. New albums get their page automatically at the URL key you choose; the 10 original ones keep their fixed pages and can only be hidden, not deleted.',
+        [[count($albums), 'albums']], ob_get_clean());
+    ?>
     <div class="sj-tabs">
       <?php foreach ($albums as $al): ?>
       <a class="sj-btn <?= (int)$al['id'] === $curAlb ? 'sj-btn-primary' : 'sj-btn-ghost' ?>"
@@ -624,10 +746,11 @@ case 'gallery':
     </div>
     <?php foreach ($albums as $al): if ((int)$al['id'] !== $curAlb) { continue; } ?>
     <h3 class="sj-form-legend">Album card (gallery hub)</h3>
-    <div class="sj-list">
-      <?php panel_row([
+    <div class="sj-list sj-cardgrid">
+      <?php panel_preview_card([
           'entity' => 'gallery_album', 'id' => (int)$al['id'],
-          'thumb'  => $al['image'] ? img_url($al['image'], 'card_4x3') : null,
+          'variant' => 'card', 'aspect' => '4x3',
+          'img'    => $al['image'] ? img_url($al['image'], 'card_4x3') : null,
           'title'  => $al['title'],
           'sub'    => $al['card_sub'] . ' · ' . album_url($al['slug']),
           'active' => (bool)$al['is_active'],
@@ -671,11 +794,9 @@ case 'gallery':
 case 'seo':
     $rows = db()->query('SELECT * FROM seo_meta ORDER BY id')->fetchAll();
     ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">The browser-tab title and the search-result description for every public page.
-         Google shows roughly the first 60 characters of a title and 155 of a description —
-         front-load what matters. One row per URL; rows can't be added or removed.</p>
-    </div>
+    <?php panel_page_head('search', 'SEO',
+        'The browser-tab title and the search-result description for every public page. Google shows roughly the first 60 characters of a title and 155 of a description — front-load what matters. One row per URL; rows can\'t be added or removed.',
+        [[count($rows), 'pages']]); ?>
     <div class="sj-list" data-list="seo_meta">
       <?php foreach ($rows as $r) {
           panel_row([
@@ -692,13 +813,13 @@ case 'seo':
 /* ================= ADMIN ACCOUNTS (N7 — owners only) ================= */
 case 'admins':
     ?>
-    <div class="sj-section-head">
-      <p class="sj-lead">Panel accounts. New accounts get a one-time temporary password (shown once —
-         copy it and hand it over) and must set their own password at first sign-in.
-         <b>Owners</b> can manage accounts; <b>editors</b> can edit content only.
-         You can never delete yourself or the last owner.</p>
+    <?php ob_start(); ?>
       <button class="sj-btn sj-btn-primary" id="sj-admin-new"><?= sj_icon('plus', 15) ?> New account</button>
-    </div>
+    <?php
+    panel_page_head('shield', 'Admin Accounts',
+        'Panel accounts. New accounts get a one-time temporary password (shown once — copy it and hand it over) and must set their own password at first sign-in. Owners manage accounts; editors edit content only. You can never delete yourself or the last owner.',
+        [[(int)db()->query('SELECT COUNT(*) FROM admin_users')->fetchColumn(), 'accounts']], ob_get_clean());
+    ?>
     <div class="sj-list" id="sj-admins" data-me="<?= (int)$_SESSION['admin_id'] ?>">
       <div class="sj-row"><div class="sj-row-main"><span class="sj-skel">loading accounts…</span></div></div>
     </div>
@@ -734,8 +855,9 @@ case 'settings':
         ],
     ];
     ?>
-    <p class="sj-lead">Site-wide text used across pages (contact info, school timings, the admissions
-       band, social links). Edit and press <b>Save settings</b> — the site updates immediately.</p>
+    <?php panel_page_head('sliders', 'Site Settings',
+        'Site-wide text used across pages — contact details, school timings, the admissions band and social links. Press Save at the bottom when done.',
+        [[count($groups, COUNT_RECURSIVE) - count($groups), 'settings']]); ?>
     <form class="sj-form-card" id="sj-settings" data-api="settings">
       <?php foreach ($groups as $legend => $keys): ?>
         <h3 class="sj-form-legend"><?= e($legend) ?></h3>

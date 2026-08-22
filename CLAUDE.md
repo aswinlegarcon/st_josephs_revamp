@@ -72,7 +72,7 @@ If a task seems to require a prohibited write, say so and propose the editor-too
 ## Theme tokens (match, don't invent)
 
 - Navy `#2b4b8a` / `#1a355d`; gold `#ffd700`. **Never gold text/icons on white** — use `#8a6d00` (`--gold-ink`).
-- Fonts: public — Fjalla One (headings), Dancing Script (accent words), League Spartan (body); admin — Segoe UI, with Fjalla One only for big stat numbers.
+- Fonts: public — Fjalla One (headings), Dancing Script (accent words), League Spartan (body); admin (since N8 "Prospectus", owner-approved) — Segoe UI body with **self-hosted** Fjalla One for titles/stat numbers and Dancing Script for sparing flourishes (`public_html/assets/fonts/` — the admin CSP blocks Google Fonts).
 - Full admin token/component spec: `ADMIN_UI_DESIGN.md`.
 
 ## Verification habits

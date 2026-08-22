@@ -202,7 +202,52 @@ Drop each line into the master template's `[SCREEN-SPECIFIC SCENE]` (and `[SCREE
 
 ---
 
-# v2 — "Professional" revamp (N7, 2026-08-15) — THE CURRENT SPEC
+# v3 — "Prospectus" (N8, 2026-08-22) — THE CURRENT SPEC
+
+Owner brief: v2 read as "normal professional", not brand-built. v3 keeps every
+v2 hook contract (§ frozen hooks below apply unchanged) and replaces the
+visual system:
+
+1. **Light editorial canvas.** Warm paper `#faf8f4`, warm hairlines `#e9e4d9`,
+   white cards. The navy sidebar stays as the brand frame (radial glow added).
+2. **The school's real type, self-hosted.** The admin CSP allows same-origin
+   fonts only, so Fjalla One + Dancing Script woff2 live in
+   `public_html/assets/fonts/` (OFL; note file beside them) with `@font-face`
+   in panel.css and inline in the auth pages. Fjalla One = page titles, card
+   titles, stat numbers, modal heads; Dancing Script = sparing flourishes
+   (dashboard greeting, hero-preview captions, empty states, login tagline).
+3. **Gold used precisely.** 44×4px gold bar under every page title; gold-ink
+   `#8a6d00` for labels/accents on white; gold-soft chips; gold top border on
+   modals; gold left bar on toasts; gold active-nav bar (v2) kept.
+4. **Live-preview editors** — the centrepiece. `panel_preview_card()` renders
+   image-led entities as miniatures of the real site inside the SAME
+   `.sj-row[data-row]` contract panel.js drags/edits: hero slides = 16:9 media
+   box + navy veil + Dancing-Script caption overlay; testimonials = the site's
+   own card recipe (navy veil, gold Fjalla name, 2px white rule, clamped white
+   body, quote icon); academies/sports/facilities/albums/achievements/unique/
+   updates = site-style 4:3 / 16:9 card grids. Hidden rows grey their media
+   and badge "Hidden" on the image. `panel_page_head()` gives every screen a
+   branded header band (navy icon tile, Fjalla title + gold bar, description,
+   live stat chips, right-aligned actions). `panel_empty()` = dashed empty
+   state with a Dancing Script line.
+5. **Grid-aware drag.** panel.js's dragover now uses the X midpoint when the
+   dragged and target cards share a visual row (2-col preview grids), Y
+   otherwise — behavior-identical for all vertical lists.
+6. **Auth pages.** login.php = split-panel brand page (navy crest panel with
+   Dancing Script tagline + white form with Fjalla h1/gold bar); password.php
+   + recover.php = brand cards (paper canvas, gold top border, Fjalla h1).
+   All functional ids/classes/names frozen.
+7. **v2 latent CSS defects fixed:** `.sj-form-grid2`, `.sj-save-note`,
+   `.sj-form-side/-fields/-foot` defined; `input.sj-search`,
+   `img.sj-portrait`, `.sj-modal-head` selectors corrected; picker tabs
+   (`.sj-tabs > button.on`) styled at all; `.sj-yearcard.off` styled.
+
+Everything below (v2) remains authoritative for the hook contract, motion
+principles, icon system, vitals, and the accounts/security posture.
+
+---
+
+# v2 — "Professional" revamp (N7, 2026-08-15) — hooks contract + components
 
 Owner brief: high-class feel, real transitions and button effects, perfect
 editing controls, **no emojis — professional icons**, a live view of site

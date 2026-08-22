@@ -85,7 +85,7 @@ panel_header('dashboard', 'Dashboard');
 ?>
 <div class="sj-hello">
   <div>
-    <h2><?= e($greet) ?>, <?= e($_SESSION['admin_name'] ?? 'admin') ?></h2>
+    <h2><span class="sj-script"><?= e($greet) ?>,</span> <?= e($_SESSION['admin_name'] ?? 'admin') ?></h2>
     <p><?= e(date('l, j F Y')) ?> — changes save to the database immediately; visitors see them on their next refresh.</p>
   </div>
   <div class="sj-hello-actions">

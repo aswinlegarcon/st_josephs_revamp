@@ -75,14 +75,17 @@ $csrf = csrf_token();
 <title>Recover admin access — St.Joseph's MHSS</title>
 <link rel="icon" href="/photos/logo-main.png" type="image/x-icon">
 <style>
-  :root { --primaryblue:#2b4b8a; --secondaryblue:#1a355d; --gold:#ffd700; }
+  /* N8 "Prospectus" — brand fonts self-hosted (CSP: same-origin only) */
+  @font-face { font-family:'Fjalla One'; src:url('/assets/fonts/fjalla-one.woff2') format('woff2');
+               font-weight:400; font-style:normal; font-display:swap; }
+  :root { --primaryblue:#2b4b8a; --secondaryblue:#1a355d; --gold:#ffd700; --gold-ink:#8a6d00; }
   * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI',Arial,sans-serif; }
   body { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:16px;
-         background:linear-gradient(135deg,var(--primaryblue),var(--secondaryblue)); }
-  .card { background:#fff; width:min(440px,96vw); border-radius:14px; padding:34px 30px;
-          box-shadow:0 20px 60px rgba(0,0,0,.35); text-align:center; }
+         background:#faf8f4; }
+  .card { background:#fff; width:min(440px,96vw); border-radius:16px; padding:34px 30px;
+          border-top:3px solid var(--gold); box-shadow:0 24px 64px rgba(18,35,63,.22); text-align:center; }
   .card img { width:64px; margin-bottom:8px; }
-  h1 { font-size:20px; color:var(--secondaryblue); margin-bottom:2px; }
+  h1 { font-family:'Fjalla One',sans-serif; font-weight:400; font-size:21px; color:var(--secondaryblue); margin-bottom:2px; }
   .sub { color:#888; font-size:13px; margin-bottom:18px; }
   .note { background:#fff8dc; border:1px solid #f0e2a0; color:#6d5a0f; border-radius:9px;
           padding:10px 12px; font-size:12.5px; margin-bottom:8px; text-align:left; }
