@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel User Guide — St. Joseph's MHSS Website</title>
+<style>
+  :root { --navy:#2b4b8a; --dark:#1a355d; --gold:#ffd700; --gold-ink:#8a6d00; --paper:#faf8f4; --hair:#e5e0d5; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:var(--paper); color:#26303e;
+         font-family:'Segoe UI', Arial, sans-serif; font-size:15.5px; line-height:1.65; }
+  .page { max-width:860px; margin:0 auto; padding:36px 28px 80px; background:#fff;
+          border-left:1px solid var(--hair); border-right:1px solid var(--hair); }
+  header.cover { text-align:center; border-bottom:3px solid var(--gold); padding-bottom:26px; margin-bottom:30px; }
+  header.cover h1 { color:var(--dark); font-size:30px; margin:8px 0 4px; }
+  header.cover .sub { color:#5f6b80; font-size:15px; }
+  header.cover .meta { color:#8a94a6; font-size:13px; margin-top:10px; }
+  h2 { color:var(--dark); font-size:22px; margin:44px 0 10px; padding-bottom:6px; border-bottom:2px solid var(--hair); }
+  h3 { color:var(--navy); font-size:17.5px; margin:26px 0 6px; }
+  h4 { color:#3c4a61; font-size:15.5px; margin:18px 0 4px; }
+  p { margin:8px 0; }
+  ul, ol { margin:8px 0 8px 6px; padding-left:22px; }
+  li { margin:4px 0; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:14.5px; }
+  th, td { border:1px solid #cfd6e2; padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#eef2f9; color:var(--dark); }
+  code { background:#f0f2f6; border:1px solid #dde2ea; border-radius:4px; padding:1px 6px;
+         font-family:Consolas, monospace; font-size:13.5px; color:#31435f; }
+  .btn { display:inline-block; background:var(--navy); color:#fff; border-radius:6px;
+         padding:1px 10px; font-size:13px; font-weight:600; white-space:nowrap; }
+  .ico { display:inline-block; background:#eef2f9; color:var(--dark); border:1px solid #cfd6e2;
+         border-radius:6px; padding:0 8px; font-size:13px; font-weight:600; white-space:nowrap; }
+  .tip { background:#fdf7df; border:1px solid #ecdfa4; border-left:5px solid var(--gold);
+         border-radius:6px; padding:10px 14px; margin:14px 0; }
+  .tip b:first-child { color:var(--gold-ink); }
+  .warn { background:#fdecea; border:1px solid #f2c4c0; border-left:5px solid #c62828;
+          border-radius:6px; padding:10px 14px; margin:14px 0; }
+  .warn b:first-child { color:#b3261e; }
+  .toc { background:#f7f9fc; border:1px solid var(--hair); border-radius:8px; padding:16px 22px; }
+  .toc a { color:var(--navy); text-decoration:none; }
+  .toc ol { margin:6px 0; }
+  .screenshotless { color:#5f6b80; font-style:italic; font-size:13.5px; }
+  @media print { .page { border:0; } body { background:#fff; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="cover">
+  <div class="sub">St. Joseph's Matriculation Higher Secondary School, Ondipudur</div>
+  <h1>Website Admin Panel — User Guide</h1>
+  <div class="sub">A step-by-step handbook for the school office. No technical knowledge needed.</div>
+  <div class="meta">Version 1.0 &middot; August 2026</div>
+</header>
+
+<nav class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#what">What is the admin panel?</a></li>
+    <li><a href="#signin">Signing in (and what to do if you can't)</a></li>
+    <li><a href="#layout">Finding your way around</a></li>
+    <li><a href="#dashboard">The Dashboard</a></li>
+    <li><a href="#buttons">The buttons you will use everywhere</a></li>
+    <li><a href="#images">Working with photos</a></li>
+    <li><a href="#richtext">Writing formatted text (bold and gold)</a></li>
+    <li><a href="#screens">Every screen, one by one</a></li>
+    <li><a href="#admins">Admin accounts (owners only)</a></li>
+    <li><a href="#trouble">If something goes wrong</a></li>
+    <li><a href="#glossary">Glossary — words used in this guide</a></li>
+  </ol>
+</nav>
+
+<h2 id="what">1. What is the admin panel?</h2>
+<p>The school website is what parents, students and visitors see. The <b>admin panel</b> is a
+   private area of the same website where you change what they see — photos, announcements,
+   toppers lists, gallery albums and so on — without touching any code.</p>
+<ul>
+  <li><b>Where it is:</b> your website address followed by <code>/admin/</code> —
+      for example <code>https://stjosephsondipudur.com/admin/</code>. Bookmark it.</li>
+  <li><b>Who can use it:</b> only people who were given an admin account (a username and password).</li>
+  <li><b>When changes appear:</b> immediately. There is no "publish" button — the moment you press
+      Save, the website is updated. A visitor sees the change the next time their page loads.</li>
+</ul>
+<div class="tip"><b>Don't be afraid to look around.</b> Simply opening screens and reading them
+  changes nothing. Changes only happen when you press a Save button, an Add button, or one of the
+  action icons described in section 5 — and the panel asks "are you sure?" before anything is deleted.</div>
+
+<h2 id="signin">2. Signing in (and what to do if you can't)</h2>
+
+<h3>2.1 Normal sign-in</h3>
+<ol>
+  <li>Open <code>/admin/</code> in your browser. You will see the blue sign-in page with the school crest.</li>
+  <li>Type your <b>username</b> and <b>password</b>, then press <span class="btn">Sign in</span>.</li>
+</ol>
+
+<h3>2.2 Your very first sign-in</h3>
+<p>New accounts start with a <b>temporary password</b> that an owner hands to you. The first time you
+   sign in with it, the panel takes you straight to a "Set a new password" page — you cannot skip it.
+   Choose your own password:</p>
+<ul>
+  <li>at least <b>12 characters</b> long,</li>
+  <li>ideally with capital and small letters and a number — the coloured strength bar and the
+      checklist under the box tick off as you type,</li>
+  <li>something you don't use anywhere else.</li>
+</ul>
+<p>From then on you sign in with your own password. Nobody — not even the owner — can see your
+   password; they can only issue a fresh temporary one.</p>
+
+<h3>2.3 Wrong password / locked account</h3>
+<ul>
+  <li>If the password is wrong you'll see <i>"Invalid username or password."</i> Try again carefully.</li>
+  <li>After <b>5 wrong attempts</b> the account locks itself for <b>15 minutes</b>. The page tells you:
+      <i>"Too many failed sign-in attempts — this account is temporarily locked… wait about N minutes."</i></li>
+  <li>You can simply wait — the lock opens by itself. Or an <b>owner</b> can unlock you at once from
+      the <b>Admin Accounts</b> screen (section 9).</li>
+</ul>
+
+<h3>2.4 Forgot your password?</h3>
+<ol>
+  <li><b>If someone else is an owner:</b> ask them. They open <b>Admin Accounts</b>, press the key
+      icon next to your name, and hand you a new temporary password. You then set your own again
+      (like a first sign-in).</li>
+  <li><b>If nobody can sign in at all:</b> contact the person who maintains the website (the site
+      maintainer). They have a safe recovery procedure that works through the hosting company's
+      file manager. You do not need to do anything yourself in this case.</li>
+</ol>
+
+<h3>2.5 Being signed out automatically</h3>
+<p>For safety the panel signs you out on its own:</p>
+<ul>
+  <li>after <b>30 minutes of doing nothing</b> (walking away from the desk), and</li>
+  <li>in any case after <b>12 hours</b>, even if you kept working.</li>
+</ul>
+<p>This is normal — just sign in again. Nothing you saved is lost. When you finish work, press
+   <span class="btn">Log out</span> at the bottom of the left menu instead of just closing the browser.</p>
+
+<h2 id="layout">3. Finding your way around</h2>
+<p>Every admin page has the same frame:</p>
+<ul>
+  <li><b>Left side — the menu.</b> A dark blue column listing every section: Dashboard, Hero Carousel,
+      Principal, About Page, and so on. Click a name to open that screen. The one you are on is highlighted.
+      At the bottom of the menu: <span class="btn">View website</span> (opens the public site in a new tab)
+      and <span class="btn">Log out</span>.</li>
+  <li><b>Top bar.</b> Shows the name of the screen you are on, a <span class="btn">Preview site</span>
+      button (same as View website), and your own name with a round initial badge — so you always know
+      which account you are using.</li>
+  <li><b>The middle.</b> The actual content of the screen. Most screens start with a header band that
+      explains in one or two sentences what the screen controls and shows small counters
+      (for example "7 slides · 7 live on the site").</li>
+</ul>
+<p class="screenshotless">Tip: if the browser window is narrow, the left menu shrinks to icons only —
+   hover over an icon to see its name.</p>
+
+<h2 id="dashboard">4. The Dashboard</h2>
+<p>The Dashboard is the first screen after signing in. It has four areas:</p>
+
+<h3>4.1 Greeting and quick buttons</h3>
+<p>"Good morning / afternoon / evening" with today's date, plus two shortcuts:
+   <span class="btn">Upload photos</span> (jumps to the Media Library) and
+   <span class="btn">View site</span>.</p>
+
+<h3>4.2 Site vitals — live</h3>
+<p>Seven small tiles showing the health of the website. They refresh by themselves every
+   20 seconds while the page is open. You don't need to act on them — they are a thermometer,
+   not a to-do list — but here is what each one means:</p>
+<table border="1">
+  <tr><th>Tile</th><th>What it tells you</th><th>When to worry</th></tr>
+  <tr><td><b>Availability</b></td><td>Whether the website and its database are answering right now.</td>
+      <td>If it doesn't say OK/online, visitors may not see the site — tell the maintainer.</td></tr>
+  <tr><td><b>Speed</b></td><td>How fast the site responds, with a small live graph.</td>
+      <td>Only if it becomes very slow and stays slow.</td></tr>
+  <tr><td><b>Server memory</b></td><td>How much working memory the server is using.</td>
+      <td>Rarely — the maintainer watches this.</td></tr>
+  <tr><td><b>Disk</b></td><td>Free storage space on the server, as a ring and a number.</td>
+      <td>If the ring is nearly full, avoid mass photo uploads and tell the maintainer.</td></tr>
+  <tr><td><b>Storage</b></td><td>How big the database and the photo library are.</td>
+      <td>Informational only.</td></tr>
+  <tr><td><b>Last backup</b></td><td>How long ago the automatic nightly copy of the database was made.</td>
+      <td>If it says "none yet" or many days ago, tell the maintainer.</td></tr>
+  <tr><td><b>PHP cache</b></td><td>A technical speed measure (cache hit rate).</td>
+      <td>Never — maintainer only.</td></tr>
+</table>
+
+<h3>4.3 Content cards</h3>
+<p>One card per section of the website, each with a one-line description and a live count
+   (e.g. "18 academies"). Clicking a card opens that screen — it is the same as using the left menu.</p>
+
+<h3>4.4 Recent activity</h3>
+<p>The last few actions taken in the panel — who did what and when ("Sr. Principal — item.update ·
+   testimonial · 5 min ago"). Useful when two people share the work: you can see what your colleague
+   already changed.</p>
+
+<h2 id="buttons">5. The buttons you will use everywhere</h2>
+<p>Almost every screen is a list of <b>cards</b> (with a picture preview) or <b>rows</b> (text only).
+   Each card or row carries the same small round icon buttons. Learn these five and you can use the
+   whole panel:</p>
+<table border="1">
+  <tr><th>Button (icon)</th><th>What it does</th></tr>
+  <tr><td><span class="ico">Edit — pencil</span></td>
+      <td>Opens a form with every detail of that item (its texts, links, photo, visibility).
+          Change what you need and press <b>Save</b>. Press anywhere outside the form to cancel
+          without saving.</td></tr>
+  <tr><td><span class="ico">Move — up / down arrows</span></td>
+      <td>Moves the item one place up or down. <b>The order here is the order on the website</b> —
+          the first card is the first slide visitors see. You can also simply <b>drag a card</b> with
+          the mouse and drop it where you want; the new order saves immediately ("Order saved" appears).</td></tr>
+  <tr><td><span class="ico">Hide / Show — eye</span></td>
+      <td>Takes the item <b>off the website without deleting it</b>. A hidden item stays in the panel,
+          greyed out with a "Hidden" badge, ready to be shown again with one click. Use this for
+          seasonal content — e.g. hide the Annual Day slide after the event, show it again next year.</td></tr>
+  <tr><td><span class="ico">Delete — bin</span></td>
+      <td>Removes the item <b>permanently</b>. The panel always asks "are you sure?" first.
+          There is no undo — if unsure, use Hide instead.</td></tr>
+  <tr><td><span class="ico">Photos — picture</span></td>
+      <td>Appears on items that own a set of photos (an academy's mini-carousel, a gallery year's
+          photo set…). Opens the photo manager: press <b>Add photo</b> to add, drag thumbnails to
+          reorder, press the small <b>×</b> on a thumbnail to remove it from that set
+          (the photo itself stays in the Media Library).</td></tr>
+</table>
+<p>Two more things that behave the same everywhere:</p>
+<ul>
+  <li><b>Add buttons</b> — most screens have a blue <span class="btn">+ Add …</span> button in the
+      header band. It opens the same form as Edit, but empty. Fill it in and press Save; the new item
+      appears at the end of the list and immediately on the website (if marked visible).</li>
+  <li><b>Toast messages</b> — after every action a small message slides in at the corner of the screen:
+      "Saved", "Order saved", "Deleted"… green means success, red means something was refused
+      (the message says why).</li>
+</ul>
+<div class="tip"><b>Hidden vs. deleted — the golden rule.</b> Hiding is reversible, deleting is not.
+  When in doubt, hide.</div>
+
+<h2 id="images">6. Working with photos</h2>
+<p>Whenever a form has a photo field, or you press an upload button, the same <b>image picker</b>
+   window opens. It has two tabs:</p>
+
+<h3>6.1 "Library" tab — reuse a photo the site already has</h3>
+<ol>
+  <li>Every photo already on the website is shown as a small tile.</li>
+  <li>Type in the search box to filter by file name; press <span class="btn">Load more</span> to see more.</li>
+  <li>Click a tile — done. That photo is now selected for the field you were editing.</li>
+</ol>
+
+<h3>6.2 "Upload new" tab — add a photo from your computer</h3>
+<ol>
+  <li>If asked, choose the <b>crop shape</b> — this simply asks "where will this photo be used?"
+      (banner, card, and so on). When you opened the picker from a specific field, the right shape
+      is already chosen for you.</li>
+  <li>Choose the <b>image file</b> (JPEG, PNG or WebP, up to 10&nbsp;MB).</li>
+  <li>Optionally type a short <b>description</b> of the photo (used by screen readers and search engines
+      — e.g. "Students receiving prizes on Annual Day").</li>
+  <li>A <b>crop box</b> appears over your photo, locked to the exact shape of the spot it will fill.
+      Drag the box to choose which part of the photo stays. You cannot pick a wrong shape —
+      the box only moves, it never distorts.</li>
+  <li>Press <span class="btn">Upload</span>.</li>
+</ol>
+<p><b>What happens automatically:</b> the panel crops the photo to the exact shape needed, resizes it,
+   and compresses it so pages stay fast. You never need to resize or edit photos before uploading.
+   Because every photo is cut to the same shape, slides and cards always line up perfectly —
+   no odd-sized pictures.</p>
+<div class="tip"><b>Photo quality tip.</b> Upload the largest, sharpest version you have. For the wide
+  banner slides, photos at least 1600&nbsp;pixels wide look best. Small or blurry originals stay small
+  and blurry.</div>
+
+<h3>6.3 Fixing a crop later</h3>
+<p>Chose the wrong part of the photo? Open <b>Media Library</b>, find the photo, and press the small
+   <b>crop</b> button on its tile. Drag the box to the new position and press
+   <span class="btn">Save crop</span>. Every page that uses this photo updates at once.</p>
+
+<h2 id="richtext">7. Writing formatted text (bold and gold)</h2>
+<p>Longer text fields (the Principal's message, academy write-ups, descriptions…) come with a small
+   toolbar. It works like a very simple Word:</p>
+<ul>
+  <li>Select some words, press <b>B</b> — they become <b>bold</b>.</li>
+  <li>Select some words, press <b>Gold</b> — they get the school's gold highlight, exactly like on the site.</li>
+  <li>What you see in the box is what visitors will see.</li>
+  <li>Pasting from Word or a website pastes the <b>plain words only</b> — outside fonts and colours are
+      stripped on purpose so the site always keeps its own style. Re-apply bold/gold with the toolbar.</li>
+</ul>
+
+<h2 id="screens">8. Every screen, one by one</h2>
+<p>This section goes through the left menu from top to bottom. For each screen: what part of the
+   public website it controls, and what every option does.</p>
+
+<h3>8.1 Hero Carousel</h3>
+<p><b>Controls:</b> the big rotating photo banner at the very top of the Home page.</p>
+<p>Each card in this screen is a <b>live miniature of its slide</b> — the caption sits on the photo
+   exactly where visitors will see it, so you can judge the result before opening the site.</p>
+<p><span class="btn">+ Add hero slide</span> creates a new slide. Fields when adding or editing:</p>
+<table border="1">
+  <tr><th>Field</th><th>What it is</th></tr>
+  <tr><td>Caption title</td><td>The large headline written on the photo.</td></tr>
+  <tr><td>Caption text</td><td>The smaller line under the headline.</td></tr>
+  <tr><td>Button label</td><td>Text on the slide's button (e.g. "Read more"). Leave empty for no button.</td></tr>
+  <tr><td>Button link</td><td>Where that button goes (a page address). Only needed if there is a label.</td></tr>
+  <tr><td>Slide image</td><td>The photo (required). Auto-cropped to the wide banner shape.</td></tr>
+  <tr><td>Visible on site</td><td>Tick = shown; untick = the slide is skipped on the website.</td></tr>
+</table>
+<p>Drag the cards (or use the arrows) to set the order the slides rotate in.</p>
+
+<h3>8.2 Principal</h3>
+<p><b>Controls:</b> the Principal's photo, name and welcome message. This block appears on the
+   <b>Home page and the About page — one edit updates both</b>.</p>
+<p>This screen is a single form, not a list:</p>
+<ul>
+  <li><span class="btn">Change photo</span> — replaces the portrait (upright portrait shape).</li>
+  <li><b>Role heading</b> — the title above the name (e.g. "Our Principal").</li>
+  <li><b>Name</b> — the Principal's name.</li>
+  <li><b>Welcome message</b> — the full message, with the bold/gold toolbar (section 7).</li>
+  <li>Press <span class="btn">Save changes</span> when done — the note beside the button confirms the save.</li>
+</ul>
+
+<h3>8.3 About Page</h3>
+<p><b>Controls:</b> everything on the About page.</p>
+<ul>
+  <li><b>Top carousel</b> — the photo banner at the top of the About page. Works exactly like the
+      Hero Carousel (section 8.1): add, reorder, hide, edit captions.</li>
+  <li><b>Content blocks</b> — three fixed blocks: <b>President</b>, <b>School History</b>,
+      <b>Rules and Regulations</b>. Press the pencil on a block to change its heading, name,
+      photo and text. These blocks cannot be deleted or reordered — the page layout is fixed.</li>
+</ul>
+<p>Note: the school-timings table and the diary download inside "Rules and Regulations" are part of
+   the fixed page design; the text around them is what you edit here. (The timings themselves are
+   changed in <b>Site Settings</b>, section 8.18.)</p>
+
+<h3>8.4 Staffs Page</h3>
+<p><b>Controls:</b> everything on the Staffs page — same pattern as the About page:</p>
+<ul>
+  <li><b>Top carousel</b> — the banner slides.</li>
+  <li><b>Content blocks</b> — "We Love our Staffs" (top block), "The Staffs" and "The Staff Tour".
+      The photos shown beside the top block on the website are the images of "The Staffs" and
+      "The Staff Tour" blocks — change those two blocks' images to change all of them.</li>
+</ul>
+
+<h3>8.5 Testimonials</h3>
+<p><b>Controls:</b> the student testimonial cards on the Home page.</p>
+<p>Each card here is rendered <b>exactly like the website card</b> — navy background, gold student
+   name, the quote — so what you see is what visitors get. Order here = order on the site.</p>
+<table border="1">
+  <tr><th>Field</th><th>What it is</th></tr>
+  <tr><td>Student name &amp; tag</td><td>The gold heading — usually name plus class/year.</td></tr>
+  <tr><td>Testimonial</td><td>The quote itself (bold/gold toolbar available).</td></tr>
+  <tr><td>Card background photo</td><td><b>Optional.</b> Leave it empty and the card uses the site's
+      standard rotating backgrounds. Set a photo to give this card its own background.</td></tr>
+  <tr><td>Visible on site</td><td>Show or hide this card.</td></tr>
+</table>
+
+<h3>8.6 School Sections</h3>
+<p><b>Controls:</b> the four section pages — KG, Primary, High School, Higher Secondary.
+   Tabs at the top switch between the four; everything below the tabs belongs to the selected section.</p>
+<ul>
+  <li><b>Top carousel</b> — that section page's banner slides (same as everywhere).</li>
+  <li><b>Intro &amp; grade card</b> — one row holding the intro heading and text shown beside the photo
+      carousel, plus the "grade card" (title, class range, image) that represents this section on the
+      Academics page. Press the pencil to edit all of it.
+      <span class="btn">Manage carousel photos</span> opens the photo set that rotates beside the intro.</li>
+  <li><b>Timeline</b> — the month-by-month activities list. One row per month.
+      <span class="btn">+ Add month</span> asks for: <b>Month</b> (e.g. "June"), <b>Time tag</b>
+      (e.g. "Term 1"), and <b>Events</b> — type each event on its own line; each line becomes one
+      bullet on the website.</li>
+  <li><b>Event blocks</b> — the photo + text blocks at the bottom of the page. Fields: Event title,
+      Description, Photo (optional). Photos alternate left / right automatically — you don't choose sides.</li>
+</ul>
+
+<h3>8.7 Academies</h3>
+<p><b>Controls:</b> the academy pages (Tamil Academy, Science Academy…) and their cards on the
+   Co-Curriculum page. Each card here previews the grid card; order here = card order on the site.</p>
+<p><span class="btn">+ Add academy</span> creates a whole new academy page in one step:</p>
+<table border="1">
+  <tr><th>Field</th><th>What it is</th></tr>
+  <tr><td>URL key</td><td>The academy's web address ending — e.g. <code>roboticsacademy</code> makes the
+      page <code>…/academy.php?slug=roboticsacademy</code>. Lowercase letters/numbers/dashes only.
+      <b>Permanent</b> — it cannot be changed later, so choose carefully.</td></tr>
+  <tr><td>Banner title / subtitle</td><td>The heading on the academy page's banner.</td></tr>
+  <tr><td>Content heading</td><td>The heading above the write-up.</td></tr>
+  <tr><td>Write-up</td><td>The academy's description (bold/gold toolbar).</td></tr>
+  <tr><td>Co-curriculum card title / subtitle</td><td>What the card in the Co-Curriculum grid says.</td></tr>
+  <tr><td>Card photo</td><td>The photo on that grid card (required).</td></tr>
+  <tr><td>Page background photo</td><td>The wide photo behind the academy page (required).</td></tr>
+  <tr><td>Visible on the co-curriculum grid</td><td>Show or hide the card.</td></tr>
+</table>
+<ul>
+  <li>The <b>picture button</b> on each card manages that academy's mini photo-carousel.</li>
+  <li>The <b>18 original academies</b> are permanent: they can be edited and hidden, but not deleted
+      (their bin button simply isn't there). Academies you add yourself can be deleted.</li>
+</ul>
+
+<h3>8.8 Sports</h3>
+<p><b>Controls:</b> the Sports page — two lists:</p>
+<ul>
+  <li><b>Top carousel</b> — the page's banner slides.</li>
+  <li><b>Sport cards</b> — one card per sport. Fields: <b>Sport name</b>, <b>Training-time line</b>
+      (e.g. "Mon–Fri, 4–5 pm"), <b>"Read More" text</b> (the panel that opens when a visitor presses
+      Read More), <b>Card photo</b>, <b>Visible on site</b>.</li>
+</ul>
+
+<h3>8.9 Infrastructure</h3>
+<p><b>Controls:</b> the Infrastructure page — the banner and the facility showcases
+   (Library, Labs, Transport…).</p>
+<ul>
+  <li><b>Top carousel</b> — banner slides.</li>
+  <li><b>Facility showcases</b> — one card per facility. Fields: <b>URL key</b> (used for the
+      quick-jump buttons on the page), <b>Facility name</b>, <b>Description</b>,
+      <b>Background photo</b>, <b>Visible on site</b>. The <b>picture button</b> manages each
+      facility's own photo carousel. The order of the cards is also the order of the quick-jump
+      buttons on the page.</li>
+</ul>
+
+<h3>8.10 Achievements</h3>
+<p><b>Controls:</b> the Achievements page — the banner plus <b>two separate lists</b>:</p>
+<ul>
+  <li><b>Achievements list</b> — achievements earned by the school and students.</li>
+  <li><b>Awards list</b> — awards given by St. Joseph's.</li>
+</ul>
+<p>Each list has its own <span class="btn">+ Add</span> button. Fields: <b>List</b> (which of the two
+   it belongs to), <b>Title</b>, <b>Sub-line</b>, <b>Photo</b>, <b>Visible on site</b>. On the website
+   the photos alternate left / right automatically.</p>
+
+<h3>8.11 Gallery Albums</h3>
+<p><b>Controls:</b> the whole Gallery — the hub page with its centre slideshow and album cards, and
+   every album's years and photo sets.</p>
+<ul>
+  <li><span class="btn">Hub slideshow</span> (top of the screen) — the photos that cross-fade in the
+      centre of the Gallery hub page. Add, drag to reorder, remove with ×.</li>
+  <li><span class="btn">+ Add album</span> — creates a new album with its own page:
+    <table border="1">
+      <tr><th>Field</th><th>What it is</th></tr>
+      <tr><td>URL key</td><td>The album's address ending, e.g. <code>gal-farewell</code>. <b>Permanent.</b></td></tr>
+      <tr><td>Hub-card title</td><td>The album's name on the Gallery hub card.</td></tr>
+      <tr><td>Album-page heading</td><td>The heading at the top of the album's own page.</td></tr>
+      <tr><td>Hub-card sub-line</td><td>The small line on the card, usually the years ("2023 – 2025").</td></tr>
+      <tr><td>Hub-card photo</td><td>The card's cover photo (required).</td></tr>
+      <tr><td>Visible on the gallery hub</td><td>Show or hide the card.</td></tr>
+    </table>
+  </li>
+  <li><b>Album tabs</b> — buttons for each album; press one to work on that album.</li>
+  <li><b>Album card</b> — a preview of the selected album's hub card; pencil to edit it.</li>
+  <li><b>Years &amp; photos</b> — each album is organised by year. <span class="btn">+ Add year</span>
+      asks for the year label (e.g. "2025"). Each year row shows how many photos it holds; press its
+      <b>picture button</b> to open that year's photo set — add photos, drag to reorder, remove with ×.
+      The first year in the list is the one visitors see first.</li>
+  <li>The <b>10 original albums</b> can be edited and hidden but not deleted; albums you create can be
+      deleted. Deleting a <b>year</b> removes its photo list, but the photos themselves stay in the
+      Media Library.</li>
+</ul>
+
+<h3>8.12 What's Unique</h3>
+<p><b>Controls:</b> the "What's Unique?" feature blocks on the Home page (ESC, Language Academies…).
+   Fields: <b>Title</b>, <b>Content</b> (bold/gold toolbar), <b>Image</b>, <b>Visible on site</b>.
+   Blocks alternate image-left / image-right automatically as you reorder them.</p>
+
+<h3>8.13 News Ticker</h3>
+<p><b>Controls:</b> the scrolling announcement bar. Each item is one short message that visitors can
+   click. Fields: <b>Text</b> (the announcement), <b>Link</b> (the page or video it opens),
+   <b>Visible on site</b>. Keep announcements short — they scroll past quickly.</p>
+
+<h3>8.14 New Updates</h3>
+<p><b>Controls:</b> the "New Updates" video-highlights carousel on the Home page. Each card previews
+   its slide. Fields: <b>Title</b>, <b>Subtitle</b>, <b>Video link</b> (e.g. a YouTube address —
+   optional), <b>Button label</b> (e.g. "Watch"), <b>Slide image</b> (required), <b>Visible on site</b>.</p>
+
+<h3>8.15 Top Marks</h3>
+<p><b>Controls:</b> the board-exam toppers boards. Content is organised by <b>year</b>, and inside
+   each year by <b>standard</b> (10th / 11th / 12th).</p>
+<ul>
+  <li><span class="btn">+ Add year</span> — creates a new year (e.g. 2026). Each year has its own card.</li>
+  <li>Inside a year: <span class="btn">+ Add topper</span> asks for <b>Standard</b> (10 / 11 / 12),
+      <b>Rank</b> (I / II / III), <b>Student name</b>, <b>Marks scored</b> and <b>Marks total</b>.
+      Toppers appear in a neat table; use the arrows to order them within the year.</li>
+  <li>The eye button hides a whole year; the bin deletes a year <b>and all its toppers</b>
+      (the panel warns you first).</li>
+  <li>The website shows only the most recent visible years — how many is set in
+      <b>Site Settings → Top-Marks years shown</b>.</li>
+</ul>
+
+<h3>8.16 Media Library</h3>
+<p><b>Controls:</b> every image the website has — the original photo collection plus everything
+   uploaded through the panel. This is the one place to manage photos themselves (everywhere else
+   you manage <i>where photos are used</i>).</p>
+<ul>
+  <li><span class="btn">Upload image</span> — add a new photo (section 6.2). Here you also choose the
+      crop shape yourself, because the panel can't know where you plan to use it.</li>
+  <li><b>Search box</b> — filter by file name.</li>
+  <li><b>"Unused only"</b> — tick to see photos that aren't used anywhere on the site (candidates for
+      deletion or for reuse).</li>
+  <li>Each tile shows a badge: a link symbol with a number (used in that many places) or
+      <b>"unused"</b>.</li>
+  <li><b>Click a tile</b> to open its details: where exactly it is used, its description (alt text —
+      editable, press <span class="btn">Save description</span>), and
+      <span class="btn">Delete image</span>. Deleting is only possible when the photo is
+      <b>not used anywhere</b> — the button stays greyed out otherwise. Remove it from every place
+      first, then delete.</li>
+  <li><b>Crop button</b> on a tile — re-crop the photo (section 6.3).</li>
+</ul>
+
+<h3>8.17 SEO</h3>
+<p><b>Controls:</b> how each page of the website looks in Google and in the browser tab.
+   One row per page — rows can't be added or removed, only edited:</p>
+<ul>
+  <li><b>Browser/search title</b> — the page's title in the browser tab and as the blue headline in
+      Google results. Google shows roughly the first <b>60 characters</b> — put the important words first.</li>
+  <li><b>Meta description</b> — the grey text under the headline in Google results. Roughly the first
+      <b>155 characters</b> are shown. Write a natural sentence that would make a parent click.</li>
+</ul>
+<p>Changes here don't alter the page itself — only how search engines and browser tabs present it.
+   Google may take days or weeks to pick up new text; that is normal.</p>
+
+<h3>8.18 Site Settings</h3>
+<p><b>Controls:</b> small pieces of text used across many pages. Change a value and press
+   <span class="btn">Save settings</span> at the bottom — one save updates the whole site.</p>
+<table border="1">
+  <tr><th>Group</th><th>Settings</th><th>Where it appears</th></tr>
+  <tr><td>Contact details</td><td>School email, phone number, address (two lines)</td>
+      <td>The contact section and the footer of every page. The email is also the address that opens
+          when a visitor clicks "email us".</td></tr>
+  <tr><td>School timings</td><td>Morning, Lunch, Afternoon</td>
+      <td>The timings shown in the footer.</td></tr>
+  <tr><td>Admissions band</td><td>Heading, sub-line, button label</td>
+      <td>The blue admissions strip near the bottom of most pages.</td></tr>
+  <tr><td>Social &amp; misc</td><td>Facebook URL, YouTube URL, footer copyright line,
+      Top-Marks years shown (1–10)</td>
+      <td>The social icons, the copyright line, and how many recent years the toppers boards show.</td></tr>
+</table>
+<p>Web addresses must start with <code>https://</code> — the panel refuses them otherwise.</p>
+
+<h2 id="admins">9. Admin accounts (owners only)</h2>
+<p>This screen only appears in the menu if your account is an <b>owner</b>. It manages who can use
+   the panel.</p>
+
+<h3>9.1 The two roles</h3>
+<table border="1">
+  <tr><th>Role</th><th>Can do</th></tr>
+  <tr><td><b>Editor</b></td><td>Everything in sections 8.1–8.18 — all content, photos, settings.</td></tr>
+  <tr><td><b>Owner</b></td><td>Everything an editor can, <b>plus</b> this screen: creating accounts,
+      resetting passwords, unlocking, changing roles, deleting accounts.</td></tr>
+</table>
+<p>Give the office staff editor accounts; keep owner for one or two responsible people.</p>
+
+<h3>9.2 Creating an account</h3>
+<ol>
+  <li>Press <span class="btn">New account</span>; enter a username, a display name and the role.</li>
+  <li>The panel shows a <b>temporary password once</b> — copy it (there is a Copy button) and hand it
+      over in person or by a private message. It is never shown again.</li>
+  <li>The new person signs in with it and is immediately made to set their own password.
+      Until then their row shows an "Awaiting first sign-in" badge.</li>
+</ol>
+
+<h3>9.3 The buttons on each account row</h3>
+<table border="1">
+  <tr><th>Button</th><th>What it does</th></tr>
+  <tr><td><span class="ico">Unlock</span></td><td>Appears only when the row shows a red "Locked"
+      badge (too many wrong passwords). Clears the lock instantly so the person can try again.</td></tr>
+  <tr><td><span class="ico">Key — reset password</span></td><td>Generates a fresh temporary password
+      (shown once, copy it). Use when someone forgot theirs. They set their own at next sign-in.</td></tr>
+  <tr><td><span class="ico">Shield — change role</span></td><td>Switches the account between editor
+      and owner. You cannot change your own role.</td></tr>
+  <tr><td><span class="ico">Bin — delete</span></td><td>Removes the account permanently. Safety rules:
+      you can never delete <b>yourself</b>, and never the <b>last remaining owner</b> — so the panel
+      can never end up with nobody in charge.</td></tr>
+</table>
+
+<h2 id="trouble">10. If something goes wrong</h2>
+<table border="1">
+  <tr><th>Situation</th><th>What to do</th></tr>
+  <tr><td>I saved a change but the website still shows the old content.</td>
+      <td>The site updated — your browser is showing an old copy. Refresh the public page
+          (press <b>Ctrl+F5</b>). Visitors get the new version automatically on their next visit.</td></tr>
+  <tr><td>I was suddenly back at the sign-in page.</td>
+      <td>You were idle for 30 minutes (or 12 hours passed). Sign in again — nothing was lost.</td></tr>
+  <tr><td>"Too many failed sign-in attempts…"</td>
+      <td>Wait the shown minutes (at most 15) or ask an owner to press Unlock on your account.</td></tr>
+  <tr><td>I forgot my password.</td>
+      <td>An owner resets it (section 9.3). If nobody can sign in, contact the site maintainer.</td></tr>
+  <tr><td>The Delete button on a photo is greyed out.</td>
+      <td>The photo is still used somewhere. Its details window lists where — remove it from those
+          places first (or just leave it; unused deletion is only housekeeping).</td></tr>
+  <tr><td>A photo shows the wrong part (head cut off, etc.).</td>
+      <td>Media Library → find the photo → crop button → drag the box → Save crop. Fixed everywhere
+          at once.</td></tr>
+  <tr><td>I deleted something by mistake.</td>
+      <td>Deletion is permanent in the panel, but the maintainer keeps nightly database backups —
+          contact them the same day and the item can usually be restored.</td></tr>
+  <tr><td>I can't delete an academy or album.</td>
+      <td>The original 18 academies and 10 albums are permanent parts of the site — they can only be
+          hidden. Items you created yourself can be deleted.</td></tr>
+  <tr><td>A red message appeared when I pressed Save.</td>
+      <td>The panel refused the change and the message says why (e.g. "URL key already in use",
+          "must start with https://"). Correct the field and save again.</td></tr>
+  <tr><td>The site vitals show a problem (availability not OK, backup very old, disk nearly full).</td>
+      <td>Nothing you did — inform the site maintainer.</td></tr>
+</table>
+<div class="warn"><b>One thing to never share.</b> Your password. The maintainer or an owner will never
+  need it — they always have their own way (temporary passwords). Anyone asking for your admin
+  password should be refused.</div>
+
+<h2 id="glossary">11. Glossary — words used in this guide</h2>
+<table border="1">
+  <tr><th>Word</th><th>Meaning</th></tr>
+  <tr><td>Carousel / slider</td><td>A strip of photos that rotate automatically, e.g. the banner at
+      the top of most pages.</td></tr>
+  <tr><td>Slide</td><td>One photo (with its caption) inside a carousel.</td></tr>
+  <tr><td>Card</td><td>A rectangular block with a photo and text — on the website (sport cards, album
+      cards) and in the panel (the preview cards you edit).</td></tr>
+  <tr><td>Banner / hero</td><td>The large photo area at the very top of a page.</td></tr>
+  <tr><td>Hidden</td><td>Kept in the panel but not shown on the website. Reversible with one click.</td></tr>
+  <tr><td>URL key</td><td>The last part of a page's web address (e.g. <code>tamilacademy</code>).
+      Permanent once chosen.</td></tr>
+  <tr><td>Crop</td><td>Choosing which part of a photo is kept when it is cut to a required shape.</td></tr>
+  <tr><td>Crop shape</td><td>The fixed proportions a spot on the site needs (wide banner, card, portrait…).
+      The panel enforces it so photos always line up.</td></tr>
+  <tr><td>Thumbnail</td><td>A small preview version of a photo.</td></tr>
+  <tr><td>Alt text / description</td><td>A one-line description of a photo, read aloud by screen
+      readers and used by Google. Good practice to fill in.</td></tr>
+  <tr><td>Owner / editor</td><td>The two account roles — see section 9.1.</td></tr>
+  <tr><td>Temporary password</td><td>A one-time password issued by an owner; must be replaced with
+      your own at first sign-in.</td></tr>
+  <tr><td>Session</td><td>Your signed-in period. Ends when you log out, after 30 idle minutes, or
+      after 12 hours.</td></tr>
+  <tr><td>Toast</td><td>The small "Saved" / error message that slides in after an action.</td></tr>
+  <tr><td>SEO</td><td>"Search Engine Optimisation" — how the site appears in Google. Edited on the
+      SEO screen.</td></tr>
+  <tr><td>Site maintainer</td><td>The technical person who looks after hosting, backups and code —
+      your contact for anything this guide says to escalate.</td></tr>
+</table>
+
+<p style="margin-top:40px; text-align:center; color:#8a94a6; font-size:13px;">
+  St. Joseph's MHSS, Ondipudur — Website Admin Panel User Guide · Version 1.0 · August 2026
+</p>
+
+</div>
+</body>
+</html>
