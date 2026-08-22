@@ -1,0 +1,165 @@
+/* site.css — Stage J "Global Campus" shared component layer (PUBLIC_UI_DESIGN.md).
+   Loaded on every page after tokens.css, before the per-page sheets.
+
+   ADDITIVE BY DESIGN: everything here is namespaced .sj-* (plus two global
+   motion policies at top and bottom), so legacy sheets keep styling
+   un-migrated pages untouched until their Stage J phase rewrites them.
+   Component recipes: buttons, cards, section bands/heads, reveal states,
+   hero geometry + scrim, Ken Burns. JS counterparts live in js/site.js. */
+
+/* ---------- global motion policy (top) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ---------- section bands ---------- */
+.sj-section { padding: var(--sj-sec-pad) 0; background: var(--sj-white); }
+.sj-section--paper { background: var(--sj-paper); }
+.sj-section--navy { background: var(--sj-navy-dark); color: #fff; }
+
+/* ---------- eyebrow + section head (mirrors the admin Prospectus gold bar) ---------- */
+.sj-eyebrow {
+  display: block;
+  font-family: var(--sj-font-body);
+  font-size: 12px; font-weight: 700; line-height: 1;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--sj-gold-ink);
+  margin-bottom: 12px;
+}
+.sj-section--navy .sj-eyebrow { color: var(--sj-gold); }
+
+.sj-sec-head { margin-bottom: 42px; }
+.sj-sec-head h2 {
+  font-family: var(--sj-font-head); font-weight: 400;
+  font-size: var(--sj-fs-h2); line-height: 1.15;
+  color: var(--sj-navy-dark); margin: 0;
+}
+.sj-sec-head h2::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin-top: 14px;
+}
+.sj-sec-head .sj-lead {
+  font-family: var(--sj-font-body); font-size: var(--sj-fs-lead);
+  line-height: 1.7; color: var(--sj-ink-soft);
+  max-width: 72ch; margin: 18px 0 0;
+}
+.sj-sec-head--center { text-align: center; }
+.sj-sec-head--center h2::after { margin-left: auto; margin-right: auto; }
+.sj-sec-head--center .sj-lead { margin-left: auto; margin-right: auto; }
+.sj-section--navy .sj-sec-head h2 { color: #fff; }
+.sj-section--navy .sj-sec-head .sj-lead { color: rgba(255, 255, 255, .78); }
+
+/* ---------- the ONE button system ---------- */
+.sj-btn {
+  display: inline-block;
+  font-family: var(--sj-font-body); font-size: 15px; font-weight: 600; line-height: 1;
+  padding: 13px 28px; border-radius: var(--sj-r-btn);
+  border: 1.5px solid transparent;
+  text-decoration: none; cursor: pointer; text-align: center;
+  transition: background var(--sj-t-fast) ease, color var(--sj-t-fast) ease,
+              filter var(--sj-t-fast) ease, transform var(--sj-t-fast) ease,
+              box-shadow var(--sj-t-fast) ease, border-color var(--sj-t-fast) ease;
+}
+.sj-btn:active { transform: scale(.98); }
+.sj-btn:focus-visible { outline: 3px solid var(--sj-navy); outline-offset: 2px; }
+.sj-section--navy .sj-btn:focus-visible { outline-color: var(--sj-gold); }
+
+.sj-btn--navy { background: var(--sj-grad-brand); color: #fff; }
+.sj-btn--navy:hover { filter: brightness(1.12); color: #fff; transform: translateY(-2px); box-shadow: var(--sj-shadow-1); }
+
+.sj-btn--gold { background: var(--sj-gold); color: var(--sj-navy-dark); }
+.sj-btn--gold:hover { background: #f2cc00; color: var(--sj-navy-dark); transform: translateY(-2px); box-shadow: var(--sj-shadow-1); }
+
+.sj-btn--ghost { border-color: var(--sj-navy); color: var(--sj-navy); background: transparent; }
+.sj-btn--ghost:hover { background: var(--sj-navy); color: #fff; }
+.sj-section--navy .sj-btn--ghost,
+.sj-on-dark .sj-btn--ghost { border-color: rgba(255, 255, 255, .75); color: #fff; }
+.sj-section--navy .sj-btn--ghost:hover,
+.sj-on-dark .sj-btn--ghost:hover { background: #fff; color: var(--sj-navy-dark); }
+
+.sj-btn--sm { font-size: 14px; padding: 10px 20px; }
+
+/* ---------- chips ---------- */
+.sj-chip {
+  display: inline-block;
+  font-family: var(--sj-font-body); font-size: 12px; font-weight: 700;
+  letter-spacing: .6px; text-transform: uppercase;
+  color: var(--sj-gold-ink); background: var(--sj-gold-soft);
+  border-radius: var(--sj-r-chip); padding: 5px 14px;
+}
+
+/* ---------- cards ---------- */
+.sj-card {
+  background: #fff;
+  border: 1px solid var(--sj-line-cool);
+  border-radius: var(--sj-r-card);
+  box-shadow: var(--sj-shadow-1);
+  overflow: hidden;
+  transition: transform var(--sj-t-med) var(--sj-ease), box-shadow var(--sj-t-med) var(--sj-ease);
+}
+.sj-card:hover, .sj-card:focus-within { transform: translateY(-6px); box-shadow: var(--sj-shadow-2); }
+.sj-card:focus-within { outline: 3px solid var(--sj-navy); outline-offset: 2px; }
+
+.sj-card-media { position: relative; overflow: hidden; background: var(--sj-navy-dark); }
+.sj-card-media--4x3 { aspect-ratio: 4 / 3; }
+.sj-card-media--16x9 { aspect-ratio: 16 / 9; }
+.sj-card-media img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+  transition: transform var(--sj-t-med) var(--sj-ease);
+}
+.sj-card:hover .sj-card-media img { transform: scale(1.06); }
+
+.sj-card-body { padding: 20px 22px 22px; }
+.sj-card-body h3 {
+  font-family: var(--sj-font-head); font-weight: 400;
+  font-size: 20px; line-height: 1.25;
+  color: var(--sj-navy-dark); margin: 0 0 6px;
+}
+.sj-card-body p {
+  font-family: var(--sj-font-body); font-size: var(--sj-fs-small);
+  line-height: 1.65; color: var(--sj-ink-soft); margin: 0;
+}
+
+/* ---------- one-time scroll reveals (sjRevealIO) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .sj-reveal {
+    opacity: 0; transform: translateY(26px);
+    transition: opacity .7s var(--sj-ease), transform .7s var(--sj-ease);
+  }
+  .sj-reveal.sj-in { opacity: 1; transform: none; }
+}
+
+/* ---------- hero system (shared geometry — adopted by hero.php from J3) ---------- */
+/* The N6 uniform-geometry guarantee lives HERE and only here: ≥901px every
+   slide box is 16:9 regardless of the photo; <901px the shipped fixed height
+   crops instead of stretching. The 901px boundary is load-bearing. */
+.sj-hero .carousel-item { position: relative; overflow: hidden; }
+.sj-hero .carousel-item::before {
+  content: ""; position: absolute; inset: 0;
+  background: var(--sj-veil); z-index: 1;
+}
+.sj-hero .carousel-item img { display: block; width: 100%; object-fit: cover; }
+@media (min-width: 901px) {
+  .sj-hero .carousel-item img { height: auto; aspect-ratio: 16 / 9; }
+}
+@media (max-width: 900px) {
+  .sj-hero .carousel-item img { height: 500px; }
+}
+@keyframes sj-kenburns {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.06) translate(1.2%, .8%); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sj-hero--motion .carousel-item.active img { animation: sj-kenburns 7s var(--sj-ease) forwards; }
+}
+
+/* ---------- global reduced-motion kill-switch (keep LAST) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

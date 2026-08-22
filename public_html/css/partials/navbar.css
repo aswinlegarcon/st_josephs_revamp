@@ -5,8 +5,9 @@
    here — the page must render pixel-identical to the pre-revamp site. */
 
 /* Site-wide base font — the original navbar carried this global rule, so it
-   applied to every page. Restored here so converted pages keep League Spartan. */
-* { font-family: "League Spartan", sans-serif; font-weight: 400; }
+   applies to every page. J1: routed through the body-font token (now Manrope);
+   this whole sheet is retired in J2 when the navbar is rebuilt. */
+* { font-family: var(--sj-font-body); font-weight: 400; }
 
 body { margin: 0; font-family: Arial, sans-serif; }
 

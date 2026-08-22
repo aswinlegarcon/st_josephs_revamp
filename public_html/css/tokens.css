@@ -1,36 +1,65 @@
-/* Design tokens for the public site (PHASES.md R1a).
-   One source of truth for the brand colours and fonts. Loaded on every page. */
+/* Design tokens for the public site — v2 (Stage J "Global Campus").
+   One source of truth for brand colours, fonts, type scale, space and motion.
+   Loaded on every page, before site.css and the per-page sheets.
+   Spec: PUBLIC_UI_DESIGN.md. */
 :root {
   /* Brand */
   --sj-navy:      #2b4b8a;
   --sj-navy-dark: #1a355d;
   --sj-gold:      #ffd700;
   --sj-gold-ink:  #8a6d00;   /* gold-MEANING text on white — WCAG-safe (never use --sj-gold on white) */
-  --sj-maroon:    firebrick;
+  --sj-gold-soft: #fdf3cf;   /* pale gold chip/tint background */
+  --sj-maroon:    firebrick; /* legacy sheets only — retired with the last old sheet (J6) */
 
   /* Neutrals */
   --sj-ink:       #26303f;
+  --sj-ink-soft:  #5f6b80;
   --sj-white:     #ffffff;
+  --sj-paper:     #faf8f4;   /* warm alternating section band (matches the admin Prospectus canvas) */
+  --sj-line:      #e9e4d9;   /* hairline on paper */
+  --sj-line-cool: #e5e9f1;   /* hairline on white */
 
-  /* Signature gradients */
+  /* Signature gradients / veils */
   --sj-grad-brand: linear-gradient(to right, var(--sj-navy), var(--sj-navy-dark));
+  --sj-veil: linear-gradient(rgba(43, 75, 138, .55), rgba(26, 53, 93, .75)); /* THE photo scrim — heroes, testimonial cards. Admin panel.css --veil mirrors this. */
 
-  /* Fonts */
+  /* Fonts (J1: body League Spartan → Manrope. Most body text never actually
+     rendered League Spartan — the historic "LeagueSpartan" typo fell back to
+     the system sans — so Manrope is close to what users really saw.) */
   --sj-font-head:   "Fjalla One", sans-serif;
   --sj-font-accent: "Dancing Script", cursive;
-  --sj-font-body:   "League Spartan", sans-serif;
+  --sj-font-body:   "Manrope", sans-serif;
+
+  /* Type scale (fluid) */
+  --sj-fs-display: clamp(34px, 5vw, 56px);
+  --sj-fs-h2:      clamp(26px, 3.2vw, 38px);
+  --sj-fs-h3:      22px;
+  --sj-fs-lead:    18px;
+  --sj-fs-body:    16px;
+  --sj-fs-small:   14px;
+
+  /* Space / radius / elevation */
+  --sj-sec-pad:  clamp(64px, 9vw, 120px);
+  --sj-r-card:   16px;
+  --sj-r-btn:    10px;
+  --sj-r-chip:   999px;
+  --sj-shadow-1: 0 6px 18px rgba(18, 35, 63, .08);
+  --sj-shadow-2: 0 16px 40px rgba(18, 35, 63, .16);
+
+  /* Motion */
+  --sj-ease:   cubic-bezier(.2, .7, .2, 1);
+  --sj-t-fast: .2s;
+  --sj-t-med:  .5s;
 }
 
 /* Gold highlight used inside rich-text (replaces old inline gold styles).
    Uses the ink-safe gold so it passes contrast on white. */
 .hl-gold { color: var(--sj-gold-ink); font-weight: 700; }
 
-/* N6 fix — Bootstrap 4→5 drift compensation (CLAUDE.md visual-freeze rule).
-   The shipped design layers a dark gradient over every carousel slide
-   (.carousel-item::before { z-index: 1 }, cloned across the page sheets) and
-   relied on Bootstrap 4's built-in `.carousel-caption { z-index: 10 }` to
-   keep the caption text and buttons ABOVE that veil. Bootstrap 5 removed the
-   caption z-index, silently sinking every caption UNDER the overlay since the
-   R1 migration. Restoring the exact BS4 value here (tokens.css loads on every
-   page) puts all captions back on top — the original rendered result. */
+/* N6 fix — Bootstrap 4→5 drift compensation. The design layers a dark
+   gradient over every carousel slide (.carousel-item::before { z-index: 1 })
+   and relies on Bootstrap 4's `.carousel-caption { z-index: 10 }` to keep the
+   caption text and buttons ABOVE that veil. Bootstrap 5 removed the caption
+   z-index; restoring the exact BS4 value here (tokens.css loads on every page)
+   keeps all captions on top. Stage J heroes depend on this too. */
 .carousel-caption { z-index: 10; }

@@ -52,10 +52,13 @@ $sjDesc  = $sjSeo['description'] ?? '';
   <!-- Fonts (single request) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Fjalla+One&family=League+Spartan:wght@100..900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap">
+  <?php // Stage J fonts: Fjalla One (display) + Manrope (body) + Dancing Script
+        // (sparse accents). League Spartan/Raleway removed (PUBLIC_UI_DESIGN.md §2). ?>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Fjalla+One&family=Manrope:wght@400;500;600;700;800&display=swap">
 
-  <!-- Design tokens, then always-on footer styles, then this page's CSS -->
+  <!-- Design tokens, the Stage J shared component layer, always-on footer styles, then this page's CSS -->
   <link rel="stylesheet" href="/css/tokens.css?v=<?php echo SJ_ASSET_VER; ?>">
+  <link rel="stylesheet" href="/css/site.css?v=<?php echo SJ_ASSET_VER; ?>">
   <link rel="stylesheet" href="/css/footer.css?v=<?php echo SJ_ASSET_VER; ?>">
   <?php foreach ($styles as $css): ?>
   <link rel="stylesheet" href="/css/<?= e($css) ?>.css?v=<?php echo SJ_ASSET_VER; ?>">
