@@ -17,7 +17,7 @@ date_default_timezone_set('Asia/Kolkata');
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260823.14'); // K6: role dropdown, IST clock, stat-band settings verified
+    define('SJ_ASSET_VER', '20260823.15'); // K6-fix: enum labels (role/type), co-curriculum aria warning
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global

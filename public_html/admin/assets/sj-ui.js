@@ -389,7 +389,12 @@
     } else if (f.type === 'enum') {
       var sel = document.createElement('select');
       (f.options || []).forEach(function (o) {
-        var op = el('option', '', esc(o) + 'th standard');
+        // Only the numeric enums (the marks standards: 10/11/12) get the
+        // friendly "th standard" suffix; word enums (role, achievement type)
+        // show the value itself — the old unconditional suffix produced
+        // "ownerth standard" / "achievementth standard".
+        var label = /^\d+$/.test(String(o)) ? o + 'th standard' : String(o);
+        var op = el('option', '', esc(label));
         op.value = o;
         if (String(value) === String(o)) op.selected = true;
         sel.appendChild(op);
