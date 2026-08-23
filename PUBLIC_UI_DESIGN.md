@@ -113,9 +113,13 @@ durations and scroll-behavior.
     (`.sj-hero-cue`, reduced-motion aware); caption = Fjalla white title
     `clamp(30px,4.5vw,56px)` + a clean Manrope sub-line + `.sj-btn--gold`.
   - `banner` (ALL inner pages): slim `clamp(240px, 36vh, 400px)` page-title
-    strip — every admin slide still cross-fades, but no Ken Burns, no
-    indicators/controls; centered Fjalla title `clamp(26px,3.5vw,42px)` +
-    Manrope sub.
+    strip (300px fixed ≤768px) — every admin slide still cross-fades, but no
+    Ken Burns, no indicators/controls. Heading style is DISTINCT from Home
+    (K5): uppercase letterspaced Fjalla `clamp(22px,3vw,36px)` over a small
+    centered gold rule + an uppercase Manrope sub-label. Because the overlay
+    nav covers the banner top, the caption centers in the VISIBLE area:
+    `top: calc(50% + 55px)` desktop / `+ 32px` mobile (half the nav height) —
+    keep these in sync if the nav heights ever change.
   - `strip`: plain mid-page content carousel (no veil/caption).
   Geometry uniformity (the N6 guarantee) holds in every variant: one shared
   box per carousel, `object-fit:cover`, photos never grow the page. Scrim
