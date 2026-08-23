@@ -570,6 +570,9 @@ $settings = [
     // J2: floating WhatsApp button — digits with country code; empty = hidden.
     // (A dedicated key: the school landline above can't receive WhatsApp.)
     'whatsapp_number'       => '',
+    // K4: About rules block — diary line + download target (were hardcoded).
+    'diary_text'            => 'To see more about our rules and regulations, then click on Download --',
+    'diary_url'             => '/files/diary.pdf',
     // J3: Home stat band — values are the strings the page shipped hardcoded
     // (leading number animates; the +/% suffix is re-appended by sjCounters).
     'home_stat1_value'      => '80+',
@@ -588,6 +591,34 @@ foreach ($settings as $k => $v) {
     $newSet += $insSet->rowCount();
 }
 $out[] = "settings: +$newSet newly seeded";
+
+/* ---------- K4: About rules block — school timings (migration 009) ----------
+   Dev convenience: create the table when the running DB predates 009 (prod
+   applies database/migrations/009_k4_rules_timings.sql via mPanel). Seed =
+   the five shipped rows, only into an EMPTY table — admin edits always win. */
+$pdo->exec("CREATE TABLE IF NOT EXISTS rules_timings (
+  id       INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  timing   VARCHAR(60)  NOT NULL,
+  activity VARCHAR(120) NOT NULL,
+  position INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+$k4Count = (int)$pdo->query('SELECT COUNT(*) FROM rules_timings')->fetchColumn();
+if ($k4Count === 0) {
+    $k4Rows = [
+        ['8.30 AM to 12.00 Noon', '- Instructional Hours'],
+        ['10 Minutes', '- Interval'],
+        ['12.00 Noon to 12.30 P.M', '- Lunch Break'],
+        ['12.30 P.M to 3.20 P.M', '- Instructional Hours'],
+        ['10 Minutes', '- Interval'],
+    ];
+    $k4Ins = $pdo->prepare('INSERT INTO rules_timings (timing, activity, position) VALUES (?,?,?)');
+    foreach ($k4Rows as $k4i => [$k4t, $k4a]) {
+        $k4Ins->execute([$k4t, $k4a, $k4i + 1]);
+    }
+    $out[] = 'rules timings: 5 shipped rows seeded';
+} else {
+    $out[] = "rules timings: kept ($k4Count rows)";
+}
 
 /* ---------- SEO defaults (F3, migration 007) ----------
    One row per public URL. INSERT IGNORE: an admin's edits always win. */

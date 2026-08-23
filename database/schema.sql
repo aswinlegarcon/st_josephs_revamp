@@ -279,6 +279,14 @@ CREATE TABLE IF NOT EXISTS timeline_entries (
   CONSTRAINT fk_tl_sec FOREIGN KEY (section_id) REFERENCES school_sections(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- K4 (migration 009): the About page's "School timings" rows (rules block).
+CREATE TABLE IF NOT EXISTS rules_timings (
+  id       INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  timing   VARCHAR(60)  NOT NULL,
+  activity VARCHAR(120) NOT NULL,
+  position INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS section_events (
   id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   section_id TINYINT UNSIGNED NOT NULL,

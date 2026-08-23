@@ -143,6 +143,12 @@ final class Repo
         return $st->fetchAll();
     }
 
+    /** School-timings rows of the About rules block, ordered (K4). */
+    public static function rulesTimings(): array
+    {
+        return db()->query('SELECT * FROM rules_timings ORDER BY position, id')->fetchAll();
+    }
+
     /** Event blocks of one section, with images, ordered — one query (C4). */
     public static function sectionEvents(int $sectionId): array
     {

@@ -11,7 +11,10 @@ foreach (['president', 'principal', 'history', 'rules'] as $roleKey) {
     $sj_blocks[$roleKey] = repo_profile($roleKey);
 }
 
+$sj_rules_timings = repo_rules_timings(); // K4: the timings table rows
+
 \SJ\View\Layout::render('about', [
+    'sj_rules_timings' => $sj_rules_timings,
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'history',
     'sjNavOverlay'   => true, // Stage J: transparent nav over the hero

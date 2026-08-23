@@ -32,18 +32,18 @@ include dirname(__DIR__) . '/partials/hero.php';
       <?php ed_rich('profile', $b['id'], 'message_html', $b['message_html']); ?>
       <?php if ($roleKey === 'rules'): ?>
       <h3 class="school-timings-heading">SCHOOL TIMINGS</h3>
+      <?php // K4: rows come from rules_timings (registry entity — editable,
+            // orderable, creatable in the panel AND via the site overlay). ?>
       <table class="school-timings">
         <tr><th>Timing</th><th>  Activity</th></tr>
-        <tr><td>8.30 AM to 12.00 Noon</td><td> - Instructional Hours</td></tr>
-        <tr><td>10 Minutes </td><td>- Interval</td></tr>
-        <tr><td>12.00 Noon to 12.30 P.M </td><td>- Lunch Break</td></tr>
-        <tr><td>12.30 P.M to 3.20 P.M </td><td>- Instructional Hours</td></tr>
-        <tr><td>10 Minutes </td><td>- Interval</td></tr>
+        <tbody<?= ed_add('rules_timing', [], 'Add timings row') ?>>
+        <?php foreach ($sj_rules_timings ?? [] as $rt): ?>
+        <tr<?= ed_item('rules_timing', $rt['id'], 'Timings row') ?>><td<?= ed_field('rules_timing', $rt['id'], 'timing') ?>><?= e($rt['timing']) ?></td><td<?= ed_field('rules_timing', $rt['id'], 'activity') ?>><?= e($rt['activity']) ?></td></tr>
+        <?php endforeach; ?>
+        </tbody>
       </table>
-      <?php /* R3: was <span style><p>…</p></span> — a <p> may not sit inside a
-               <span>. The gold color now lives on the <p> itself; the text and
-               the link inherit exactly the same computed color as before. */ ?>
-      <p class="diary-line">To see more about our rules and regulations, then click on Download --  <a href="/files/diary.pdf" download="SchoolDiary.pdf" class="download-btn">Download</a></p>
+      <?php // K4: the diary line + download target are settings now. ?>
+      <p class="diary-line"><?= e(repo_setting('diary_text', 'To see more about our rules and regulations, then click on Download --')) ?>  <a href="<?= e(repo_setting('diary_url', '/files/diary.pdf')) ?>" download="SchoolDiary.pdf" class="download-btn">Download</a></p>
       <?php endif; ?>
     </div>
   </div>

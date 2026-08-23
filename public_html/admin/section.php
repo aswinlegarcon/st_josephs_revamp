@@ -385,8 +385,21 @@ case 'aboutpage':
           ]);
       } ?>
     </div>
-    <p class="sj-hint">The school-timings table and the diary download under "Rules and Regulations"
-       are fixed layout — text around them is editable here.</p>
+    <?php ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('rules_timing', [], 'Add timings row') ?>><?= sj_icon('plus', 14) ?> Add row</button>
+    <?php $addBtn = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">School timings (Rules block) <?= $addBtn ?></h3>
+    <div class="sj-list" data-list="rules_timing">
+      <?php foreach (repo_rules_timings() as $rt) {
+          panel_row([
+              'entity' => 'rules_timing', 'id' => $rt['id'],
+              'title'  => $rt['timing'],
+              'sub'    => $rt['activity'],
+              'canMove' => true,
+          ]);
+      } ?>
+    </div>
+    <p class="sj-hint">The diary line and its download link live in Site Settings → "About page — rules &amp; diary".</p>
     <?php
     break;
 
@@ -850,6 +863,10 @@ case 'settings':
             'jumbotron_heading' => ['Heading', ''],
             'jumbotron_sub'     => ['Sub-line', ''],
             'jumbotron_btn'     => ['Button label', ''],
+        ],
+        'About page — rules & diary' => [
+            'diary_text' => ['Diary line', 'The sentence before the Download link in the Rules block.'],
+            'diary_url'  => ['Diary file/link', 'Where the Download link points (e.g. /files/diary.pdf).'],
         ],
         'Home stat band (the four animated counters)' => [
             'home_stat1_value' => ['Stat 1 — value', 'A number plus optional suffix, e.g. 80+ or 100%'],

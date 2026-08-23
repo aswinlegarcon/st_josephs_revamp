@@ -25,6 +25,9 @@ $SETTING_KEYS = [
     'footer_copyright'      => [160, 'text'],
     'marks_years_shown'     => [2,   'int'],
     'whatsapp_number'       => [15,  'digits', true], // J2: floating WhatsApp button; blank hides it
+    // K4: About rules block — diary line + download target
+    'diary_text'            => [200, 'text'],
+    'diary_url'             => [200, 'text'],
     // J3: Home stat band (value = number + optional suffix, e.g. "2200+")
     'home_stat1_value'      => [12,  'text'],
     'home_stat1_label'      => [40,  'text'],

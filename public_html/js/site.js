@@ -100,10 +100,13 @@ function sjCounters(selector) {
 // (rAF-throttled, passive). Wired up by the J2 navbar; no-op until it exists.
 function sjNavScroll() {
   var nav = document.querySelector('.sj-navhead') || document.querySelector('.navbar.sj-nav');
-  if (!nav) return;
+  var cue = document.querySelector('.sj-hero-cue');
+  if (!nav && !cue) return;
   var ticking = false;
   function apply() {
-    nav.classList.toggle('sj-scrolled', window.scrollY > 40);
+    if (nav) nav.classList.toggle('sj-scrolled', window.scrollY > 40);
+    // K4: the hero scroll cue has done its job once the visitor scrolls.
+    if (cue) cue.classList.toggle('hide', window.scrollY > 60);
     ticking = false;
   }
   window.addEventListener('scroll', function () {
@@ -119,14 +122,26 @@ function sjNavScroll() {
 function sjMegaHover() {
   if (!window.bootstrap) return;
   if (!window.matchMedia('(min-width: 992px) and (pointer: fine)').matches) return;
+  // K4: track every dropdown so entering one INSTANTLY closes the others —
+  // fast pointer sweeps across the menu can never overlap two open panels.
+  var entries = [];
   document.querySelectorAll('.sj-nav .nav-item.dropdown').forEach(function (item) {
     var toggle = item.querySelector('[data-bs-toggle="dropdown"]');
     if (!toggle) return;
-    var dd = bootstrap.Dropdown.getOrCreateInstance(toggle);
-    var timer = null;
-    item.addEventListener('pointerenter', function () { clearTimeout(timer); dd.show(); });
+    var entry = { dd: bootstrap.Dropdown.getOrCreateInstance(toggle), timer: null };
+    entries.push(entry);
+    item.addEventListener('pointerenter', function () {
+      entries.forEach(function (o) {
+        if (o === entry) return;
+        clearTimeout(o.timer);
+        o.dd.hide();
+      });
+      clearTimeout(entry.timer);
+      entry.dd.show();
+      toggle.blur(); // no stray focus ring from programmatic opens
+    });
     item.addEventListener('pointerleave', function () {
-      timer = setTimeout(function () { dd.hide(); }, 140);
+      entry.timer = setTimeout(function () { entry.dd.hide(); }, 140);
     });
   });
 }

@@ -339,6 +339,11 @@ function repo_sections(): array
     return Repo::sections();
 }
 
+function repo_rules_timings(): array
+{
+    return \SJ\Content\Repo::rulesTimings();
+}
+
 function repo_timeline(int $sectionId): array
 {
     return Repo::timeline($sectionId);

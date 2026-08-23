@@ -179,6 +179,14 @@ final class Registry
                     'is_active'  => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
+            // K4: the About rules block's "School timings" table rows.
+            'rules_timing' => [
+                'table' => 'rules_timings', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'fields' => [
+                    'timing'   => ['type' => 'text', 'max' => 60,  'label' => 'Timing (e.g. 8.30 AM to 12.00 Noon)'],
+                    'activity' => ['type' => 'text', 'max' => 120, 'label' => 'Activity (e.g. - Instructional Hours)'],
+                ],
+            ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
                 // K2 (owner decision): the home layout fits exactly three cards —

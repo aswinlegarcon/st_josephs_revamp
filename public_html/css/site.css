@@ -187,6 +187,8 @@ body { margin: 0; color: var(--sj-ink); }
 @media (prefers-reduced-motion: no-preference) {
   .sj-hero-cue { animation: sj-cue 1.8s ease-in-out infinite; }
 }
+/* K4: once the visitor scrolls, the cue has done its job (sjNavScroll). */
+.sj-hero-cue.hide { animation: none; opacity: 0; transition: opacity .3s ease; }
 @keyframes sj-kenburns {
   from { transform: scale(1) translate(0, 0); }
   to   { transform: scale(1.06) translate(1.2%, .8%); }
@@ -294,9 +296,19 @@ body { margin: 0; color: var(--sj-ink); }
 }
 .sj-nav .nav-link:hover, .sj-nav .nav-link:focus-visible, .sj-nav .nav-link.show { color: var(--sj-gold-ink); }
 .sj-nav .nav-link.on { color: var(--sj-navy); }
-.sj-nav .nav-link.on::after {
+/* K4: the active underline lives on ::before — Bootstrap's dropdown CARET
+   owns ::after, so active groups keep their arrow. */
+.sj-nav .nav-link.on::before {
   content: ""; position: absolute; left: 13px; right: 13px; bottom: 2px;
   height: 2px; border-radius: 1px; background: var(--sj-gold);
+}
+/* K4: no browser focus box on mouse clicks; keyboard users get a clean gold
+   ring instead of the UA blue rectangle. */
+.sj-nav .nav-link:focus { outline: none; }
+.sj-nav .nav-link:focus-visible {
+  outline: 2px solid var(--sj-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 .sj-nav .navbar-toggler { border-color: var(--sj-line-cool); }
 .sj-nav .navbar-toggler:focus { box-shadow: 0 0 0 3px rgba(43, 75, 138, .3); }
@@ -316,6 +328,9 @@ body { margin: 0; color: var(--sj-ink); }
 .sj-nav .sj-mega .dropdown-item.on { background: var(--sj-gold-soft); color: var(--sj-navy); font-weight: 700; }
 .sj-nav .sj-mega--2col { min-width: 480px; }
 .sj-nav .sj-mega--2col.show { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px; }
+/* K4: the LAST TWO groups open right-aligned so their panels never overflow
+   the viewport edge. */
+.sj-nav .navbar-nav .nav-item:nth-last-child(-n+2) .dropdown-menu { left: auto; right: 0; }
 
 /* overlay state: the MAIN bar starts transparent over the page hero (the
    strip stays solid navy) and settles to white after 40px (sjNavScroll). */
