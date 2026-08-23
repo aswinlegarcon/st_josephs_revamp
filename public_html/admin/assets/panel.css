@@ -351,7 +351,12 @@ div.sj-row-thumb.noimg { display: flex; align-items: center; justify-content: ce
 .sj-prev-tmname { font-family: var(--font-display); font-weight: 400; color: var(--gold); font-size: 18px; border-bottom: 2px solid #fff; padding-bottom: 8px; margin-bottom: 10px; }
 .sj-prev-tmname br { display: none; }
 .sj-prev-tmbody { color: #fff; font-size: 12.5px; line-height: 1.6; text-align: justify; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-.sj-prev-quote { position: absolute; top: 12px; right: 46%; width: 32px; z-index: 2; }
+/* K2 fix: img.sj-prev-quote must OUT-SPECIFY `.sj-prev-media img` (:318),
+   which was stretching the 32px badge into a full-bleed cover image. */
+.sj-prev-media img.sj-prev-quote {
+  position: absolute; inset: auto; top: 12px; right: 14px;
+  width: 32px; height: auto; object-fit: contain; z-index: 2;
+}
 .sj-row.sj-prev.off { opacity: 1; }
 .sj-row.sj-prev.off .sj-prev-media { filter: grayscale(.6); opacity: .55; }
 
@@ -463,6 +468,13 @@ input.sj-search:focus { outline: none; border-color: var(--blue); box-shadow: va
 .sj-richbar { display: flex; gap: 2px; padding: 6px; background: var(--paper); border-bottom: 1px solid var(--hair); }
 .sj-richbar button { border: 0; background: transparent; border-radius: 6px; min-width: 30px; height: 28px; cursor: pointer; font-size: 13px; color: var(--dark); transition: background var(--t-fast) ease; }
 .sj-richbar button:hover { background: var(--gold-soft); color: var(--gold-ink); }
+/* K2: live toggle state — the format under the caret lights its button up */
+.sj-richbar button.on {
+  background: var(--gold-soft);
+  color: var(--gold-ink);
+  box-shadow: inset 0 0 0 1.5px var(--gold-ink);
+}
+.sj-richbar .sep { width: 1px; height: 20px; background: var(--hair); margin: 4px 6px; align-self: center; }
 .sj-rich { min-height: 110px; padding: 10px 12px; outline: none; font: inherit; }
 .sj-rich .hl-gold { color: var(--gold-ink); font-weight: 700; }
 

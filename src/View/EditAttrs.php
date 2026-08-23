@@ -45,8 +45,10 @@ final class EditAttrs
         return $a;
     }
 
-    /** "+ Add" affordance on a list container. $preset = column values fixed at creation. */
-    public static function add(string $entity, array $preset = [], string $label = 'Add'): string
+    /** "+ Add" affordance on a list container. $preset = column values fixed at
+     *  creation. $currentCount (K2): pass the rendered row count so entities
+     *  with a registry max_count hide the button once the section is full. */
+    public static function add(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null): string
     {
         if (!Auth::isEdit()) {
             return '';
@@ -54,6 +56,9 @@ final class EditAttrs
         $reg = Registry::entity($entity);
         if ($reg === null || empty($reg['creatable'])) {
             return '';
+        }
+        if ($currentCount !== null && !empty($reg['max_count']) && $currentCount >= (int)$reg['max_count']) {
+            return ''; // section is full — no Add affordance (item.php enforces too)
         }
         $fields = [];
         foreach ($reg['fields'] as $name => $def) {

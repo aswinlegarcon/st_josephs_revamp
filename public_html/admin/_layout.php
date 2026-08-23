@@ -47,12 +47,17 @@ function panel_sections(): array
     return $s;
 }
 
-/** data-panel-add attribute: registry-driven field metadata for the Add modal. */
-function panel_add_attr(string $entity, array $preset = [], string $label = 'Add'): string
+/** data-panel-add attribute: registry-driven field metadata for the Add modal.
+ *  $currentCount (K2): pass the screen's row count so entities with a registry
+ *  max_count lose the Add button once the section is full. */
+function panel_add_attr(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null): string
 {
     $reg = sj_registry_entity($entity);
     if ($reg === null || empty($reg['creatable'])) {
         return '';
+    }
+    if ($currentCount !== null && !empty($reg['max_count']) && $currentCount >= (int)$reg['max_count']) {
+        return ''; // section is full — item.php enforces the same cap server-side
     }
     $fields = [];
     foreach ($reg['fields'] as $name => $def) {

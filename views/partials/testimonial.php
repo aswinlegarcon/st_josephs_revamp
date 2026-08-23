@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/css/partials/testimonial.css?v=<?php echo SJ_ASSET_VER; ?>">
     <div class="testimonial-container">
         <h1 class="sj-reveal">Students Testimonial</h1>
-        <div class="testimonial"<?= ed_add('testimonial', [], 'Add testimonial') ?>>
+        <div class="testimonial"<?= ed_add('testimonial', [], 'Add testimonial', count($sj_testimonials)) ?>>
             <?php foreach ($sj_testimonials as $ti => $t): ?>
             <?php // N2/J3: a chosen photo only sets the --sj-tm-bg custom property —
                   // the veil + sizing recipe lives ONCE in testimonial.css (the

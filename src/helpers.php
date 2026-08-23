@@ -203,9 +203,9 @@ function ed_item(string $entity, $id, string $label = ''): string
     return EditAttrs::item($entity, $id, $label);
 }
 
-function ed_add(string $entity, array $preset = [], string $label = 'Add'): string
+function ed_add(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null): string
 {
-    return EditAttrs::add($entity, $preset, $label);
+    return EditAttrs::add($entity, $preset, $label, $currentCount);
 }
 
 function ed_rich(string $entity, $id, string $field, ?string $html): void

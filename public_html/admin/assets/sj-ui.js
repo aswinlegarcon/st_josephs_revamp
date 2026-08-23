@@ -85,10 +85,26 @@
     m.appendChild(head); m.appendChild(body); m.appendChild(foot);
     ov.appendChild(m);
     document.body.appendChild(ov);
-    function close() { ov.remove(); }
+    var ret;
+    function close() {
+      document.removeEventListener('keydown', onKey);
+      ov.remove();
+      if (ret.onClose) ret.onClose();
+    }
+    // K2: Escape closes the TOPMOST open modal (stacking-safe — each modal
+    // only reacts when it is the last overlay in the DOM).
+    function onKey(e) {
+      if (e.key !== 'Escape') return;
+      var all = document.querySelectorAll('.sj-overlay');
+      if (all[all.length - 1] !== ov) return;
+      e.preventDefault();
+      close();
+    }
+    document.addEventListener('keydown', onKey);
     x.addEventListener('click', close);
     ov.addEventListener('mousedown', function (e) { if (e.target === ov) close(); });
-    return { ov: ov, body: body, foot: foot, close: close };
+    ret = { ov: ov, body: body, foot: foot, close: close, onClose: null };
+    return ret;
   }
 
   /* ---------------- WYSIWYG rich editor ----------------
@@ -107,35 +123,91 @@
       bar.appendChild(b);
       return b;
     }
-    btn('<b>B</b>', 'Bold', function () { document.execCommand('bold'); });
-    btn('<i>I</i>', 'Italic', function () { document.execCommand('italic'); });
-    var g = btn('Gold', 'Gold highlight', function () {
-      var sel = window.getSelection();
-      if (!sel.rangeCount || sel.isCollapsed) { toast('Select some text first', true); return; }
-      var range = sel.getRangeAt(0);
-      var span = document.createElement('span');
-      span.className = 'hl-gold';
-      try {
-        range.surroundContents(span);
-      } catch (err) { // selection crosses element boundaries
-        span.appendChild(range.extractContents());
-        range.insertNode(span);
-      }
-      sel.removeAllRanges();
-    });
-    g.classList.add('gold');
-    btn('✕ fmt', 'Remove formatting from selection', function () {
-      document.execCommand('removeFormat');
-      var sel = window.getSelection();
-      if (!sel.rangeCount) return;
-      var range = sel.getRangeAt(0);
+
+    // Un-wraps every gold span the range touches (shared: Gold toggle + Clear).
+    function unGold(range) {
       editor.querySelectorAll('span.hl-gold').forEach(function (s) {
         if (range.intersectsNode(s)) {
           while (s.firstChild) s.parentNode.insertBefore(s.firstChild, s);
           s.remove();
         }
       });
+    }
+    // The current selection range, but only when it lives inside THIS editor.
+    function selectionRange() {
+      var sel = window.getSelection();
+      if (!sel.rangeCount) return null;
+      var r = sel.getRangeAt(0);
+      return editor.contains(r.commonAncestorContainer) ? r : null;
+    }
+    function goldActive() {
+      var r = selectionRange();
+      if (!r) return false;
+      var node = r.commonAncestorContainer;
+      if (node.nodeType === 3) node = node.parentNode;
+      if (node.closest && node.closest('span.hl-gold')) return true;
+      var spans = editor.querySelectorAll('span.hl-gold');
+      for (var i = 0; i < spans.length; i++) {
+        if (r.intersectsNode(spans[i])) return true;
+      }
+      return false;
+    }
+
+    var bB = btn('<b>B</b>', 'Bold — click again to remove (Ctrl+B)', function () {
+      document.execCommand('bold');
+      refresh();
     });
+    var bI = btn('<i>I</i>', 'Italic — click again to remove (Ctrl+I)', function () {
+      document.execCommand('italic');
+      refresh();
+    });
+    var bG = btn('Gold', 'Gold highlight — click again to remove', function () {
+      var sel = window.getSelection();
+      if (!sel.rangeCount || sel.isCollapsed) { toast('Select some text first', true); return; }
+      var range = sel.getRangeAt(0);
+      if (goldActive()) { // K2: Gold is a real toggle now
+        unGold(range);
+      } else {
+        var span = document.createElement('span');
+        span.className = 'hl-gold';
+        try {
+          range.surroundContents(span);
+        } catch (err) { // selection crosses element boundaries
+          span.appendChild(range.extractContents());
+          range.insertNode(span);
+        }
+      }
+      sel.removeAllRanges();
+      refresh();
+    });
+    bG.classList.add('gold');
+    bar.appendChild(el('span', 'sep'));
+    btn('Clear', 'Remove ALL formatting from the selection', function () {
+      document.execCommand('removeFormat');
+      var r = selectionRange();
+      if (r) unGold(r);
+      refresh();
+    });
+
+    // K2: live toggle states — B / I / Gold light up (.on) whenever the caret
+    // or selection carries that format, so the admin always SEES what is
+    // applied and one click turns it off. Driven by selectionchange; inert
+    // once the editor leaves the DOM.
+    function refresh() {
+      var inside = !!selectionRange();
+      var can = false, itl = false;
+      if (inside) {
+        try { can = document.queryCommandState('bold'); itl = document.queryCommandState('italic'); } catch (e) {}
+      }
+      bB.classList.toggle('on', inside && can);
+      bI.classList.toggle('on', inside && itl);
+      bG.classList.toggle('on', inside && goldActive());
+    }
+    document.addEventListener('selectionchange', function () {
+      if (!document.contains(editor)) return;
+      refresh();
+    });
+    refresh();
   }
 
   function initRichEditor(editor, bar) {
@@ -174,8 +246,12 @@
       M.body.appendChild(pane);
       var settled = false;
       function done(img) { settled = true; M.close(); resolve(img); }
+      // Any close path (X, backdrop, Escape) that isn't a pick = cancel.
+      M.onClose = function () {
+        if (!settled) { settled = true; reject(new Error('cancel')); }
+      };
       M.ov.addEventListener('mousedown', function (e) {
-        if (e.target === M.ov && !settled) reject(new Error('cancel'));
+        if (e.target === M.ov && !settled) { settled = true; reject(new Error('cancel')); }
       });
 
       function showLibrary() {

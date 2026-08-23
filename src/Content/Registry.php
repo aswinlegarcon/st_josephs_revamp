@@ -181,6 +181,9 @@ final class Registry
             ],
             'testimonial' => [
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                // K2 (owner decision): the home layout fits exactly three cards —
+                // both Add buttons hide at the cap and item.php refuses a 4th.
+                'max_count' => 3,
                 'fields' => [
                     'name_html'   => ['type' => 'html', 'max' => 200,   'label' => 'Student name & tag'],
                     'body_html'   => ['type' => 'html', 'max' => 65000, 'label' => 'Testimonial'],

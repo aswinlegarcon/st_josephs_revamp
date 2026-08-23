@@ -52,6 +52,23 @@ switch ($action) {
         $data   = is_array($in['data'] ?? null) ? $in['data'] : [];
         $preset = is_array($in['preset'] ?? null) ? $in['preset'] : [];
 
+        // K2: registry max_count is authoritative here — the Add buttons hide
+        // client-side, but only this check makes the cap real. Table/parent
+        // identifiers come from the registry, never from the request.
+        if (!empty($reg['max_count'])) {
+            $max = (int)$reg['max_count'];
+            if (!empty($reg['parent']) && isset($preset[$reg['parent']])) {
+                $st = db()->prepare("SELECT COUNT(*) FROM {$reg['table']} WHERE {$reg['parent']} = ?");
+                $st->execute([(int)$preset[$reg['parent']]]);
+                $cnt = (int)$st->fetchColumn();
+            } else {
+                $cnt = (int)db()->query("SELECT COUNT(*) FROM {$reg['table']}")->fetchColumn();
+            }
+            if ($cnt >= $max) {
+                api_fail("This section is full — it holds a maximum of {$max} entries. Delete one first.");
+            }
+        }
+
         $cols = [];
         $vals = [];
         foreach ($reg['fields'] as $name => $def) {

@@ -12,7 +12,7 @@ if (!defined('SJ_PUBLIC_ROOT')) {
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260823.8'); // K1: type purge, two-tier navbar, hero caps + banner, marks mobile
+    define('SJ_ASSET_VER', '20260823.9'); // K2: rich-toolbar toggle states, Esc-to-close, preview quote fix
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global
