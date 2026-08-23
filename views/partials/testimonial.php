@@ -2,10 +2,8 @@
 // C3: DB-driven — $sj_testimonials comes from the page controller. name_html/
 // body_html are sanitized rich fields (write-path whitelist), echoed raw by
 // design; the card1/2/3 background classes cycle by position.
-// Styles live VERBATIM in /css/partials/testimonial.css (body link = valid
-// HTML, same cascade position — R3). The cards use class "card card1..3":
-// Bootstrap-4's .card contribution (radius/border/background) is re-supplied
-// by /css/home-bs4-remnants.css. ?>
+// Styles live in /css/partials/testimonial.css (Stage J: fully self-contained
+// — the old home-bs4-remnants.css dependency is gone). ?>
 <link rel="stylesheet" href="/css/partials/testimonial.css?v=<?php echo SJ_ASSET_VER; ?>">
     <div class="testimonial-container">
         <h1 class="sj-reveal">Students Testimonial</h1>

@@ -18,7 +18,7 @@ $sj_c_fb    = repo_setting('facebook_url', 'https://www.facebook.com/stjosephssc
 <!-- Contact strt -->
 <div class="contactus contact-section " id="contact">
     <div class="title">
-      <h2 class="reveal-contact">Make an Enquiry</h2>
+      <h2 class="sj-reveal">Make an Enquiry</h2>
     </div>
     <div class="box">
       <!-- Form -->

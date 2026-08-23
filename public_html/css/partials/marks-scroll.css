@@ -1,63 +1,32 @@
-/* "Watch Out" toppers marquee styles (moved verbatim from the partial's
-   <style> block in R3 — body link, same document position, cascade unchanged).
-   Do not tidy (incl. the .marks-scroll body-class rule, which matched nothing
-   on the baseline because the nested <body class="marks-scroll"> was discarded
-   by the parser; no wrapper exists so it keeps matching nothing). The photo
-   url is site-absolute (R3 bug-15): the inline original said photos/…, which
-   resolved against the page URL to the same /photos/ file. */
-:root {
-  --primaryblue: #2b4b8a;
-  --secondaryblue: #1a355d;
-  --gold : #ffd700;
-  --white : white;
-  --black : black;
-  --maroon : firebrick;
-}
+/* "Watch Out" toppers marquee — Stage J token pass. The seamless-loop
+   mechanics are untouched: the list renders twice and scroll50 translates
+   -50% with a per-column inline animation-duration (DYNAMIC_MIGRATION_PLAN
+   §8.4). Used by home AND highsec. */
 
-.marks-scroll{
-    font-family: Arial, sans-serif;
-
-    color: white;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-
+.sec-marks-scroll {
+    background: var(--sj-veil), url('/photos/schname.jpg') center / cover;
+    padding: 25px;
 }
-.sec-marks-scroll
-{
-    background: linear-gradient(rgba(43, 75, 138, 0.8), rgba(26, 53, 93, 0.8) ), url('/photos/schname.jpg');
- background-size:cover;
-    padding:25px
+.sec-marks-scroll h2 {
+    font-family: var(--sj-font-head);
+    color: var(--sj-gold);
+    text-align: center;
+    font-size: clamp(28px, 3.4vw, 44px);
+    font-weight: 400;
+    padding: 15px;
 }
-.sec-marks-scroll h2{
-    font-family: "Fjalla One", sans-serif!important;
-    color:#ffd700;
-    text-align:center;
-    font-size:40px;
-    font-weight:700;
-    padding:15px;
+.sec-marks-scroll h2::after {
+    content: ""; display: block;
+    width: 44px; height: 4px; border-radius: 2px;
+    background: var(--sj-gold); margin: 12px auto 0;
 }
-/* animation */
-.reveal-marks-scroll
-    {
-        transition: 1s;
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    .reveal-marks-scroll.active {
-        opacity: 1;
-        transform: translateY(0px);
-    }
 .marks-container {
     display: flex;
     width: 100%;
-    margin-bottom:30px;
-    padding:25px;
-    background-color: white;
-
+    margin-bottom: 30px;
+    padding: 25px;
+    background: transparent;
+    gap: 10px;
 }
 
 .carousel-marks {
@@ -66,18 +35,20 @@
     overflow: hidden;
     position: relative;
     margin: 0 10px;
-
     float: left;
+    border-radius: var(--sj-r-card);
+    box-shadow: var(--sj-shadow-1);
 }
 
 .carousel-marks h2 {
-    font-family: "Fjalla One", sans-serif!important;
-    color:white;
+    font-family: var(--sj-font-head);
+    color: #fff;
     position: absolute;
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 28px;
+    font-size: 26px;
+    font-weight: 400;
     margin: 0;
     z-index: 1;
 }
@@ -94,7 +65,7 @@
 
 .carousel-marks .carousel-inner-container {
     position: absolute;
-    top: 100px; /* Adjust the top to be below the heading */
+    top: 100px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -102,68 +73,35 @@
 }
 
 .carousel-marks .marks-carousel-item {
-    color:#ffd700;
+    color: var(--sj-gold);
+    font-family: var(--sj-font-body);
     height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 18px;
+    font-size: 17px;
     padding: 10px;
     box-sizing: border-box;
 }
-.carousel-marks .marks-carousel-item span{
-    color:#fff;
-    font-size:20px;
-    font-weight:bolder;
+.carousel-marks .marks-carousel-item span {
+    color: #fff;
+    font-size: 19px;
+    font-weight: 700;
 }
-.carousel-left {
-    background-image: linear-gradient(to left, #2b4b8a, #1a355d);
-}
-
-.carousel-right {
-
-    background-image: linear-gradient(to left, #2b4b8a, #1a355d);
+.carousel-left, .carousel-right {
+    background-image: var(--sj-grad-brand);
 }
 
 @keyframes scroll50 {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-50%);
-    }
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
 }
-@media(max-width:768px)
-{
-    .carousel-marks .marks-carousel-item {
-
-    font-size: 13px;
-    padding: 5px;
-    text-align:center;
-
+@media (max-width: 768px) {
+    .carousel-marks .marks-carousel-item { font-size: 13px; padding: 5px; text-align: center; }
+    .carousel-marks .marks-carousel-item span { font-size: 13px; }
 }
-.carousel-marks .marks-carousel-item span{
-
-    font-size:13px;
-
-}
-}
-@media(max-width:450px)
-{
-    .carousel-marks h2{
-        font-size:20px;
-    }
-    .carousel-marks .marks-carousel-item {
-
-    font-size: 11px;
-    padding: 0px;
-    text-align:center;
-
-}
-.carousel-marks .marks-carousel-item span{
-
-    font-size:11px;
-
-
-}
+@media (max-width: 450px) {
+    .carousel-marks h2 { font-size: 20px; }
+    .carousel-marks .marks-carousel-item { font-size: 11px; padding: 0; text-align: center; }
+    .carousel-marks .marks-carousel-item span { font-size: 11px; }
 }

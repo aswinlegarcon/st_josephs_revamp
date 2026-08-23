@@ -71,9 +71,5 @@ function sendMail(event) {
     });
 }
 
-// Scroll-reveal for the contact section — shipped parameters, now through the
-// shared helper in /js/site.js (R2). This file is included from the page body
-// before site.js loads, hence the DOMContentLoaded wrapper.
-window.addEventListener('DOMContentLoaded', function () {
-    sjReveal('.reveal-contact', 150);
-});
+// Stage J: the section heading reveals via the shared one-time .sj-reveal
+// system (site.js) — no per-file reveal code needed anymore.

@@ -1,5 +1,5 @@
-/* Gallery hub cross-fade slideshow styles (moved verbatim from the page's
-   <style> block in R3 — body link, same document position, cascade unchanged). */
+/* Gallery hub cross-fade slideshow — Stage J token pass. The JS behavior
+   (setInterval cross-fade + data-bg lazy loading) is untouched. */
 .gal-slider {
     margin: 0;
     padding: 0;
@@ -7,19 +7,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+    background: var(--sj-paper);
     overflow: hidden;
 }
 
 .container-slider {
     position: relative;
     width: 60%;
-    margin:auto;
+    margin: auto;
     height: 500px;
-    border-radius: 10px;
-    border: 5px solid #2b4b8a;
-    box-shadow: 0px 0px 25px #2b4b8a;
+    border-radius: var(--sj-r-card);
+    box-shadow: var(--sj-shadow-2);
     overflow: hidden;
 }
 

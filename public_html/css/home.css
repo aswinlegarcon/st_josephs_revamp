@@ -340,9 +340,6 @@ html { overflow-x: hidden; }
 
 /* ---------- contact ---------- */
 .contact-section { margin: 0; padding: 0; box-sizing: border-box; }
-/* .reveal-contact stays toggle-based (contact partial's own script) */
-.reveal-contact { transition: 1.2s; transform: translateX(-30px); opacity: 0; }
-.reveal-contact.active { opacity: 1; transform: translateX(0); }
 .contactus {
   background: var(--sj-paper);
   position: relative;

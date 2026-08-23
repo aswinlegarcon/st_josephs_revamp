@@ -19,7 +19,6 @@ $sj_slug = (string)$sj_academy['slug']; // DB value from here on
     'title'       => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'   => 'academics',
     'styles'      => ['academy'],
-    'scripts'     => ['academy'],
     'sj_slug'     => $sj_slug,
     'sj_academy'  => $sj_academy,
     'sj_carousel' => repo_linked_images('academy', (int)$sj_academy['id'], 'carousel'),

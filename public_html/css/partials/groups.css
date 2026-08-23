@@ -1,12 +1,6 @@
-/* "Groups Offered" cards styles (moved verbatim from the partial's <style>
-   block in R3 — body link, same document position, cascade unchanged). Do not
-   tidy (incl. the .groups body-class rule, which matched nothing on the
-   baseline because the nested <body class="groups"> was discarded by the
-   parser; no wrapper exists so it keeps matching nothing). The photo url is
-   site-absolute (R3 bug-15): the inline original said ../photos/, which
-   resolved against the page URL to the same /photos/ file. */
-.groups{
-  font-family: Arial, sans-serif;
+/* "Groups Offered" cards (highsec) — Stage J token pass. Structure kept;
+   colors routed through the brand tokens. */
+.groups {
   margin: 0;
   padding: 0;
   display: flex;
@@ -15,69 +9,65 @@
   height: 100vh;
 }
 .groups-container {
-    border: 4px solid #2b4b8a;
-    background:  linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/highsec1.jpg');
-background-size: cover;
+  border-radius: var(--sj-r-card);
+  background: var(--sj-veil), url('/media/static/highsec1.jpg') center / cover;
   width: 90%;
   max-width: 1200px;
-  padding:50px;
-  margin: 0 auto;
-  margin-bottom:20px;
+  padding: clamp(28px, 4vw, 50px);
+  margin: 0 auto 20px;
   text-align: center;
+  box-shadow: var(--sj-shadow-2);
 }
 .groups-container .header {
-  font-family: "Fjalla One", sans-serif!important;
-  font-size: 3em;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #ffd700;
-
+  font-family: var(--sj-font-head);
+  font-size: clamp(1.8em, 3.4vw, 3em);
+  font-weight: 400;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.groups-container .header::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 14px auto 20px;
 }
 .groups-container .card {
-  background:linear-gradient(to left, #2b4b8a, #1a355d);
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 12px;
   margin: 10px 0;
   padding: 20px;
   display: flex;
   align-items: center;
+  transition: background var(--sj-t-fast) ease, transform var(--sj-t-fast) ease;
 }
-
+.groups-container .card:hover { background: rgba(255, 255, 255, .12); transform: translateY(-3px); }
 .groups-container .card .card-icon {
-  background-color: #ffd700;
+  background-color: var(--sj-gold);
   border-radius: 50%;
-  color: black;
-  font-size: 1.5em;
+  color: var(--sj-navy-dark);
+  font-size: 1.4em;
   width: 50px;
   height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 20px;
+  flex: 0 0 auto;
 }
 .groups-container .card .card-content {
-    margin-top:10px;
-    font-size:20px;
+  margin-top: 10px;
+  font-size: 19px;
   text-align: center;
-  color:#fff;
+  color: #fff;
 }
-.groups-container .card .card-content span{
-  font-family: "Fjalla One", sans-serif!important;
-  color:#ffd700;
+.groups-container .card .card-content span {
+  font-family: var(--sj-font-head);
+  color: var(--sj-gold);
 }
-.groups-container .card .card-content p{
-  font-family: "LeagueSpartan", sans-serif!important;
-
+.groups-container .card .card-content p {
+  font-family: var(--sj-font-body);
 }
 @media (max-width: 600px) {
-  .card {
-    flex-direction: column;
-    text-align: center;
-  }
-  .card-icon {
-    margin-bottom: 10px;
-  }
-  .card-content {
-    text-align: center;
-  }
+  .groups-container .card { flex-direction: column; text-align: center; }
+  .groups-container .card .card-icon { margin: 0 0 10px; }
 }
