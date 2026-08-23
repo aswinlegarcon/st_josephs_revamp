@@ -92,7 +92,7 @@ If a task seems to require a prohibited write, say so and propose the editor-too
 ## Theme tokens (match, don't invent)
 
 - Navy `#2b4b8a` / `#1a355d`; gold `#ffd700`. **Never gold text/icons on white** — use `#8a6d00` (`--gold-ink`).
-- Fonts: public (since Stage J "Global Campus", owner-approved) — Fjalla One (headings/display), **Manrope** (body), Dancing Script (ONE flourish line per hero, nothing more); admin (since N8 "Prospectus", owner-approved) — Segoe UI body with **self-hosted** Fjalla One for titles/stat numbers and Dancing Script for sparing flourishes (`public_html/assets/fonts/` — the admin CSP blocks Google Fonts).
+- Fonts: public (since Stage K "bold & clean", owner-approved) — Fjalla One (headings/display) + **Manrope** (body) ONLY; Dancing Script is retired from the public site (emphasis = gold Fjalla or uppercase letterspaced Manrope). Admin (since N8 "Prospectus", owner-approved) — Segoe UI body with **self-hosted** Fjalla One for titles/stat numbers and Dancing Script for sparing flourishes (`public_html/assets/fonts/` — the admin CSP blocks Google Fonts).
 - Full admin token/component spec: `ADMIN_UI_DESIGN.md`.
 
 ## Verification habits

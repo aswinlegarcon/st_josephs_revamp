@@ -47,20 +47,19 @@ Section rhythm: sections alternate `#fff` and `--sj-paper`. Navy-dark bands
 (footer, admissions band, stat band) anchor the page. `--sj-maroon` (firebrick)
 is legacy-only and dies with the last old sheet in J6.
 
-## 2. Typography
+## 2. Typography (v1.1 — Stage K "bold & clean")
 
 Loaded via one Google Fonts request (public pages have no CSP restriction;
-the admin self-hosts separately): **Fjalla One** (400), **Manrope**
-(400/500/600/700/800), **Dancing Script** (400/700). League Spartan and Raleway
-are removed (League Spartan mostly never rendered — the historic
-`"LeagueSpartan"` typo fell back to system sans, so Manrope is close to what
-users actually saw).
+the admin self-hosts separately): **Fjalla One** (400) and **Manrope**
+(400/500/600/700/800). NOTHING ELSE — the owner retired the Dancing Script
+accents in Stage K ("looks childish"); emphasis is now gold Fjalla at heading
+size (`.home-text span`) or uppercase letterspaced Manrope (hero sub-lines,
+banner subtitles, nav links).
 
 | Var | Family | Use |
 |---|---|---|
-| `--sj-font-head` | Fjalla One | h1–h6, display numbers, nav brand, buttons ≥15px if uppercase |
-| `--sj-font-body` | Manrope | Everything else — body, nav links, captions, forms |
-| `--sj-font-accent` | Dancing Script | ONE flourish line per hero caption; testimonial "voice" line. Nothing else |
+| `--sj-font-head` | Fjalla One | h1–h6, display numbers, nav brand, gold in-heading emphasis |
+| `--sj-font-body` | Manrope | Everything else — body, nav links, caption sub-lines, forms |
 
 Scale (fluid, `clamp()`): display `clamp(34px, 5vw, 56px)`; h2 section titles
 `clamp(26px, 3.2vw, 38px)`; h3 `22px`; lead `18px`; body `16px`/1.7; small `14px`;
@@ -106,21 +105,32 @@ durations and scroll-behavior.
   `.sj-card-media` aspect-box (`--4x3`/`--16x9`) with `object-fit:cover` img zoom
   on hover; `.sj-card-body` (Fjalla title 20px navy-dark, Manrope sub). Grids via
   Bootstrap columns; blur-siblings hover is retired.
-- **Hero (`views/partials/hero.php`)** — the single carousel partial (variants
-  `hero`/`strip`). Geometry (the N6 guarantee, verbatim): ≥901px
-  `aspect-ratio:16/9` + `object-fit:cover`; <901px fixed heights. Scrim `::before`
-  = `--sj-veil` z-index:1; captions z-index:10 (tokens.css BS4 patch). Caption:
-  eyebrow (optional), Fjalla title `clamp(30px,4.5vw,54px)` white, ONE Dancing
-  Script gold flourish line, `.sj-btn--gold`. Ken Burns on active img. Controls:
-  slim chevrons + line indicators, gold active.
-- **Mega menu (`views/partials/navbar.php`)** — `fixed-top`; Bootstrap Dropdown
-  engine, panels restyled (white, 16px radius, shadow-2, 2–3 column link groups
-  with 12px eyebrow group labels); hover-intent open ≥992px (site.js), click/Esc
-  baseline; gold underline slide on active/hover links; "Admissions" `.sj-btn--gold`
-  right-aligned. Mobile <992px: Bootstrap Offcanvas from right, accordion groups,
-  contact strip + CTA at the bottom. `$sjNavOverlay` pages start transparent
-  (white links) and settle to solid white + hairline shadow after 40px; all other
-  pages solid from load with body padding compensation.
+- **Hero (`views/partials/hero.php`)** — the single carousel partial, THREE
+  variants since Stage K (owner UX decision: full-screen carousels hid the
+  content):
+  - `hero` (HOME only): box CAPPED at `min(56.25vw, 62vh)` so the next section
+    always peeks; Ken Burns on the active slide; a bouncing scroll cue
+    (`.sj-hero-cue`, reduced-motion aware); caption = Fjalla white title
+    `clamp(30px,4.5vw,56px)` + a clean Manrope sub-line + `.sj-btn--gold`.
+  - `banner` (ALL inner pages): slim `clamp(240px, 36vh, 400px)` page-title
+    strip — every admin slide still cross-fades, but no Ken Burns, no
+    indicators/controls; centered Fjalla title `clamp(26px,3.5vw,42px)` +
+    Manrope sub.
+  - `strip`: plain mid-page content carousel (no veil/caption).
+  Geometry uniformity (the N6 guarantee) holds in every variant: one shared
+  box per carousel, `object-fit:cover`, photos never grow the page. Scrim
+  `::before` = `--sj-veil` z-index:1; captions z-index:10 (tokens.css patch).
+- **Navbar (`views/partials/navbar.php`)** — two-tier international (Stage K):
+  a solid navy-dark utility strip (36px: phone · email from settings · gold
+  uppercase ADMISSIONS ENQUIRY chip; hidden <768px) above the white main bar —
+  crest + Fjalla wordmark left, UPPERCASE Manrope 13px/700/1.2px links right.
+  No hover-underline animation: hover is a gold-ink color shift; ONLY the
+  active page carries a thin gold underline (server-side SCRIPT_NAME match;
+  groups light for their children, mega items highlight gold-soft). Mega
+  panels: Bootstrap Dropdown restyled (white, 14px radius, shadow-2),
+  hover-intent ≥992px. Mobile <992px: Offcanvas drawer with accordion groups
+  + gold CTA. The fixed element is the `.sj-navhead` wrapper; `$sjNavOverlay`
+  pages render the MAIN bar transparent (strip stays navy) until 40px scroll.
 - **Stat band** — navy-dark full-bleed strip on Home: 4 items, Fjalla
   `clamp(34px,4vw,52px)` gold numbers (`.counter[data-target]`), Manrope white
   labels, hairline separators. Values/labels from settings `home_stat{1..4}_value/_label`.
@@ -160,6 +170,9 @@ durations and scroll-behavior.
    `.sj-prev-tm*`) mirror public recipes — update them in the SAME phase the
    public recipe changes.
 7. **Legacy URLs** all keep working; controllers/data flow untouched by Stage J.
+8. **Section caps (Stage K):** entities with a fixed layout capacity carry
+   `max_count` in the registry (testimonial = 3). Both Add affordances hide at
+   the cap and `item.php` create refuses authoritatively.
 
 ## 7. Breakpoints
 

@@ -187,6 +187,23 @@ redesign request is the owner approval the rule required).
 | 47 | ✅ J5 | Bespoke hub pages | about/staffs/academics/infrastructure/achievements/sports/co-curriculum/gallery: hand-rolled heroes → hero.php; card grids → `.sj-card` (blur-siblings retired, per-page JS emptied); gallery keeps cross-fade + data-bg lazy (re-skin only); token rewrites of the 8 sheets + groups/gallery-slider/preloader css; `$sjNavOverlay` on hero pages; about.php inline gold → token. | views/pages/×8, css ×8 + partials, js per-page, bootstrap.php | J4 | Each page desktop+375px pass; keyboard focus on cards; gallery initial payload still one image; budgets unchanged; console clean. | M |
 | 48 | ✅ J6 | Sweep + audits + docs truth pass | Retire dead files (home-bs4-remnants.css, partials/navbar.css, emptied JS, sjReveal/sjBlurCards at zero callers); greps: `#2b4b8a` outside tokens ≈0, League Spartan/Raleway 0, dupe `:root` 0; a11y (contrast, aria, focus), full reduced-motion pass, Lighthouse vs docs/perf-baseline.md; WEBSITE_CONTEXT.md truth pass, docs/learn/11-stage-j.md, final CLAUDE/PHASES/PUBLIC_UI_DESIGN wording. | deletions, docs | J5 | Audits pass; Lighthouse ≥ F4 scores; docs true. | L |
 
+### Stage K — Global Campus refinement + admin editor UX (Seq 49–51, added 2026-08-23)
+
+Owner feedback on Stage J: cards/testimonials/gallery approved; the script
+font, navbar and full-screen hero carousels felt "childish" and buried the
+page content; the mobile marks marquee was crushed; and the admin rich-text
+toolbar lacked toggle states (gold/italic irreversible in place), modals had
+no Esc, the testimonial preview was covered by a giant quote icon, and full
+sections still offered "Add". Decisions made with the owner: Fjalla-only
+bold type, two-tier international navbar, compact Home hero + slim inner
+banners, stacked marks columns on mobile, testimonial cap = 3.
+
+| Seq | ID | Name | Goal | Files touched | Depends | Acceptance | Risk |
+|---|---|---|---|---|---|---|---|
+| 49 | ✅ K1 | Type purge + two-tier navbar + hero v2 + marks mobile | Dancing Script OUT of the public site (accents → gold Fjalla / uppercase Manrope); navy utility strip (settings phone/email + gold CTA) over a white bar with UPPERCASE links and an active-page-only gold underline (`.sj-navhead` wrapper, server-side SCRIPT_NAME actives); Home hero capped `min(56.25vw, 62vh)` + scroll cue; ALL inner pages → slim `banner` hero variant `clamp(240px,36vh,400px)` (all slides still cross-fade, no Ken Burns/controls); marks year-columns stack full-width ≤900px at readable sizes; panel.css preview sub-line lockstep. | shell.php, tokens/site/6-page css, navbar/hero + 8 page templates, marks-scroll.css, panel.css, bootstrap (VER .8) | J6 | **Verified live:** fonts request = Fjalla+Manrope, 0 Dancing requests/faces; hero 446px on 720px viewport with cue; strip renders phone/email/CTA; links uppercase 1.2px LS; Home underlined on /, Academics group + Kindergarten item active on /kg.php; kg banner slim (clamp floor in the vh-less dev pane), indicators hidden, Ken Burns off; marks stacked 3×297px at 375px; sweep 200, home 12 queries, console clean. | M |
+| 50 | ✅ K2 | Admin editor UX | Toolbar v2 (shared by panel + overlay): selectionchange state engine lights B/I (queryCommandState) and Gold (hl-gold ancestry) with `.on`; Gold toggles OFF via extracted unGold(); '✕ fmt' → separated 'Clear' action. Esc closes the topmost panel modal/picker (openModal keydown + onClose hook → pickImage cancels). Preview quote out-specifies the media-img cover rule (32px corner badge again). Registry `max_count` (testimonial 3): both Add affordances hide at the cap (panel shows a "Section full" chip) + authoritative count check in item.php create. | sj-ui.js, panel.css, css/admin.css, Registry, EditAttrs/helpers, admin/_layout + section.php, api/item.php, testimonial partial, bootstrap (VER .9) | K1 | **Verified live (devtest owner, removed after):** 8/8 toolbar drill (gold off→apply→ON inside→click removes→off; bold ON/off with live state; Esc closed the modal); toolbar = B/I/Gold/│/Clear; quote 32×32; Add absent at 3 + full chip; 4th create → friendly "section is full" error, count stayed 3; overlay add-hook also hidden; SECURITY §4 PASS (registry-literal identifiers, bound parent value). | M |
+| 51 | ✅ K3 | Docs truth pass | PUBLIC_UI_DESIGN v1.1 (type §2, hero variants + two-tier navbar §5, max_count constraint), CLAUDE.md fonts line, this table; final greps (public Dancing Script consumers = 0). | docs | K2 | Greps clean; docs true. | L |
+
 ---
 
 ## 3. Performance Plan (Stage D/H detail)
