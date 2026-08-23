@@ -2,7 +2,7 @@
 // (three optimized section photos, no hero_slide rows) so it keeps its own
 // markup but wears the shared .sj-hero classes for identical geometry/veil. ?>
 <!-- top carousel -->
-<section class="sj-hero sj-hero--hero sj-hero--motion sj-reveal">
+<section class="sj-hero sj-hero--banner sj-reveal">
   <div id="academicsHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000" data-sj-kbnav>
     <div class="carousel-inner">
       <div class="carousel-item active">

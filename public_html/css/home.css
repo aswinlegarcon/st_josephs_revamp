@@ -21,9 +21,9 @@ html { overflow-x: hidden; }
   margin: 0;
 }
 .home-text span {
-  font-family: var(--sj-font-accent);
-  font-size: clamp(32px, 4.4vw, 55px);
-  font-weight: 700;
+  font-family: var(--sj-font-head);
+  font-size: clamp(26px, 3.6vw, 46px);
+  font-weight: 400;
   color: var(--sj-gold);
 }
 

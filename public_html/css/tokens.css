@@ -23,11 +23,9 @@
   --sj-grad-brand: linear-gradient(to right, var(--sj-navy), var(--sj-navy-dark));
   --sj-veil: linear-gradient(rgba(43, 75, 138, .55), rgba(26, 53, 93, .75)); /* THE photo scrim — heroes, testimonial cards. Admin panel.css --veil mirrors this. */
 
-  /* Fonts (J1: body League Spartan → Manrope. Most body text never actually
-     rendered League Spartan — the historic "LeagueSpartan" typo fell back to
-     the system sans — so Manrope is close to what users really saw.) */
+  /* Fonts (J1: body → Manrope; K1: Dancing Script accents retired — the owner
+     chose "Fjalla-only, bold & clean". Two families, nothing curly.) */
   --sj-font-head:   "Fjalla One", sans-serif;
-  --sj-font-accent: "Dancing Script", cursive;
   --sj-font-body:   "Manrope", sans-serif;
 
   /* Type scale (fluid) */

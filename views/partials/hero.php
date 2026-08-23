@@ -17,7 +17,7 @@
 // ];
 $sjH        = $sjHero;
 $sjHSlides  = $sjH['slides'] ?? [];
-$sjHVariant = ($sjH['variant'] ?? 'hero') === 'strip' ? 'strip' : 'hero';
+$sjHVariant = in_array($sjH['variant'] ?? 'hero', ['strip', 'banner'], true) ? $sjH['variant'] : 'hero';
 $sjHPreset  = $sjH['preset'] ?? 'hero_16x7';
 $sjHId      = $sjH['id'] ?? 'sjHero';
 ?>
@@ -38,7 +38,7 @@ $sjHId      = $sjH['id'] ?? 'sjHero';
             'eager' => $i === 0,
             'extra' => isset($s['id']) ? trim(ed_img('hero_slide', $s['id'])) : '',
         ]) ?>
-        <?php if ($sjHVariant === 'hero'): ?>
+        <?php if ($sjHVariant !== 'strip'): ?>
         <div class="carousel-caption sj-hero-cap">
           <h5 class="sj-hero-title"<?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
           <p class="sj-hero-flourish"<?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
@@ -63,4 +63,5 @@ $sjHId      = $sjH['id'] ?? 'sjHero';
     </button>
     <?php endif; ?>
   </div>
+  <?php if ($sjHVariant === 'hero'): ?><span class="sj-hero-cue" aria-hidden="true"></span><?php endif; ?>
 </section>

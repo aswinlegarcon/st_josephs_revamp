@@ -13,7 +13,7 @@
 $sjHero = [
     'id'          => 'infraHeroCarousel',
     'slides'      => $sj_hero_slides,
-    'variant'     => 'hero',
+    'variant'     => 'banner', // K1: slim page-title strip (owner UX decision)
     'preset'      => 'hero_16x7',
     'interval'    => 2000,
     'page_id'     => $sj_page ? (int)$sj_page['id'] : null,

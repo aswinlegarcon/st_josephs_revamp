@@ -96,12 +96,17 @@
     0%   { transform: translateY(0); }
     100% { transform: translateY(-50%); }
 }
-@media (max-width: 768px) {
-    .carousel-marks .marks-carousel-item { font-size: 13px; padding: 5px; text-align: center; }
-    .carousel-marks .marks-carousel-item span { font-size: 13px; }
-}
-@media (max-width: 450px) {
-    .carousel-marks h2 { font-size: 20px; }
-    .carousel-marks .marks-carousel-item { font-size: 11px; padding: 0; text-align: center; }
-    .carousel-marks .marks-carousel-item span { font-size: 11px; }
+/* K1 (owner decision): on phones the year columns STACK full-width instead of
+   crushing side by side — each keeps its own scrolling toppers list. */
+@media (max-width: 900px) {
+    .marks-container { flex-direction: column; padding: 14px; }
+    .carousel-marks {
+        width: 100%;
+        float: none;
+        margin: 0 0 16px;
+        height: 360px;
+    }
+    .carousel-marks .marks-carousel-item { font-size: 15px; padding: 8px; text-align: center; }
+    .carousel-marks .marks-carousel-item span { font-size: 16px; }
+    .carousel-marks h2 { font-size: 22px; }
 }

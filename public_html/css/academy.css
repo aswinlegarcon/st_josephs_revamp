@@ -24,11 +24,13 @@
   background: var(--sj-gold); margin: 14px auto 0;
 }
 .back-bar .back-text p {
-  font-family: var(--sj-font-accent);
+  font-family: var(--sj-font-body);
+  font-weight: 600;
   text-align: center;
-  font-size: clamp(19px, 2.4vw, 30px);
-  color: var(--sj-gold);
-  margin: 12px 0 0;
+  font-size: clamp(14px, 1.5vw, 18px);
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, .88);
+  margin: 14px 0 0;
 }
 
 /* content band (photo behind, veiled by the per-page .bg-1 head style) */

@@ -1,12 +1,14 @@
-<?php // Site navigation — Stage J "Global Campus" (PUBLIC_UI_DESIGN.md §5).
-// Fixed-top brand nav with grouped dropdown panels. STATIC hrefs only — zero
-// DB queries, so every page keeps its ≤12-query budget; admin-created
-// academies/albums surface on the co-curriculum grid / gallery hub instead.
-// Engine: Bootstrap Dropdown (click/Esc/aria) + Offcanvas (<992px drawer);
-// hover-intent open and the scrolled state live in js/site.js
-// (sjMegaHover / sjNavScroll). Pages with a full-bleed hero set $sjNavOverlay
-// (Layout data) → transparent start, solid after 40px; all other pages render
-// solid with the .sj-nav-spacer standing in for the old in-flow navbar height.
+<?php // Site navigation — Stage K "two-tier international" (PUBLIC_UI_DESIGN.md §5).
+// A navy utility strip (phone · email · Admissions, from cached settings —
+// zero extra queries) above a clean white main bar: crest + Fjalla wordmark
+// left, UPPERCASE letterspaced links right, a thin gold underline on the
+// ACTIVE page only. STATIC hrefs — every page keeps its ≤12-query budget;
+// admin-created academies/albums surface on their hub pages instead.
+// Engine: Bootstrap Dropdown (mega panels) + Offcanvas (<992px drawer);
+// hover-intent + scrolled state in js/site.js (sjMegaHover / sjNavScroll).
+// Pages with a photo hero set $sjNavOverlay → the MAIN bar starts transparent
+// (the strip stays solid navy) and settles to white after 40px; other pages
+// render solid with .sj-nav-spacer standing in for the bar height.
 $sjNavGroups = [
     'About' => [
         ['/about.php',          'Our School'],
@@ -42,8 +44,26 @@ $sjNavGroups = [
     ],
 ];
 $sjNavOverlayOn = !empty($sjNavOverlay);
+// Active-page detection: server-set script name only (never request-derived).
+$sjNavCurrent = \basename($_SERVER['SCRIPT_NAME'] ?? 'index.php');
+$sjNavActive  = static fn (string $href): bool => \basename($href) === $sjNavCurrent;
+$sjNavStripPhone = repo_setting('contact_phone', '0422-2271367');
+$sjNavStripMail  = repo_setting('contact_email', '');
 ?>
-<nav class="navbar navbar-expand-lg fixed-top sj-nav<?= $sjNavOverlayOn ? ' sj-nav--overlay' : '' ?>">
+<header class="fixed-top sj-navhead<?= $sjNavOverlayOn ? ' sj-nav--overlay' : '' ?>">
+  <div class="sj-nav-strip">
+    <div class="sj-nav-strip-inner">
+      <span class="sj-nav-strip-contacts">
+        <span><i class="fa-solid fa-phone" aria-hidden="true"></i> <?= e($sjNavStripPhone) ?></span>
+        <?php if ($sjNavStripMail !== ''): ?>
+        <a href="mailto:<?= e($sjNavStripMail) ?>"><i class="fa-solid fa-envelope" aria-hidden="true"></i> <?= e($sjNavStripMail) ?></a>
+        <?php endif; ?>
+      </span>
+      <a class="sj-nav-strip-cta" href="/index.php#contact">Admissions Enquiry</a>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg sj-nav">
   <div class="container-fluid sj-nav-inner">
     <a class="navbar-brand sj-nav-brand" href="/index.php">
       <img src="/photos/logo-main.png" alt="St.Joseph's crest">
@@ -55,20 +75,22 @@ $sjNavOverlayOn = !empty($sjNavOverlay);
 
     <div class="sj-nav-desk d-none d-lg-flex">
       <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" href="/index.php">Home</a></li>
-        <?php foreach ($sjNavGroups as $sjNavGroup => $sjNavLinks): ?>
+        <li class="nav-item"><a class="nav-link<?= $sjNavActive('/index.php') ? ' on' : '' ?>" href="/index.php">Home</a></li>
+        <?php foreach ($sjNavGroups as $sjNavGroup => $sjNavLinks):
+            $sjNavGroupOn = false;
+            foreach ($sjNavLinks as [$h, $l]) { if ($sjNavActive($h)) { $sjNavGroupOn = true; break; } }
+        ?>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button"
+          <a class="nav-link dropdown-toggle<?= $sjNavGroupOn ? ' on' : '' ?>" href="#" role="button"
              data-bs-toggle="dropdown" aria-expanded="false"><?= e($sjNavGroup) ?></a>
           <div class="dropdown-menu sj-mega<?= count($sjNavLinks) > 6 ? ' sj-mega--2col' : '' ?>">
             <?php foreach ($sjNavLinks as [$sjNavHref, $sjNavLabel]): ?>
-            <a class="dropdown-item" href="<?= e($sjNavHref) ?>"><?= e($sjNavLabel) ?></a>
+            <a class="dropdown-item<?= $sjNavActive($sjNavHref) ? ' on' : '' ?>" href="<?= e($sjNavHref) ?>"><?= e($sjNavLabel) ?></a>
             <?php endforeach; ?>
           </div>
         </li>
         <?php endforeach; ?>
       </ul>
-      <a class="sj-btn sj-btn--gold sj-btn--sm sj-nav-cta" href="/index.php#contact">Admissions</a>
     </div>
 
     <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas"
@@ -76,7 +98,8 @@ $sjNavOverlayOn = !empty($sjNavOverlay);
       <span class="navbar-toggler-icon"></span>
     </button>
   </div>
-</nav>
+  </nav>
+</header>
 <?php if (!$sjNavOverlayOn): ?><div class="sj-nav-spacer" aria-hidden="true"></div><?php endif; ?>
 
 <div class="offcanvas offcanvas-end sj-drawer" tabindex="-1" id="sjNavDrawer" aria-label="Site menu">

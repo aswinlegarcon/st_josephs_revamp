@@ -52,9 +52,9 @@ $sjDesc  = $sjSeo['description'] ?? '';
   <!-- Fonts (single request) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <?php // Stage J fonts: Fjalla One (display) + Manrope (body) + Dancing Script
-        // (sparse accents). League Spartan/Raleway removed (PUBLIC_UI_DESIGN.md §2). ?>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Fjalla+One&family=Manrope:wght@400;500;600;700;800&display=swap">
+  <?php // Stage K fonts: Fjalla One (display) + Manrope (body) ONLY — the owner
+        // retired the Dancing Script accents ("bold & clean"). PUBLIC_UI_DESIGN.md §2. ?>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Manrope:wght@400;500;600;700;800&display=swap">
 
   <!-- Design tokens, the Stage J shared component layer, always-on footer styles, then this page's CSS -->
   <link rel="stylesheet" href="/css/tokens.css?v=<?php echo SJ_ASSET_VER; ?>">

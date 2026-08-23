@@ -99,7 +99,7 @@ function sjCounters(selector) {
 // Navbar settle: toggles .sj-scrolled on the .sj-nav navbar past 40px scroll
 // (rAF-throttled, passive). Wired up by the J2 navbar; no-op until it exists.
 function sjNavScroll() {
-  var nav = document.querySelector('.navbar.sj-nav');
+  var nav = document.querySelector('.sj-navhead') || document.querySelector('.navbar.sj-nav');
   if (!nav) return;
   var ticking = false;
   function apply() {

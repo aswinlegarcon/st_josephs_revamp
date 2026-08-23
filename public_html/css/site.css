@@ -21,8 +21,8 @@
 * { font-family: var(--sj-font-body); font-weight: 400; }
 body { margin: 0; color: var(--sj-ink); }
 
-:root { --sj-nav-h: 76px; }
-@media (max-width: 576px) { :root { --sj-nav-h: 64px; } }
+:root { --sj-nav-h: 110px; } /* K1 two-tier: 36px strip + 74px main bar */
+@media (max-width: 768px) { :root { --sj-nav-h: 64px; } } /* strip hidden on mobile */
 
 /* ---------- section bands ---------- */
 .sj-section { padding: var(--sj-sec-pad) 0; background: var(--sj-white); }
@@ -152,11 +152,40 @@ body { margin: 0; color: var(--sj-ink); }
   background: var(--sj-veil); z-index: 1;
 }
 .sj-hero .carousel-item img { display: block; width: 100%; object-fit: cover; }
-@media (min-width: 901px) {
-  .sj-hero .carousel-item img { height: auto; aspect-ratio: 16 / 9; }
-}
+/* K1 geometry (owner UX decision): the HOME hero is CAPPED so the next
+   section always peeks below; every slide shares the same box (the N6
+   uniform guarantee) and over-tall photos centre-crop, never grow. */
+.sj-hero--hero .carousel-item img { height: min(56.25vw, 62vh); }
 @media (max-width: 900px) {
-  .sj-hero .carousel-item img { height: 500px; }
+  .sj-hero--hero .carousel-item img { height: min(500px, 62vh); }
+}
+/* K1 banner variant: the slim page-title strip every inner page leads with.
+   Still cross-fades ALL admin-managed slides — nothing is orphaned. */
+.sj-hero--banner .carousel-item img { height: clamp(240px, 36vh, 400px); }
+.sj-hero--banner .carousel-indicators,
+.sj-hero--banner .carousel-control-prev,
+.sj-hero--banner .carousel-control-next { display: none; }
+.sj-hero--banner .carousel-caption { top: 50%; transform: translateY(-50%); bottom: auto; }
+.sj-hero--banner .sj-hero-title { font-size: clamp(26px, 3.5vw, 42px); }
+.sj-hero--banner .sj-hero-flourish { margin-top: 8px; }
+.sj-hero--banner .sj-hero-btnwrap { margin-top: 14px; }
+
+/* scroll cue (hero variant only): a soft bouncing chevron above the fold */
+.sj-hero-cue {
+  position: absolute; left: 50%; bottom: 20px; z-index: 11;
+  width: 22px; height: 22px; margin-left: -11px;
+  border-right: 3px solid rgba(255, 255, 255, .85);
+  border-bottom: 3px solid rgba(255, 255, 255, .85);
+  transform: rotate(45deg);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .4));
+}
+@keyframes sj-cue {
+  0%, 100% { transform: translateY(0) rotate(45deg); opacity: .85; }
+  50%      { transform: translateY(8px) rotate(45deg); opacity: .4; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sj-hero-cue { animation: sj-cue 1.8s ease-in-out infinite; }
 }
 @keyframes sj-kenburns {
   from { transform: scale(1) translate(0, 0); }
@@ -166,8 +195,8 @@ body { margin: 0; color: var(--sj-ink); }
   .sj-hero--motion .carousel-item.active img { animation: sj-kenburns 7s var(--sj-ease) forwards; }
 }
 
-/* hero caption (variant 'hero'): Fjalla title, ONE Dancing Script gold
-   flourish, gold CTA. Caption z-index:10 comes from the tokens.css patch. */
+/* hero caption: bold Fjalla title over a clean Manrope sub-line (K1 — the
+   script flourish is retired). Caption z-index:10 from the tokens.css patch. */
 .sj-hero .carousel-caption { top: 32%; bottom: auto; }
 .sj-hero-title {
   font-family: var(--sj-font-head); font-weight: 400;
@@ -176,9 +205,10 @@ body { margin: 0; color: var(--sj-ink); }
   text-shadow: 0 2px 18px rgba(0, 0, 0, .35);
 }
 .sj-hero-flourish {
-  font-family: var(--sj-font-accent);
-  font-size: clamp(20px, 2.6vw, 34px); line-height: 1.2;
-  color: var(--sj-gold); margin: 10px 0 0;
+  font-family: var(--sj-font-body); font-weight: 600;
+  font-size: clamp(13px, 1.4vw, 17px); line-height: 1.5;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, .92); margin: 12px 0 0;
 }
 .sj-hero-btnwrap { display: inline-block; margin-top: 22px; text-decoration: none; }
 @media (max-width: 600px) {
@@ -200,15 +230,42 @@ body { margin: 0; color: var(--sj-ink); }
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .45));
 }
 
-/* ---------- navigation (J2) ---------- */
+/* ---------- navigation (K1: two-tier international) ---------- */
+/* .sj-navhead is the fixed-top wrapper: navy utility strip + white main bar.
+   sjNavScroll toggles .sj-scrolled on it; $sjNavOverlay adds .sj-nav--overlay. */
+.sj-navhead { transition: box-shadow var(--sj-t-fast) ease; }
+.sj-navhead.sj-scrolled { box-shadow: 0 6px 18px rgba(18, 35, 63, .10); }
+
+.sj-nav-strip {
+  background: var(--sj-navy-dark);
+  color: rgba(255, 255, 255, .85);
+  font-family: var(--sj-font-body);
+  font-size: 12.5px; font-weight: 600;
+}
+.sj-nav-strip-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 36px; padding: 4px 22px; gap: 14px;
+}
+.sj-nav-strip-contacts { display: flex; align-items: center; gap: 24px; }
+.sj-nav-strip-contacts i { color: var(--sj-gold); margin-right: 6px; font-size: 11px; }
+.sj-nav-strip-contacts a { color: rgba(255, 255, 255, .85); text-decoration: none; transition: color var(--sj-t-fast) ease; }
+.sj-nav-strip-contacts a:hover { color: var(--sj-gold); }
+.sj-nav-strip-cta {
+  background: var(--sj-gold); color: var(--sj-navy-dark);
+  font-size: 11.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+  border-radius: 4px; padding: 5px 14px; text-decoration: none; white-space: nowrap;
+  transition: background var(--sj-t-fast) ease;
+}
+.sj-nav-strip-cta:hover { background: #f2cc00; color: var(--sj-navy-dark); }
+@media (max-width: 768px) { .sj-nav-strip { display: none; } }
+
 .sj-nav {
   background: #fff;
   border-bottom: 1px solid var(--sj-line-cool);
   padding: 0;
-  transition: background var(--sj-t-fast) ease, box-shadow var(--sj-t-fast) ease,
-              border-color var(--sj-t-fast) ease;
+  transition: background var(--sj-t-fast) ease, border-color var(--sj-t-fast) ease;
 }
-.sj-nav-inner { min-height: var(--sj-nav-h); padding: 6px 22px; }
+.sj-nav-inner { min-height: 74px; padding: 5px 22px; }
 .sj-nav-spacer { height: calc(var(--sj-nav-h) + 2px); } /* +2: nav border + rounding — measured */
 
 .sj-nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
@@ -228,21 +285,19 @@ body { margin: 0; color: var(--sj-ink); }
   .sj-nav-name small { font-size: 10px; }
 }
 
-.sj-nav-desk { align-items: center; gap: 4px; margin-left: auto; }
+.sj-nav-desk { align-items: center; gap: 2px; margin-left: auto; }
 .sj-nav .nav-link {
-  font-family: var(--sj-font-body); font-size: 15px; font-weight: 600;
-  color: var(--sj-ink); padding: 10px 14px; position: relative;
+  font-family: var(--sj-font-body); font-size: 13px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--sj-ink); padding: 10px 13px; position: relative;
   transition: color var(--sj-t-fast) ease;
 }
-.sj-nav .nav-link::after {
-  content: ""; position: absolute; left: 14px; right: 14px; bottom: 4px;
+.sj-nav .nav-link:hover, .sj-nav .nav-link:focus-visible, .sj-nav .nav-link.show { color: var(--sj-gold-ink); }
+.sj-nav .nav-link.on { color: var(--sj-navy); }
+.sj-nav .nav-link.on::after {
+  content: ""; position: absolute; left: 13px; right: 13px; bottom: 2px;
   height: 2px; border-radius: 1px; background: var(--sj-gold);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform var(--sj-t-fast) ease;
 }
-.sj-nav .nav-link:hover, .sj-nav .nav-link:focus-visible, .sj-nav .nav-link.show { color: var(--sj-navy); }
-.sj-nav .nav-link:hover::after, .sj-nav .nav-link.show::after { transform: scaleX(1); }
-.sj-nav-cta { margin-left: 14px; }
 .sj-nav .navbar-toggler { border-color: var(--sj-line-cool); }
 .sj-nav .navbar-toggler:focus { box-shadow: 0 0 0 3px rgba(43, 75, 138, .3); }
 
@@ -258,20 +313,21 @@ body { margin: 0; color: var(--sj-ink); }
 .sj-nav .sj-mega .dropdown-item:hover, .sj-nav .sj-mega .dropdown-item:focus {
   background: var(--sj-paper); color: var(--sj-navy);
 }
+.sj-nav .sj-mega .dropdown-item.on { background: var(--sj-gold-soft); color: var(--sj-navy); font-weight: 700; }
 .sj-nav .sj-mega--2col { min-width: 480px; }
 .sj-nav .sj-mega--2col.show { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px; }
 
-/* scrolled + overlay states (sjNavScroll toggles .sj-scrolled) */
-.sj-nav.sj-scrolled { box-shadow: 0 6px 18px rgba(18, 35, 63, .10); }
-.sj-nav--overlay { background: transparent; border-bottom-color: transparent; }
+/* overlay state: the MAIN bar starts transparent over the page hero (the
+   strip stays solid navy) and settles to white after 40px (sjNavScroll). */
+.sj-nav--overlay:not(.sj-scrolled) .sj-nav { background: transparent; border-bottom-color: transparent; }
 .sj-nav--overlay:not(.sj-scrolled) .sj-nav-name b { color: #fff; }
 .sj-nav--overlay:not(.sj-scrolled) .sj-nav-name small { color: rgba(255, 255, 255, .78); }
 .sj-nav--overlay:not(.sj-scrolled) .nav-link { color: #fff; }
 .sj-nav--overlay:not(.sj-scrolled) .nav-link:hover,
 .sj-nav--overlay:not(.sj-scrolled) .nav-link.show { color: var(--sj-gold); }
+.sj-nav--overlay:not(.sj-scrolled) .nav-link.on { color: var(--sj-gold); }
 .sj-nav--overlay:not(.sj-scrolled) .navbar-toggler { border-color: rgba(255, 255, 255, .5); }
 .sj-nav--overlay:not(.sj-scrolled) .navbar-toggler-icon { filter: invert(1) brightness(2); }
-.sj-nav--overlay.sj-scrolled { background: #fff; border-bottom-color: var(--sj-line-cool); }
 
 /* mobile drawer (Bootstrap Offcanvas) */
 .sj-drawer { width: 320px; }

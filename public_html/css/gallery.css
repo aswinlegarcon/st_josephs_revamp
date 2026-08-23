@@ -26,12 +26,13 @@
   background: var(--sj-gold); margin: 14px auto 0;
 }
 .gallery-text p {
-  font-family: var(--sj-font-accent);
+  font-family: var(--sj-font-body);
   text-align: center;
-  font-size: clamp(20px, 2.6vw, 30px);
-  font-weight: 700;
-  color: var(--sj-gold-ink);
-  margin-top: 10px;
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-weight: 600;
+  letter-spacing: .5px;
+  color: var(--sj-ink-soft);
+  margin-top: 14px;
 }
 
 /* album cards */
