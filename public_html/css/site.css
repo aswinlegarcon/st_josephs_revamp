@@ -166,6 +166,40 @@ body { margin: 0; color: var(--sj-ink); }
   .sj-hero--motion .carousel-item.active img { animation: sj-kenburns 7s var(--sj-ease) forwards; }
 }
 
+/* hero caption (variant 'hero'): Fjalla title, ONE Dancing Script gold
+   flourish, gold CTA. Caption z-index:10 comes from the tokens.css patch. */
+.sj-hero .carousel-caption { top: 32%; bottom: auto; }
+.sj-hero-title {
+  font-family: var(--sj-font-head); font-weight: 400;
+  font-size: clamp(30px, 4.5vw, 56px); line-height: 1.1;
+  letter-spacing: .5px; color: #fff; margin: 0;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .35);
+}
+.sj-hero-flourish {
+  font-family: var(--sj-font-accent);
+  font-size: clamp(20px, 2.6vw, 34px); line-height: 1.2;
+  color: var(--sj-gold); margin: 10px 0 0;
+}
+.sj-hero-btnwrap { display: inline-block; margin-top: 22px; text-decoration: none; }
+@media (max-width: 600px) {
+  .sj-hero .carousel-caption { top: 24%; }
+  .sj-hero-btnwrap { margin-top: 14px; }
+}
+
+/* strip variant: a plain content carousel — no veil, no caption */
+.sj-hero--strip .carousel-item::before { content: none; }
+
+/* slim indicators + soft controls */
+.sj-hero .carousel-indicators [data-bs-target] {
+  width: 26px; height: 4px; border-radius: 2px;
+  background: #fff; opacity: .45; border: 0;
+  transition: opacity var(--sj-t-fast) ease, background var(--sj-t-fast) ease;
+}
+.sj-hero .carousel-indicators .active { background: var(--sj-gold); opacity: 1; }
+.sj-hero .carousel-control-prev-icon, .sj-hero .carousel-control-next-icon {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .45));
+}
+
 /* ---------- navigation (J2) ---------- */
 .sj-nav {
   background: #fff;

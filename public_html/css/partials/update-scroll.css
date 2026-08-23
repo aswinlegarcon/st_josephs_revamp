@@ -1,12 +1,11 @@
-/* News ticker bar styles (moved verbatim from the partial's <style> block in
-   R3 — body link, same document position, cascade unchanged). Do not tidy. */
-/* Top bar */
+/* News ticker bar — Stage J token pass (marquee behavior unchanged). */
 .top-bar-update {
-  background: linear-gradient(to right, #2b4b8a, #1a355d);
+  background: var(--sj-grad-brand);
+  border-top: 3px solid var(--sj-gold);
   overflow: hidden;
   white-space: nowrap;
   position: relative;
-  padding: 5px 0;
+  padding: 7px 0;
   text-align: center;
 }
 
@@ -18,58 +17,36 @@
 
 .update-link {
   display: inline-block;
-  margin-right: 30px; /* Space between updates */
-  color: white;
-  font-size: 16px;
+  margin-right: 30px;
+  color: #fff;
+  font-family: var(--sj-font-body);
+  font-size: 15px;
+  font-weight: 500;
 }
 
-.update-link a {
-  color: white;
-  text-decoration: none;
-}
-
-.update-link a:hover {
-  color: #ffd700; /* Gold color on hover */
-  transition: color 0.3s;
-}
+.update-link a { color: #fff; text-decoration: none; }
+.update-link a:hover { color: var(--sj-gold); transition: color .3s; }
 
 .new-update-blinker {
-  color: #ffd700; /* Red color for the blinker */
-  margin-right: 10px; /* Space between blinker and link */
+  color: var(--sj-gold);
+  margin-right: 10px;
   animation: blinker 1s linear infinite;
-  font-size: 24px; /* Increase the size of the dot */
-  line-height: 16px; /* Adjust to vertically center the dot */
+  font-size: 24px;
+  line-height: 16px;
 }
 
 @keyframes slide {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
+@keyframes blinker { 50% { opacity: 0; } }
 
-@keyframes blinker {
-  50% {
-    opacity: 0;
-  }
-}
-
-.sliding-text-update:hover {
-  animation-play-state: paused; /* Pause the animation on hover */
-}
+.sliding-text-update:hover { animation-play-state: paused; }
 
 @media (max-width: 700px) {
-  .sliding-text-update {
-    animation: slide 15s linear infinite;
-  }
+  .sliding-text-update { animation: slide 15s linear infinite; }
   @keyframes slide {
-    0% {
-      transform: translateX(-50%);
-    }
-    100% {
-      transform: translateX(50%);
-    }
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(50%); }
   }
 }

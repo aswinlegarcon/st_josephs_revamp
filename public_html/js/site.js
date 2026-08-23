@@ -74,7 +74,9 @@ function sjRevealIO(selector) {
     els.forEach(function (el) { el.classList.add('sj-in'); });
     return;
   }
+  var fired = false;
   var io = new IntersectionObserver(function (entries) {
+    fired = true;
     entries.forEach(function (en) {
       if (!en.isIntersecting) return;
       var el = en.target;
@@ -85,6 +87,14 @@ function sjRevealIO(selector) {
     });
   }, { threshold: 0.15 });
   els.forEach(function (el) { io.observe(el); });
+  // Safety valve: if the observer NEVER reports (broken IO in odd webviews —
+  // something always intersects at load in a working one), content must not
+  // stay invisible. One check, then reveal everything.
+  setTimeout(function () {
+    if (fired) return;
+    io.disconnect();
+    els.forEach(function (el) { el.classList.add('sj-in'); });
+  }, 4000);
 }
 
 // Count-up stats: <span class="counter" data-target="2200+"></span>.
@@ -113,7 +123,9 @@ function sjCounters(selector) {
     requestAnimationFrame(step);
   }
   if (!('IntersectionObserver' in window)) { els.forEach(animate); return; }
+  var fired = false;
   var io = new IntersectionObserver(function (entries) {
+    fired = true;
     entries.forEach(function (en) {
       if (!en.isIntersecting) return;
       io.unobserve(en.target);
@@ -121,6 +133,16 @@ function sjCounters(selector) {
     });
   }, { threshold: 0.4 });
   els.forEach(function (el) { io.observe(el); });
+  // Safety valve (same rationale as sjRevealIO): broken IO must not leave the
+  // stat band stuck at 0 — set the final values without animation.
+  setTimeout(function () {
+    if (fired) return;
+    io.disconnect();
+    els.forEach(function (el) {
+      var m = String(el.getAttribute('data-target') || '').trim().match(/^(\d+)(.*)$/);
+      if (m) put(el, parseInt(m[1], 10), m[2] || '');
+    });
+  }, 4000);
 }
 
 // Navbar settle: toggles .sj-scrolled on the .sj-nav navbar past 40px scroll
@@ -158,6 +180,24 @@ function sjMegaHover() {
   });
 }
 
+// Keyboard ←/→ for THE page's main carousel — the one marked data-sj-kbnav
+// (hero.php sets it; one per page). Same guards as the shipped home-hero
+// implementation: no modifiers, not while typing, not in admin edit mode.
+function sjHeroKeys() {
+  var host = document.querySelector('.carousel[data-sj-kbnav]');
+  if (!host) return;
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    var t = e.target;
+    if (t && t.closest && t.closest('input, textarea, select, [contenteditable]')) return;
+    if (document.body.classList.contains('sj-edit-mode')) return;
+    if (!window.bootstrap) return;
+    var c = window.bootstrap.Carousel.getOrCreateInstance(host);
+    if (e.key === 'ArrowRight') { c.next(); } else { c.prev(); }
+  });
+}
+
 // Auto-wire the Stage J pieces present on the page. Counters are scoped to
 // [data-sj-counters] containers (J3+ markup) so the legacy inline counter
 // script on the un-migrated Home page is never double-driven.
@@ -166,4 +206,5 @@ document.addEventListener('DOMContentLoaded', function () {
   sjCounters('[data-sj-counters] .counter[data-target]');
   sjNavScroll();
   sjMegaHover();
+  sjHeroKeys();
 });

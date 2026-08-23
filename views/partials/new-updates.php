@@ -11,8 +11,8 @@
 
 <!-- Carousel Starts -->
  <section class="update ">
- <div class="update-text">
-    <h3 class="reveal-update">
+ <div class="update-text sj-reveal">
+    <h3>
         New Updates
     </h3>
  </div>
@@ -60,10 +60,3 @@
 </div>
 </section>
 
-<!-- Custom JavaScript -->
-<script>
-// Shipped reveal (scroll-only), now via the shared helper in /js/site.js (R2).
-window.addEventListener('DOMContentLoaded', function () {
-    sjReveal('.reveal-update', 150);
-});
-</script>

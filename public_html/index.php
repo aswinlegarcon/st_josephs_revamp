@@ -19,9 +19,7 @@ $sj_testimonials  = repo_testimonials(is_edit());
 \SJ\View\Layout::render('home', [
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'index',
-    // Baseline head-cascade order: the page's own CSS first, then the section
-    // sheets in template order. (home-bs4-remnants.css is linked at the END of
-    // the page body by views/pages/home.php — see the note there.)
+    'sjNavOverlay'   => true, // Stage J: transparent nav over the full-bleed hero
     'styles'         => ['home'],
     'sj_page'        => $sj_page,
     'sj_principal'   => $sj_principal,

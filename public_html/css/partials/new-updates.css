@@ -1,235 +1,98 @@
-/* "New Updates" carousel styles (moved verbatim from the partial's <style>
-   block in R3 — body link, same document position, cascade unchanged). Do not
-   tidy. */
-:root {
-  --primaryblue: #2b4b8a;
-  --secondaryblue: #1a355d;
-  --gold: #ffd700;
-  --white: white;
-  --black: black;
-  --maroon: firebrick;
-}
+/* "New Updates" carousel — Stage J rewrite (PUBLIC_UI_DESIGN.md §5).
+   Paper band, gold-bar section heading, 16:9 media geometry (same guarantee
+   as the hero), Fjalla gold caption over the brand veil. */
 
 .update {
   margin: auto;
-  padding-bottom: 100px;
+  background: var(--sj-paper);
+  padding: var(--sj-sec-pad) 0;
 }
 
-.update-text h3 { /* was h5 — R3 heading-order fix; font-size is explicit */
-  font-family: "Fjalla One", sans-serif !important;
+.update-text h3 {
+  font-family: var(--sj-font-head);
+  font-weight: 400;
   text-align: center;
-  font-size: 55px;
-  font-weight: 600;
-  margin: 50px;
+  font-size: clamp(30px, 4vw, 54px);
+  color: var(--sj-navy-dark);
+  margin: 0 0 8px;
+}
+.update-text h3::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 14px auto 36px;
 }
 
 .update-carousel {
   box-sizing: border-box;
-  height: 70%;
-  width: 90%;
-  align-items: center;
+  width: min(1200px, 92%);
   margin: auto;
-
-  border-radius: 60px;
+  border-radius: var(--sj-r-card);
   overflow: hidden;
+  box-shadow: var(--sj-shadow-2);
 }
 
+.update-carousel-item { position: relative; }
 .update-carousel-item::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.5)
-  );
+  inset: 0;
+  background: var(--sj-veil);
   z-index: 1;
 }
-/* animation */
-.reveal-update {
-  transition: 1.2s;
-  transform: translateY(50px);
-  opacity: 0;
-}
-
-.reveal-update.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .update-carousel-item img {
-  height: 100%;
+  display: block;
   width: 100%;
+  object-fit: cover;
   position: relative;
   z-index: 0;
 }
-.upd .update-carousel-caption {
-  top: 38%;
+@media (min-width: 901px) {
+  .update-carousel-item img { height: auto; aspect-ratio: 16 / 9; }
+}
+@media (max-width: 900px) {
+  .update-carousel-item img { height: 420px; }
 }
 
-.update-carousel-caption h4 { /* was h5 — R3 heading-order fix; font-size is explicit */
-  font-family: "Fjalla One", sans-serif !important;
-  color: #ffd700;
-  font-size: 80px;
-  font-weight: 700;
+.update-carousel .carousel-indicators [data-bs-target] {
+  width: 26px; height: 4px; border-radius: 2px;
+  background: #fff; opacity: .45; border: 0;
 }
+.update-carousel .carousel-indicators .active { background: var(--sj-gold); opacity: 1; }
 
+.update-carousel-caption { top: 30%; bottom: auto; }
+.update-carousel-caption h4 {
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  color: var(--sj-gold);
+  font-size: clamp(30px, 4.5vw, 60px);
+  margin: 0;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .35);
+}
 .update-carousel-caption p {
-  font-family: "LeagueSpartan", sans-serif !important;
-
-  font-size: 18px;
-  top: 2rem;
+  font-family: var(--sj-font-body);
+  font-size: clamp(13px, 1.4vw, 18px);
+  color: rgba(255, 255, 255, .92);
+  margin: 10px 0 0;
 }
 
-.update-slider-btn {
-  margin-top: 30px;
-}
-
+.update-slider-btn { display: inline-block; margin-top: 20px; text-decoration: none; }
 .update-slider-btn .btn {
-  /* shipped: `background-color: none` — not a valid background-color value, so
-     the browser ignored it (R3: commented out, renders exactly the same)
-  background-color: none;
-  */
-  color: #fff;
-
-  font-size: 20px;
-  transition: 0.5s;
+  font-family: var(--sj-font-body);
+  font-size: 15px; font-weight: 600;
+  color: var(--sj-navy-dark);
+  background: var(--sj-gold);
+  border: 0;
+  border-radius: var(--sj-r-btn);
+  padding: 12px 26px;
+  transition: background var(--sj-t-fast) ease, transform var(--sj-t-fast) ease;
 }
-
 .update-slider-btn .btn:hover {
-  color: #fff;
-  background: linear-gradient(to left, #2b4b8a, #1a355d) !important;
-  color: var(--white);
+  color: var(--sj-navy-dark);
+  background: #f2cc00;
+  transform: translateY(-2px);
 }
-
-@media (max-width: 1200px) {
-  .update-carousel {
-    width: 90%;
-    height: 90%;
-  }
-
-  .update-carousel-item img {
-    height: 600px;
-    width: 1100px;
-  }
-
-  .update-carousel-caption h4 { /* was h5 — R3 heading-order fix; font-size is explicit */
-    font-size: 70px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 15px;
-    top: 2rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 30px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 17px;
-  }
-}
-
-@media (max-width: 768px) {
-  .update-carousel {
-    width: 90%;
-    height: 90%;
-  }
-
-  .update-carousel-caption {
-    top: 40%;
-  }
-
-  .update-carousel-caption h4 { /* was h5 — R3 heading-order fix; font-size is explicit */
-    font-size: 55px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 12px;
-    top: 2rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 15px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 13px;
-  }
-}
-
 @media (max-width: 600px) {
-  .update-carousel-caption {
-    top: 42%;
-  }
-
-  .update-carousel-caption h4 { /* was h5 — R3 heading-order fix; font-size is explicit */
-    font-size: 60px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 12px;
-    top: 1rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 10px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.3rem 2rem;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 500px) {
-  .update-text h3 { /* was h5 — R3 heading-order fix; font-size is explicit */
-    font-size: 35px;
-  }
-  .update-carousel-caption {
-    top: 40%;
-  }
-
-  .update-carousel-caption h4 { /* was h5 — R3 heading-order fix; font-size is explicit */
-    font-size: 35px;
-    font-weight: 700;
-  }
-
-  .update-carousel-caption p {
-    font-size: 11px;
-    top: 1rem;
-  }
-
-  .update-slider-btn {
-    margin-top: 8px;
-  }
-
-  .update-slider-btn .btn {
-    padding: 0.4rem 2rem;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 370px) {
-  .update-carousel-caption h4 { /* was h5 — R3 heading-order fix; font-size is explicit */
-    font-size: 30px;
-    font-weight: 700;
-  }
-
-  .update-slider-btn {
-    margin-top: 1px;
-  }
-
-  .update-carousel-caption p {
-    top: 0.5rem;
-  }
+  .update-carousel-caption { top: 22%; }
+  .update-slider-btn { margin-top: 12px; }
+  .update-slider-btn .btn { padding: 9px 18px; font-size: 13px; }
 }

@@ -1,113 +1,83 @@
-/* Students Testimonial styles (moved verbatim from the partial's <style> block
-   in R3 — body link, same document position, cascade unchanged). Do not tidy
-   (incl. the .testimonial-body rule, which matched nothing on the baseline
-   because the nested <body class="testimonial-body"> was discarded by the
-   parser; no wrapper exists so it keeps matching nothing). The photo urls are
-   site-absolute (R3 bug-15): the inline originals said ../photos/, which
-   resolved against the page URL to the same /photos/ files. */
-.testimonial-body {
-  font-family: Arial, sans-serif;
-
-  color: white;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
+/* Students Testimonial cards — Stage J rewrite (PUBLIC_UI_DESIGN.md §5).
+   THE single source of the card recipe: background = the brand veil over
+   --sj-tm-bg (set by the card1/2/3 statics below, or by the partial's inline
+   style when an admin picks a photo — N2/J3 de-triplication). The admin
+   panel's preview (.sj-prev--tm) mirrors this recipe. Self-contained since
+   home-bs4-remnants.css was retired. */
 
 .testimonial-container {
-  background-color: #fff5f5 !important;
-  padding: 40px;
-}
-
-.testimonial-container h1 {
-  font-family: "Fjalla One", sans-serif !important;
-  font-weight: 700;
-  font-size: 46px;
-  margin-bottom: 30px;
+  background: #fff;
+  padding: var(--sj-sec-pad) clamp(16px, 4vw, 48px);
   text-align: center;
 }
-/* animation */
-.testimonial-reveal {
-  transition: 1.2s;
-  transform: translateY(50px);
-  opacity: 0;
+.testimonial-container > h1 {
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  font-size: clamp(30px, 4vw, 54px);
+  color: var(--sj-navy-dark);
 }
-.testimonial-reveal.active {
-  opacity: 1;
-  transform: translateY(0);
+.testimonial-container > h1::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 14px auto 0;
 }
+
 .testimonial {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 26px;
   flex-wrap: wrap;
+  margin-top: 40px;
 }
 
-.card {
-  background-size: cover;
-  border-radius: 10px;
-  padding: 20px;
-  margin: 10px;
-  width: 30%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: left;
+.testimonial .card {
+  --sj-tm-bg: none;
   position: relative;
+  width: 30%;
+  min-width: 280px;
+  padding: 56px 26px 30px;
+  text-align: left;
+  border: 0;
+  border-radius: var(--sj-r-card);
+  box-shadow: var(--sj-shadow-1);
+  background: var(--sj-veil), var(--sj-tm-bg) center / cover no-repeat;
+  background-color: var(--sj-navy-dark); /* paint when no photo resolves */
+  color: #fff;
+  overflow: hidden;
+  transition: transform var(--sj-t-med) var(--sj-ease), box-shadow var(--sj-t-med) var(--sj-ease);
 }
-.card:hover {
-  box-shadow: 0px 0px 30px 5px rgba(0, 0, 0, 0.2);
-}
-/* F2: the /media/static/*.jpg files are full-frame recompressions of the
-   original PNGs (photographs stored as PNG were ~920 KB each; the JPEG copies
-   are ~78 KB and sit under the same navy gradient). */
-.card1 {
-  background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/media/static/testimonial1.jpg");
-    background-size:100% 100%;
-}
-.card2 {
-  background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/media/static/testimonial2.jpg");
-    background-size:100% 100%;
-}
-.card3 {
-  background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/media/static/testimonial3.jpg");
-    background-size:100% 100%;
+.testimonial .card:hover { transform: translateY(-6px); box-shadow: var(--sj-shadow-2); }
 
-}
+/* the three shipped static backgrounds (admin photo overrides via --sj-tm-bg) */
+.testimonial .card1 { --sj-tm-bg: url("/media/static/testimonial1.jpg"); }
+.testimonial .card2 { --sj-tm-bg: url("/media/static/testimonial2.jpg"); }
+.testimonial .card3 { --sj-tm-bg: url("/media/static/testimonial3.jpg"); }
 
-.card h2 { /* was h3 — R3 heading-order fix */
-  font-family: "Fjalla One", sans-serif !important;
-  /* pin the h3 default size the baseline rendered with (Bootstrap's RFS h3:
-     the calc below 1200px, capped at exactly 1.75rem from 1200px up) */
-  font-size: calc(1.3rem + .6vw);
+.testimonial .card h2 {
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1rem + .5vw, 1.6rem);
+  color: var(--sj-gold);
   border-bottom: 2px solid #fff;
   padding-bottom: 10px;
-  margin-bottom: 20px;
-  margin-top: 70px;
-  color: gold;
+  margin-bottom: 14px;
 }
-@media (min-width: 1200px) {
-  .card h2 { font-size: 1.75rem; }
-}
-
-.card p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  color: white;
-  line-height: 1.6;
-  margin-bottom: 10px;
+.testimonial .card p {
+  font-family: var(--sj-font-body);
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, .92);
   text-align: justify;
 }
-
 .quote-icon {
   position: absolute;
-  top: 20px;
-  right: 48%;
-  width: 50px;
-  height: 50px;
+  top: 16px;
+  right: 20px;
+  width: 34px;
+  opacity: .9;
 }
 
-@media (max-width: 768px) {
-  .card {
-    width: 80%;
-  }
+@media (max-width: 900px) {
+  .testimonial { flex-direction: column; align-items: center; }
+  .testimonial .card { width: min(480px, 100%); }
 }

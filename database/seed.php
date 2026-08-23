@@ -570,6 +570,16 @@ $settings = [
     // J2: floating WhatsApp button — digits with country code; empty = hidden.
     // (A dedicated key: the school landline above can't receive WhatsApp.)
     'whatsapp_number'       => '',
+    // J3: Home stat band — values are the strings the page shipped hardcoded
+    // (leading number animates; the +/% suffix is re-appended by sjCounters).
+    'home_stat1_value'      => '80+',
+    'home_stat1_label'      => 'Faculties',
+    'home_stat2_value'      => '2200+',
+    'home_stat2_label'      => 'Our Students',
+    'home_stat3_value'      => '100%',
+    'home_stat3_label'      => 'Board Results',
+    'home_stat4_value'      => '50+',
+    'home_stat4_label'      => 'Win Awards',
 ];
 $insSet = $pdo->prepare('INSERT IGNORE INTO settings (skey, svalue) VALUES (?,?)');
 $newSet = 0;

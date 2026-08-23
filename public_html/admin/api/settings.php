@@ -25,6 +25,15 @@ $SETTING_KEYS = [
     'footer_copyright'      => [160, 'text'],
     'marks_years_shown'     => [2,   'int'],
     'whatsapp_number'       => [15,  'digits', true], // J2: floating WhatsApp button; blank hides it
+    // J3: Home stat band (value = number + optional suffix, e.g. "2200+")
+    'home_stat1_value'      => [12,  'text'],
+    'home_stat1_label'      => [40,  'text'],
+    'home_stat2_value'      => [12,  'text'],
+    'home_stat2_label'      => [40,  'text'],
+    'home_stat3_value'      => [12,  'text'],
+    'home_stat3_label'      => [40,  'text'],
+    'home_stat4_value'      => [12,  'text'],
+    'home_stat4_label'      => [40,  'text'],
 ];
 
 $in     = api_input();

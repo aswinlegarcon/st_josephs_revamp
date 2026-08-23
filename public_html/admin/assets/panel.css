@@ -33,7 +33,7 @@
   --e3: 0 24px 64px rgba(18, 35, 63, .30);
   --shadow-1: var(--e1); --shadow-2: var(--e2);
   --grad-brand: linear-gradient(135deg, var(--blue), var(--dark));
-  --veil: linear-gradient(rgba(43, 75, 138, .7), rgba(26, 53, 93, .7));
+  --veil: linear-gradient(rgba(43, 75, 138, .55), rgba(26, 53, 93, .75)); /* J3 lockstep: mirrors the public --sj-veil */
   --font-display: 'Fjalla One', 'Segoe UI', sans-serif;
   --font-script: 'Dancing Script', cursive;
   --font-ui: 'Segoe UI', system-ui, Arial, sans-serif;
@@ -321,13 +321,16 @@ div.sj-row-thumb.noimg { display: flex; align-items: center; justify-content: ce
   position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center; padding: 8%;
 }
+/* J3 lockstep: the public hero caption is now a Fjalla WHITE title over ONE
+   Dancing Script GOLD flourish line (site.css .sj-hero-title/-flourish). */
 .sj-prev-cap-title {
-  font-family: var(--font-script); font-weight: 600; color: #9db9ea;
-  font-size: clamp(20px, 5cqw, 34px); line-height: 1.1;
+  font-family: var(--font-display); font-weight: 400; color: #fff;
+  font-size: clamp(18px, 4.6cqw, 30px); line-height: 1.1; letter-spacing: .4px;
   text-shadow: 0 1px 10px rgba(18, 35, 63, .5);
 }
 .sj-prev-cap-text {
-  color: #fff; font-size: 12.5px; margin-top: 6px; max-width: 82%;
+  font-family: var(--font-script); font-weight: 600; color: var(--gold);
+  font-size: clamp(14px, 3.2cqw, 20px); margin-top: 6px; max-width: 82%;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .sj-prev-noimg {

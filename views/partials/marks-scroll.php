@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="/css/partials/marks-scroll.css?v=<?php echo SJ_ASSET_VER; ?>">
     <section class="sec-marks-scroll">
-        <h2 class="reveal-marks-scroll">Watch Out</h2>
+        <h2 class="sj-reveal">Watch Out</h2>
 
     <div class="container marks-container"<?= ed_add('mark_year', [], 'Add year') ?>>
         <?php foreach ($sj_marks_years as $yi => $y):
@@ -40,9 +40,3 @@
         <?php endforeach; ?>
     </div>
     </section>
-    <script>
-// Shipped reveal (scroll-only), now via the shared helper in /js/site.js (R2).
-window.addEventListener('DOMContentLoaded', function () {
-    sjReveal('.reveal-marks-scroll', 150);
-});
-</script>

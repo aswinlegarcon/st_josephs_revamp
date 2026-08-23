@@ -847,6 +847,16 @@ case 'settings':
             'jumbotron_sub'     => ['Sub-line', ''],
             'jumbotron_btn'     => ['Button label', ''],
         ],
+        'Home stat band (the four animated counters)' => [
+            'home_stat1_value' => ['Stat 1 — value', 'A number plus optional suffix, e.g. 80+ or 100%'],
+            'home_stat1_label' => ['Stat 1 — label', ''],
+            'home_stat2_value' => ['Stat 2 — value', ''],
+            'home_stat2_label' => ['Stat 2 — label', ''],
+            'home_stat3_value' => ['Stat 3 — value', ''],
+            'home_stat3_label' => ['Stat 3 — label', ''],
+            'home_stat4_value' => ['Stat 4 — value', ''],
+            'home_stat4_label' => ['Stat 4 — label', ''],
+        ],
         'Social & misc' => [
             'facebook_url'      => ['Facebook URL', 'Must start with https://'],
             'youtube_url'       => ['YouTube URL', 'Must start with https://'],
