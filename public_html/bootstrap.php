@@ -8,11 +8,16 @@ if (!defined('SJ_PUBLIC_ROOT')) {
     define('SJ_PUBLIC_ROOT', __DIR__); // …/public_html
 }
 
+// K6: the school lives in IST — every date()/greeting renders in
+// Asia/Kolkata regardless of the server's zone (the container is UTC; the
+// DB session is pinned to +05:30 in Db.php so timestamps stay consistent).
+date_default_timezone_set('Asia/Kolkata');
+
 // Static-asset cache-busting version. Bump this ONE line per deploy instead of
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260823.13'); // K5: banner caption clears the overlay nav (desktop + mobile) + banner heading style
+    define('SJ_ASSET_VER', '20260823.14'); // K6: role dropdown, IST clock, stat-band settings verified
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global

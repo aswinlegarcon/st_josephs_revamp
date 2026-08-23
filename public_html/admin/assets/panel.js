@@ -450,7 +450,7 @@
         fields: [
           { name: 'username', label: 'Username (lowercase, 3–30)', type: 'text', required: true },
           { name: 'display_name', label: 'Display name', type: 'text', required: true },
-          { name: 'role', label: 'Account role — owner: full control · editor: content only', type: 'text', required: true }
+          { name: 'role', label: 'Account role — owner: full control · editor: content only', type: 'enum', options: ['editor', 'owner'], required: true }
         ],
         values: { role: 'editor' },
         submitLabel: 'Create account',

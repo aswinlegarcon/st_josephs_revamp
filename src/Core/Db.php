@@ -59,6 +59,11 @@ final class Db
             self::$pdo = $debug
                 ? new CountingPdo($dsn, $cfg['user'], $cfg['pass'], $opts)
                 : new PDO($dsn, $cfg['user'], $cfg['pass'], $opts);
+            // K6: the school runs on IST — pin the MySQL session so NOW()/
+            // timestamps match PHP's Asia/Kolkata default (bootstrap.php).
+            // Keeping both on one zone is what keeps the dashboard's
+            // "N min ago" feed arithmetic honest.
+            self::$pdo->exec("SET time_zone = '+05:30'");
         } catch (PDOException $e) {
             if (\PHP_SAPI === 'cli') {
                 \fwrite(\STDERR, 'Database connection failed: ' . $e->getMessage() . "\n");
