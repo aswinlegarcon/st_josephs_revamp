@@ -38,7 +38,7 @@ services:
       - ./composer.json:/var/www/composer.json
       - ./backups:/var/www/backups
     ports:
-      - "127.0.0.1:8090:80"
+      - "0.0.0.0:8090:80"
 
 volumes:
   dbdata:

@@ -165,10 +165,38 @@ body { margin: 0; color: var(--sj-ink); }
 .sj-hero--banner .carousel-indicators,
 .sj-hero--banner .carousel-control-prev,
 .sj-hero--banner .carousel-control-next { display: none; }
-.sj-hero--banner .carousel-caption { top: 50%; transform: translateY(-50%); bottom: auto; }
-.sj-hero--banner .sj-hero-title { font-size: clamp(26px, 3.5vw, 42px); }
-.sj-hero--banner .sj-hero-flourish { margin-top: 8px; }
+/* three-class selector: must OUT-SPECIFY the later `.sj-hero .carousel-caption`
+   position rules (equal two-class specificity would lose on source order).
+   The transparent navbar overlays the banner, so the caption centers in the
+   VISIBLE area below it: offset = half the nav height (110px desktop tier). */
+.sj-hero.sj-hero--banner .carousel-caption { top: calc(50% + 55px); transform: translateY(-50%); bottom: auto; }
+/* K5: distinct banner heading (owner: Home keeps its style; inner pages get
+   their own) — uppercase letterspaced Fjalla over a small gold rule, with an
+   uppercase Manrope sub-label. */
+.sj-hero--banner .sj-hero-title {
+  font-size: clamp(22px, 3vw, 36px);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+.sj-hero--banner .sj-hero-title::after {
+  content: ""; display: block;
+  width: 36px; height: 3px; border-radius: 2px;
+  background: var(--sj-gold); margin: 12px auto 0;
+}
+.sj-hero--banner .sj-hero-flourish {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: clamp(11px, 1.2vw, 13px);
+  color: rgba(255, 255, 255, .85);
+  margin-top: 10px;
+}
 .sj-hero--banner .sj-hero-btnwrap { margin-top: 14px; }
+/* K5: the transparent navbar sits OVER the banner — on phones the caption
+   must clear it (taller banner + caption nudged below true center). */
+@media (max-width: 768px) {
+  .sj-hero--banner .carousel-item img { height: 300px; }
+  .sj-hero.sj-hero--banner .carousel-caption { top: calc(50% + 32px); } /* mobile nav = 64px */
+}
 
 /* scroll cue (hero variant only): a soft bouncing chevron above the fold */
 .sj-hero-cue {
