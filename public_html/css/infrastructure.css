@@ -1,451 +1,106 @@
-.infrastructure {
-  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
-  scroll-behavior: smooth;
+/* infrastructure.css — Stage J "Global Campus" rewrite (PUBLIC_UI_DESIGN.md).
+   Hero from the shared partial; this sheet styles the quick-jump subnav and
+   the alternating facility showcases (.infra-new / .infra-new1 — text/carousel
+   sides flip per section; per-facility #bg-N photos come from the template's
+   head style with the brand veil). */
+
+/* quick-jump subnav */
+.sj-subnav {
+  background: #fff;
+  border-bottom: 1px solid var(--sj-line-cool);
+  padding: 12px 18px;
+  gap: 14px;
 }
-
-/* abt-carousel */
-.abt-carousel .carousel-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+.sj-subnav .inside-nav-text {
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--sj-navy-dark);
+  margin: 0 10px 0 0;
 }
-
-.abt-carousel .carousel-inner {
-  height: 550px !important;
-}
-
-.carousel-caption {
-  top: 20%;
-}
-
-.carousel-caption h5 {
-  font-family: "Fjalla One", sans-serif !important;
-  text-align: center;
-  color: #fff;
-  font-size: 100px;
-  font-weight: 700;
-}
-
-.carousel-caption p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  text-align: center;
-  font-size: 18px;
-  top: 2rem;
-}
-/* anomation */
-.abt-carousel-reveal {
-  transition: 1.5s;
-  transform: translateY(90px);
-  opacity: 0;
-}
-
-.abt-carousel-reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (max-width: 900px) {
-  .abt-carousel .carousel-item img {
-    width: 1500px !important;
-  }
-
-  .carousel-caption h5 {
-    font-size: 70px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 15px;
-    top: 2rem;
-  }
-
-  .slider-btn {
-    margin-top: 30px;
-  }
-
-  .slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 17px;
-  }
-}
-
-@media (max-width: 768px) {
-  .abt-carousel .carousel-item img {
-    height: 700px;
-    width: 1200px;
-  }
-
-  .carousel-caption {
-    top: 35%;
-  }
-
-  .carousel-caption h5 {
-    font-size: 65px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 12px;
-    top: 2rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .carousel-caption {
-    top: 35%;
-  }
-
-  .carousel-caption h5 {
-    font-size: 60px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 12px;
-    top: 1rem;
-  }
-}
-
-@media (max-width: 500px) {
-  .carousel-caption {
-    top: 32%;
-  }
-
-  .carousel-caption h5 {
-    font-size: 50px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 15px;
-    top: 1rem;
-  }
-}
-
-@media (max-width: 370px) {
-  .carousel-caption h5 {
-    font-size: 45px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    top: 0.5rem;
-  }
-}
-/* abt-carousel end */
-/* 
-
-.infrastructure-text {
-    box-sizing: border-box;
-    align-items: center;
-    margin: auto;
-    padding: 20px;
-    background-color:#CCCCCC!important ;
-}
-
-.infrastructure-text h4 {
-    text-align: center;
-    font-size: 60px;
-    font-weight: 700;
-}
-
-.infrastructure-text p {
-    text-align: center;
-    font-style: italic;
-    font-size: 30px;
-    font-weight: 500;
-}
-.infrastructure-text-reveal
-{
-    transition: 1.5s;
-    transform: translateX(-50px);
-    opacity: 0;
-}
-
-
-.infrastructure-text-reveal.active 
-{
-    opacity: 1;
-    transform: translateX(0);
-}
-@media(max-width:768px)
-{
-    .infrastructure-text h4{
-        font-size: 40px;
-    }
-    .infrastructure-text p{
-        font-size: 20px;
-    }
-} */
-/* new carousel for infra */
-/* new carousel for infra */
-.inside-nav-text {
-  font-family: "Fjalla One", sans-serif !important;
-  font-size: 20px;
-  font-weight: 600;
-  margin-right: 10px;
-}
-.btn-group {
+.sj-subnav .btn-group {
   flex-wrap: wrap;
-  justify-content: left;
+  gap: 8px;
 }
-.btn-group .btn {
-  font-family: "LeagueSpartan", sans-serif !important;
-  background: linear-gradient(to left, #2b4b8a, #1a355d);
-  border: none;
-  color: #fff;
-  transition: 0.5s;
+.sj-subnav .btn-group a { text-decoration: none; }
+.sj-subnav .btn {
+  font-family: var(--sj-font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--sj-navy) !important;
+  border: 1.5px solid var(--sj-navy) !important;
+  border-radius: var(--sj-r-chip) !important;
+  background: transparent !important;
+  padding: 7px 16px;
+  transition: background var(--sj-t-fast) ease, color var(--sj-t-fast) ease;
 }
-.btn-group .btn:hover {
-  background: firebrick;
-  border: none;
-  color: #fff;
+.sj-subnav .btn:hover {
+  background: var(--sj-navy) !important;
+  color: #fff !important;
 }
-.btn-group a {
-  margin: 5px;
-}
-.infra-new {
+.sj-subnav .navbar-toggler { border-color: var(--sj-line-cool); }
+
+/* facility showcases (both variants share the shell) */
+.infra-new, .infra-new1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;
-  border: 2px solid black;
-  padding: 40px;
-  transition: 1.5s;
-  width: 90%;
-  margin: auto;
-  margin-top: 20px;
+  align-items: center;
+  padding: clamp(28px, 5vw, 56px);
+  scroll-margin-top: 90px; /* #bg-N anchors land below the fixed nav */
 }
-
-.infra-new-carousel {
-  order: 2; /* Initial order */
-  flex: 1 1 600px;
+.infra-new-carousel, .infra-new-carousel1 {
+  flex: 1 1 500px;
   width: 100%;
+  margin-top: 20px !important;
 }
-
-.infra-new-carousel .carousel-inner {
-  width: 100%;
-  height: auto;
-  border-radius: 35px;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
-}
-
-.infra-new-carousel .carousel-image {
-  object-fit: contain !important;
-  width: 100%;
-  height: 500px; /* Adjust this value as needed */
-}
-
-.infra-new-text {
-  order: 1; /* Initial order */
-  flex: 1 1 50%;
-  margin-left: 20px;
-  margin-right: 20px;
-  text-align: left;
-}
-
-.infra-new-text h4 {
-  font-family: "Fjalla One", sans-serif !important;
-  color: #fff;
-  font-size: 42px;
-  font-weight: 600;
-}
-.infra-new-text p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  color: antiquewhite;
-  font-size: 22px;
-}
-.infra-new-text span {
-  font-family: "Fjalla One", sans-serif !important;
-  color: #ffd700;
-  font-size: 22px;
-}
-
-/* animation */
-.infra-new-reveal {
-  transition: 1.5s;
-  transform: translateX(-50px);
-  opacity: 0;
-}
-
-.infra-new-reveal.active {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-@media(max-width: 1520px) {
-  .infra-new {
-    flex-direction: column;
-    align-items: center;
-  }
-  .infra-new-carousel {
-    order: 2!important; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-  }
-
-  .infra-new-text {
-    order: 1!important; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-    text-align: left;
-    margin-top: 20px;
-  }
-
-  .infra-new-carousel .carousel-inner {
-    height: auto;
-  }
-}
-
-@media (max-width: 768px) {
-  .infra-new {
-    flex-direction: column;
-    align-items: center;
-  }
-  .infra-new:hover {
-    transform: none;
-  }
-  .infra-new-carousel {
-    order: 2; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-  }
-  .infra-new-text p {
-    text-align: justify;
-  }
-  .infra-new-text {
-    order: 1; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-    text-align: left;
-    margin-top: 20px;
-  }
-
-  .infra-new-carousel .carousel-inner {
-    height: auto;
-  }
-}
-
-/* infre new-1 */
-
-.infra-new1 {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  border: 2px solid black;
-  padding: 40px;
-  transition: 1.5s;
-  width: 90%;
-  margin: auto;
-  margin-top: 20px;
-}
-/* .infra-new1:hover{
-    transform: scale(1.02);
-} */
-.infra-new-carousel1 {
-  order: 1; /* Initial order */
-  flex: 1 1 600px;
-  width: 100%;
-}
-
+.infra-new-carousel { order: 2; }
+.infra-new-carousel1 { order: 1; }
+.infra-new-carousel .carousel-inner,
 .infra-new-carousel1 .carousel-inner {
   width: 100%;
   height: auto;
-  border-radius: 35px;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+  border-radius: var(--sj-r-card);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
 }
-.infra-new-carousel1 .carousel-image {
-  object-fit: contain;
-  width: 100%;
-  height: 500px; /* Adjust this value as needed */
-}
-.infra-new-text1 {
-  order: 2; /* Initial order */
-  flex: 1 1 50%;
-  margin-left: 20px;
-  margin-right: 20px;
+.infra-new-text, .infra-new-text1 {
+  flex: 1 1 45%;
+  margin: 0 20px;
   text-align: left;
 }
-
-.infra-new-text1 h4 {
-  font-family: "Fjalla One", sans-serif !important;
+.infra-new-text { order: 1; }
+.infra-new-text1 { order: 2; }
+.infra-new-text h4, .infra-new-text1 h4 {
+  font-family: var(--sj-font-head);
   color: #fff;
-  font-size: 40px;
-  font-weight: 600;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 400;
 }
-.infra-new-text1 p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  color: antiquewhite;
-  font-size: 22px;
+.infra-new-text h4::after, .infra-new-text1 h4::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 12px 0 16px;
 }
-.infra-new-text1 span {
-  font-family: "Fjalla One", sans-serif !important;
-  color: #ffd700;
-  font-size: 22px;
-}
-@media (max-width: 1465px) {
-  .infra-new1 {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .infra-new-carousel1 {
-    order: 2; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-  }
-
-  .infra-new-text1 {
-    order: 1; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-    text-align: left;
-    margin-top: 20px;
-  }
-
-  .infra-new-carousel1 .carousel-inner {
-    height: auto;
-  }
+.infra-new-text p, .infra-new-text1 p {
+  font-family: var(--sj-font-body);
+  color: rgba(255, 255, 255, .9);
+  font-size: 15.5px;
+  line-height: 1.8;
 }
 
+@media (max-width: 1300px) {
+  .infra-new, .infra-new1 { flex-direction: column; align-items: center; }
+  .infra-new-carousel, .infra-new-carousel1 { order: 2; flex: 1 1 100%; margin: 0; }
+  .infra-new-text, .infra-new-text1 { order: 1; flex: 1 1 100%; margin: 20px 0 0; }
+}
 @media (max-width: 768px) {
-  .infra-new1 {
-    flex-direction: column;
-    align-items: center;
-  }
-  .infra-new1:hover {
-    transform: none;
-  }
-  .infra-new-carousel1 {
-    order: 2; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-  }
-  .infra-new-text1 p {
-    text-align: justify;
-  }
-  .infra-new-text1 {
-    order: 1; /* Change order on small screens */
-    flex: 1 1 100%;
-    margin: 0;
-    text-align: left;
-    margin-top: 20px;
-  }
-
-  .infra-new-carousel1 .carousel-inner {
-    height: auto;
-  }
+  .infra-new-text p, .infra-new-text1 p { text-align: justify; }
 }
 
-/* Customize carousel controls */
+/* content-carousel controls */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-color: #000 !important;
+  background-color: var(--sj-navy) !important;
   border-radius: 50% !important;
   padding: 15px;
 }

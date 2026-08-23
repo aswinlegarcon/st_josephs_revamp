@@ -7,6 +7,7 @@ $sj_page = repo_page('achievements');
 \SJ\View\Layout::render('achievements', [
     'title'           => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'       => 'achievements',
+    'sjNavOverlay'    => true, // Stage J: transparent nav over the hero
     'styles'          => ['achievements'],
     'showJumbotron'   => false,
     'sj_page'         => $sj_page,

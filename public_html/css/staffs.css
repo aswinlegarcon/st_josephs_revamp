@@ -1,301 +1,104 @@
-.infrastructure {
-  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
-}
+/* staffs.css — Stage J "Global Campus" rewrite (PUBLIC_UI_DESIGN.md).
+   Hero from the shared partial; this sheet styles the "We Love our Staffs"
+   flanked intro and the two staff blocks (same card recipe as sections). */
 
-/* abt-carousel */
-.abt-carousel .carousel-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
-}
-
-.abt-carousel .carousel-inner {
-  height: 600px !important;
-}
-
-.carousel-caption {
-  top: 20%;
-}
-
-.carousel-caption h5 {
-  font-family: "Fjalla One", sans-serif !important;
-  color: #fff;
-  font-size: 100px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.carousel-caption p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  font-size: 18px;
-  top: 2rem;
-  text-align: center;
-}
-/* anomation */
-.abt-carousel-reveal {
-  transition: 1.5s;
-  transform: translateY(90px);
-  opacity: 0;
-}
-
-.abt-carousel-reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (max-width: 900px) {
-  .abt-carousel .carousel-item img {
-    width: 1500px !important;
-  }
-
-  .carousel-caption h5 {
-    font-size: 70px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 15px;
-    top: 2rem;
-  }
-
-  .slider-btn {
-    margin-top: 30px;
-  }
-
-  .slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 17px;
-  }
-}
-
-@media (max-width: 768px) {
-  .abt-carousel .carousel-item img {
-    height: 700px;
-    width: 1200px;
-  }
-
-  .carousel-caption {
-    top: 35%;
-  }
-
-  .carousel-caption h5 {
-    font-size: 75px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 12px;
-    top: 2rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .carousel-caption {
-    top: 35%;
-  }
-
-  .carousel-caption h5 {
-    font-size: 65px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 12px;
-    top: 1rem;
-  }
-}
-
-@media (max-width: 500px) {
-  .carousel-caption {
-    top: 32%;
-  }
-
-  .carousel-caption h5 {
-    font-size: 55px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    font-size: 15px;
-    top: 1rem;
-  }
-}
-
-@media (max-width: 370px) {
-  .carousel-caption h5 {
-    font-size: 55px;
-    font-weight: 700;
-  }
-
-  .carousel-caption p {
-    top: 0.5rem;
-  }
-}
-/* abt-carousel end */
-
+/* flanked intro: photo — text — photo */
 .infrastructure-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: auto;
-  padding: 20px;
-  background-color: #cccccc !important;
-  box-sizing: border-box;
-  flex-wrap: wrap;
+  gap: 26px;
+  width: min(1300px, 92%);
+  margin: clamp(36px, 5vw, 64px) auto;
 }
-
-.infrastructure-text {
-  padding: 20px;
-  text-align: center;
-  box-sizing: border-box;
-  flex: 1 1 300px;
-}
-
-.infrastructure-text h4 {
-  font-family: "Fjalla One", sans-serif !important;
-  font-size: 60px;
-  font-weight: 700;
-}
-
-.infrastructure-text p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  text-align: left;
-  font-size: 20px;
-  font-weight: 500;
-  text-align: justify;
-}
-
-.infrastructure-text-reveal {
-  transition: 1.5s;
-  transform: translateX(-20px);
-  opacity: 0;
-}
-
-.infrastructure-text-reveal.active {
-  opacity: 1;
-  transform: translateX(0);
-}
-
 .infrastructure-image {
-  max-width: 25%;
-  height: auto;
-  box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.5);
-  border-radius: 25px;
-  margin: 0 20px;
-  flex: 1 1 150px;
+  flex: 1 1 28%;
+  min-width: 0;
+  width: 28%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--sj-r-card);
+  box-shadow: var(--sj-shadow-1);
+}
+.infrastructure-text { flex: 1 1 44%; text-align: center; padding: 0 10px; }
+.infrastructure-text h4 {
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  font-size: clamp(26px, 3vw, 40px);
+  color: var(--sj-navy-dark);
+}
+.infrastructure-text h4::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 12px auto 16px;
+}
+.infrastructure-text p {
+  font-family: var(--sj-font-body);
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: var(--sj-ink-soft);
+}
+@media (max-width: 900px) {
+  .infrastructure-container { flex-direction: column; }
+  .infrastructure-image { width: min(420px, 100%); }
 }
 
-/* Media Queries for Responsiveness */
-
-@media (max-width: 1030px) {
-  .infrastructure-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .infrastructure-text h4 {
-    font-size: 40px;
-  }
-
-  .infrastructure-text p {
-    font-size: 20px;
-  }
-
-  .infrastructure-image {
-    max-width: 50%;
-    margin: 10px 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .infrastructure-text h4 {
-    font-size: 32px;
-  }
-
-  .infrastructure-text p {
-    font-size: 18px;
-  }
-
-  .infrastructure-image {
-    max-width: 80%;
-  }
-}
-
-/* new template */
-
+/* staff blocks (paper band + white cards, same recipe as sections) */
 .newtemp-body {
-  background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7)),
-    url("/media/static/staff1.jpg"); /* F2: full-frame recompression of /photos/staff1.jpg */
-  background-size: cover;
+  background: var(--sj-paper);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 100vh;
-  border-bottom: 3px solid white;
+  padding: var(--sj-sec-pad) 0;
 }
-
 .about-container {
   display: flex;
   flex-direction: column;
+  gap: 28px;
   max-width: 1200px;
-  width: 100%;
-  margin: 20px;
+  width: min(1200px, 92%);
 }
-
 .about-section {
   display: flex;
   flex-direction: row;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: var(--sj-r-card);
+  box-shadow: var(--sj-shadow-1);
   overflow: hidden;
+  transition: transform var(--sj-t-med) var(--sj-ease), box-shadow var(--sj-t-med) var(--sj-ease);
 }
-
-.about-image {
-  width: 50%;
-  object-fit: cover;
-}
-
+.about-section:hover { transform: translateY(-4px); box-shadow: var(--sj-shadow-2); }
+.about-image { width: 50%; object-fit: cover; }
 .about-content {
-  padding: 20px;
+  padding: clamp(22px, 3vw, 40px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
 }
-
 .about-content h2 {
-  font-family: "Fjalla One", sans-serif !important;
-  font-size: 30px;
-  margin-bottom: 10px;
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  font-size: clamp(24px, 2.6vw, 32px);
+  color: var(--sj-navy-dark);
+  margin-bottom: 6px;
 }
-
+.about-content h2::after {
+  content: ""; display: block;
+  width: 36px; height: 3px; border-radius: 2px;
+  background: var(--sj-gold); margin-top: 10px;
+}
 .about-content p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  font-size: 16px;
-  margin-bottom: 20px;
-  text-align: justify;
+  font-family: var(--sj-font-body);
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--sj-ink-soft);
+  margin: 14px 0 0;
 }
-
-/* Responsive Styles */
 @media (max-width: 768px) {
-  .about-section {
-    flex-direction: column;
-  }
-
-  .about-section:nth-child(2) .about-content {
-    order: 2;
-  }
-
-  .about-section:nth-child(2) .about-image {
-    order: 1;
-  }
-
-  .about-image {
-    width: 100%;
-  }
+  .about-section { flex-direction: column; }
+  .about-section:nth-child(2) .about-content { order: 2; }
+  .about-section:nth-child(2) .about-image { order: 1; }
+  .about-image { width: 100%; }
+  .about-content p { text-align: justify; }
 }

@@ -5,22 +5,19 @@
 // collapse ids reuse the shipped word forms (collapseOne…collapseNine).
 $sj_words = ['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen'];
 ?>
-<!-- top carousel -->
-<section class="abt-carousel">
-<div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-  <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add sports slide') : '' ?>>
-    <?php foreach ($sj_hero_slides as $i => $s): ?>
-    <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'Sports slide') ?>>
-      <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => ($i === 0 ? 'First' : ($i === 1 ? 'Second' : 'Third')) . ' slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
-      <div class="carousel-caption text-start">
-          <h5<?= $i === 0 ? ' class="abt-carousel-reveal"' : '' ?><?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
-          <p<?= $i === 0 ? ' class="abt-carousel-reveal"' : '' ?><?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-</div>
-</section>
+<!-- top carousel — Stage J: the shared hero partial (shipped id kept) -->
+<?php
+$sjHero = [
+    'id'          => 'carouselExampleSlidesOnly',
+    'slides'      => $sj_hero_slides,
+    'variant'     => 'hero',
+    'preset'      => 'hero_16x7',
+    'interval'    => 2000,
+    'page_id'     => $sj_page ? (int)$sj_page['id'] : null,
+    'keyboardNav' => true,
+];
+include dirname(__DIR__) . '/partials/hero.php';
+?>
 
 <!-- sportsment cards start -->
 <div class="home-text">
@@ -28,7 +25,7 @@ $sj_words = ['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten
 </div>
 <section class="sports-all"<?= ed_add('sport', [], 'Add sport') ?>>
 <?php foreach (array_chunk($sj_sports, 3) as $ri => $chunk): $sfx = $sj_suffixes[min($ri, count($sj_suffixes) - 1)] ?? ''; ?>
-<section class="sports-card sports-card-reveal<?= e($sfx) ?>">
+<section class="sports-card sj-reveal">
     <div class="row mt-5">
     <?php foreach ($chunk as $ci => $S): $n = $ri * 3 + $ci; $word = $sj_words[$n] ?? (string)($n + 1); ?>
         <div class="col-md-4">
@@ -67,11 +64,3 @@ $sj_words = ['One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten
 <?php endforeach; ?>
 </section>
 
-<script src="/js/sports.js"></script>
-<script>
-// Shipped selectors/threshold, now through the shared helper in /js/site.js
-// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.sports-card-reveal,.sports-text-reveal,.abt-carousel-reveal', 150, true);
-});
-</script>

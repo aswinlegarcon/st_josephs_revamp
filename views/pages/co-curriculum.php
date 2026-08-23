@@ -1,49 +1,46 @@
-<?php // Co-curriculum page body (static content; academy cards). Bootstrap 5 dialect. ?>
+<?php // Co-curriculum page body — Stage J. The top carousel is static content
+// (three shipped photos, no hero_slide rows) so it keeps its own markup but
+// wears the shared .sj-hero classes for identical geometry/veil/caption. ?>
 <!-- top carousel -->
-<section class="abt-carousel ">
-<div id="coCurriculumHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
+<section class="sj-hero sj-hero--hero sj-hero--motion sj-reveal">
+<div id="coCurriculumHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000" data-sj-kbnav>
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img class="d-block w-100" src="/photos/band1.jpg" alt="First slide"><?php /* N5 audit: original kept — every recompression came out LARGER (193→200+ KB) */ ?>
-      <div class="carousel-caption text-start">
-          <h5 class="abt-carousel-reveal">Our Co-Curriculum</h5>
-          <p class="abt-carousel-reveal">About our co-curriculum</p>
-
+      <img class="d-block w-100" src="/photos/band1.jpg" alt="First slide" fetchpriority="high"><?php /* N5 audit: original kept — every recompression came out LARGER (193→200+ KB) */ ?>
+      <div class="carousel-caption sj-hero-cap">
+          <h5 class="sj-hero-title">Our Co-Curriculum</h5>
+          <p class="sj-hero-flourish">About our co-curriculum</p>
       </div>
     </div>
     <div class="carousel-item">
-      <img class="d-block w-100" src="photos/vocaca1.jpg" alt="Second slide">
-      <div class="carousel-caption text-start">
-      <h5>Our Co-Curriculum</h5>
-          <p>About our co-curriculum</p>
+      <img class="d-block w-100" src="photos/vocaca1.jpg" alt="Second slide" loading="lazy">
+      <div class="carousel-caption sj-hero-cap">
+      <h5 class="sj-hero-title">Our Co-Curriculum</h5>
+          <p class="sj-hero-flourish">About our co-curriculum</p>
       </div>
     </div>
     <div class="carousel-item">
-      <img class="d-block w-100" src="photos/ncc1.jpg" alt="Third slide">
-      <div class="carousel-caption text-start">
-      <h5>Our Co-Curriculum</h5>
-          <p>About our co-curriculum</p>
+      <img class="d-block w-100" src="photos/ncc1.jpg" alt="Third slide" loading="lazy">
+      <div class="carousel-caption sj-hero-cap">
+      <h5 class="sj-hero-title">Our Co-Curriculum</h5>
+          <p class="sj-hero-flourish">About our co-curriculum</p>
       </div>
     </div>
   </div>
 </div>
 </section>
 
-<!-- co-curriculumment cards start -->
-
+<!-- academy cards -->
 <div class="home-text">
-    <h2  class="span-reveal">The <span>Co Curriculum </span> of St.Joseph's</h2>
+    <h2>The <span>Co Curriculum </span> of St.Joseph's</h2>
 </div>
 
 <section class="co-curriculum-all">
 <?php
-// C5: the 18 academy cards render from the `academies` table (grid order =
-// admin order). Three cards per reveal-section; the reveal-class suffixes
-// reproduce the shipped sequence ('', 2, 3, 4, 4, 5 — the duplicate 4 is a
-// shipped quirk kept on purpose). $sj_academies from the controller.
-$sj_suffixes = ['', '2', '3', '4', '4', '5'];
+// C5: the 18+ academy cards render from the `academies` table (grid order =
+// admin order), three per row. $sj_academies from the controller.
 foreach (array_chunk($sj_academies, 3) as $ri => $chunk): ?>
-    <section class="co-curriculum-card co-curriculum-card-reveal<?= $sj_suffixes[min($ri, 5)] ?>">
+    <section class="co-curriculum-card sj-reveal">
     <div class="row mt-5">
     <?php foreach ($chunk as $ac): ?>
         <div class="col-md-4">
@@ -52,7 +49,7 @@ foreach (array_chunk($sj_academies, 3) as $ri => $chunk): ?>
             <div class="card-body">
             <h3 class="card-title"<?= ed_field('academy', $ac['id'], 'card_title') ?>><?= e($ac['card_title']) ?></h3>
             <p class="card-text"<?= ed_field('academy', $ac['id'], 'card_subtitle') ?>><?= e($ac['card_subtitle']) ?></p>
-            <a class="btn btn-primary btn-lg" href="<?= e(academy_url($ac['slug'])) ?>" role="button" aria-label="Read more about <?= e($ac['name']) ?>">Read more</a>
+            <a class="sj-btn sj-btn--navy sj-btn--sm" href="<?= e(academy_url($ac['slug'])) ?>" role="button" aria-label="Read more about <?= e($ac['name']) ?>">Read more</a>
             </div>
           </div>
         </div>
@@ -61,12 +58,3 @@ foreach (array_chunk($sj_academies, 3) as $ri => $chunk): ?>
     </section>
 <?php endforeach; ?>
     </section>
-
-<script src="/js/co-curriculum.js"></script>
-<script>
-// Shipped selectors/threshold, now through the shared helper in /js/site.js
-// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.co-curriculum-card-reveal,.co-curriculum-text-reveal,.abt-carousel-reveal', 50, true);
-});
-</script>

@@ -5,27 +5,24 @@
 // the SAME row the home page renders — one edit updates both pages).
 // The timings table + diary download are structural markup and stay in the view.
 ?>
-<!-- top carousel -->
-<section class="abt-carousel">
-  <div id="aboutHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-    <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add about slide') : '' ?>>
-      <?php foreach ($sj_hero_slides as $i => $s): ?>
-      <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'About slide') ?>>
-        <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => ($i === 0 ? 'First' : ($i === 1 ? 'Second' : 'Third')) . ' slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
-        <div class="carousel-caption text-start<?= $i === 0 ? ' abt-carousel-reveal' : '' ?>">
-          <h5<?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
-          <p<?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-  </div>
-</section>
+<!-- top carousel — Stage J: the shared hero partial (shipped id kept) -->
+<?php
+$sjHero = [
+    'id'          => 'aboutHeroCarousel',
+    'slides'      => $sj_hero_slides,
+    'variant'     => 'hero',
+    'preset'      => 'hero_16x7',
+    'interval'    => 2000,
+    'page_id'     => $sj_page ? (int)$sj_page['id'] : null,
+    'keyboardNav' => true,
+];
+include dirname(__DIR__) . '/partials/hero.php';
+?>
 
 <!-- about start -->
 <div class="containers">
   <?php foreach (['president', 'principal', 'history', 'rules'] as $roleKey): $b = $sj_blocks[$roleKey] ?? null; if (!$b) continue; ?>
-  <div class="about-section">
+  <div class="about-section sj-reveal">
     <div class="about-image">
       <?= img_tag($b['image'], 'portrait_4x5', ['alt' => $b['heading'], 'extra' => trim(ed_img('profile', $b['id']))]) ?>
     </div>
@@ -46,7 +43,7 @@
       <?php /* R3: was <span style><p>…</p></span> — a <p> may not sit inside a
                <span>. The gold color now lives on the <p> itself; the text and
                the link inherit exactly the same computed color as before. */ ?>
-      <p style="color:#ffd700;">To see more about our rules and regulations, then click on Download --  <a href="/files/diary.pdf" download="SchoolDiary.pdf" class="download-btn">Download</a></p>
+      <p class="diary-line">To see more about our rules and regulations, then click on Download --  <a href="/files/diary.pdf" download="SchoolDiary.pdf" class="download-btn">Download</a></p>
       <?php endif; ?>
     </div>
   </div>
@@ -54,7 +51,7 @@
 </div>
 
 <!-- cross-navigation teasers -->
-<div class="abt-card-container reveal-abt-card">
+<div class="abt-card-container sj-reveal">
   <section class="section">
     <?php /* F2: /media/static/achbg.jpg is a full-frame recompression of
              /photos/achbg.jpg (541K -> 164K); same image, same framing. */ ?>
@@ -75,10 +72,3 @@
   </section>
 </div>
 
-<script>
-// Shipped selectors/threshold, now through the shared helper in /js/site.js
-// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.abt-carousel-reveal,.ab-1,.ab-2,.ab-3,.ab-4,.reveal-diary,.reveal-abt-card', 150, true);
-});
-</script>

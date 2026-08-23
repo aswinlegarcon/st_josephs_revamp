@@ -13,6 +13,7 @@ foreach (['staff_love', 'staff_team', 'staff_tour'] as $roleKey) {
 \SJ\View\Layout::render('staffs', [
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'infrastructure',
+    'sjNavOverlay'   => true, // Stage J: transparent nav over the hero
     'styles'         => ['staffs'],
     'showJumbotron'  => false,
     'sj_page'        => $sj_page,

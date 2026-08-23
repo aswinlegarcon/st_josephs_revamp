@@ -10,9 +10,10 @@
 // difference). Rendered by the shell as a HEAD <style> — valid HTML where the
 // old body <style> was not (R3); nothing else styles .bg-1, so the position
 // change cannot alter the cascade.
-$sjHeadCss = "  .bg-1 { background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('"
+// Stage J: the brand veil (--sj-veil values) replaces the old black scrim.
+$sjHeadCss = "  .bg-1 { background: linear-gradient(rgba(43, 75, 138, .55), rgba(26, 53, 93, .75)), url('"
     . e($sj_academy['image'] ? img_url($sj_academy['image'], 'bg_wide') : '')
-    . "') no-repeat; background-size: cover; }";
+    . "') no-repeat center; background-size: cover; }";
 ?>
 
 <section class="back-bar">

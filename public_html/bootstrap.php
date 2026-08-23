@@ -12,7 +12,7 @@ if (!defined('SJ_PUBLIC_ROOT')) {
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260823.5'); // J4: generic families (sections/academy/album css rewrites)
+    define('SJ_ASSET_VER', '20260823.6'); // J5: bespoke hub pages (8 templates + sheets)
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global

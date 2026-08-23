@@ -12,7 +12,7 @@ function sj_achieve_list(array $rows): void
         foreach ($pair as $k => $A) {
             $rev = $k === 1;
             ?>
-        <div class="item<?= $rev ? ' reverse' : '' ?><?= empty($A['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('achievement', $A['id'], $A['title']) ?>>
+        <div class="item sj-reveal<?= $rev ? ' reverse' : '' ?><?= empty($A['is_active']) ? ' sj-inactive' : '' ?>"<?= $rev ? ' data-sj-delay="120"' : '' ?><?= ed_item('achievement', $A['id'], $A['title']) ?>>
             <?php if (!$rev): ?>
             <?= img_tag($A['image'], 'feature_4x3', ['alt' => 'Section Image', 'extra' => trim(ed_img('achievement', $A['id']))]) ?>
             <div class="icon">
@@ -36,22 +36,19 @@ function sj_achieve_list(array $rows): void
 }
 ?>
 
-<!-- top carousel -->
-<section class="abt-carousel">
-<div id="achievementsHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-  <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add achievements slide') : '' ?>>
-    <?php foreach ($sj_hero_slides as $i => $s): ?>
-    <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'Achievements slide') ?>>
-      <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => ($i === 0 ? 'First' : ($i === 1 ? 'Second' : 'Third')) . ' slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
-      <div class="carousel-caption text-start">
-          <h5<?= $i === 0 ? ' class="abt-carousel-reveal"' : '' ?><?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
-          <p<?= $i === 0 ? ' class="abt-carousel-reveal"' : '' ?><?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-</div>
-</section>
+<!-- top carousel — Stage J: the shared hero partial (shipped id kept) -->
+<?php
+$sjHero = [
+    'id'          => 'achievementsHeroCarousel',
+    'slides'      => $sj_hero_slides,
+    'variant'     => 'hero',
+    'preset'      => 'hero_16x7',
+    'interval'    => 2000,
+    'page_id'     => $sj_page ? (int)$sj_page['id'] : null,
+    'keyboardNav' => true,
+];
+include dirname(__DIR__) . '/partials/hero.php';
+?>
 
 <!-- Achievement cards start -->
 <div class="home-text">
@@ -64,11 +61,3 @@ function sj_achieve_list(array $rows): void
 </div>
 <?php sj_achieve_list($sj_awards); ?>
 
-<script src="/js/achievements.js"></script>
-<script>
-// Shipped selectors/threshold, now through the shared helper in /js/site.js
-// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.achieve-card-reveal,.achieve-text-reveal,.abt-carousel-reveal', 150, true);
-});
-</script>

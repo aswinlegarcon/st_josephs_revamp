@@ -8,29 +8,26 @@ $sj_love = $sj_blocks['staff_love'] ?? null;
 $sj_team = $sj_blocks['staff_team'] ?? null;
 $sj_tour = $sj_blocks['staff_tour'] ?? null;
 ?>
-<!-- top carousel -->
-<section class="abt-carousel ">
-<div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-  <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add staffs slide') : '' ?>>
-    <?php foreach ($sj_hero_slides as $i => $s): ?>
-    <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'Staffs slide') ?>>
-      <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => ($i === 0 ? 'First' : 'Second') . ' slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
-      <div class="carousel-caption text-start<?= $i === 0 ? ' abt-carousel-reveal' : '' ?>">
-          <h5<?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
-          <p<?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-</div>
-</section>
+<!-- top carousel — Stage J: the shared hero partial (shipped id kept) -->
+<?php
+$sjHero = [
+    'id'          => 'carouselExampleSlidesOnly',
+    'slides'      => $sj_hero_slides,
+    'variant'     => 'hero',
+    'preset'      => 'hero_16x7',
+    'interval'    => 2000,
+    'page_id'     => $sj_page ? (int)$sj_page['id'] : null,
+    'keyboardNav' => true,
+];
+include dirname(__DIR__) . '/partials/hero.php';
+?>
 
 <!-- infrastructurement cards start -->
 <?php if ($sj_love): ?>
 <div class="infrastructure-container">
     <?= img_tag($sj_team['image'] ?? null, 'feature_4x3', ['alt' => 'Left Image', 'class' => 'infrastructure-image']) ?>
     <div class="infrastructure-text">
-        <h4 class="infrastructure-text-reveal"<?= ed_field('profile', $sj_love['id'], 'person_name') ?>><?= e($sj_love['person_name']) ?></h4>
+        <h4 class="sj-reveal"<?= ed_field('profile', $sj_love['id'], 'person_name') ?>><?= e($sj_love['person_name']) ?></h4>
         <?php ed_rich('profile', $sj_love['id'], 'message_html', $sj_love['message_html']); ?>
     </div>
     <?= img_tag($sj_tour['image'] ?? null, 'feature_4x3', ['alt' => 'Right Image', 'class' => 'infrastructure-image']) ?>
@@ -44,10 +41,10 @@ $sj_tour = $sj_blocks['staff_tour'] ?? null;
 <section class="newtemp-body">
 <div class="about-container">
         <?php if ($sj_team): ?>
-        <div class="about-section">
+        <div class="about-section sj-reveal">
             <?= img_tag($sj_team['image'], 'feature_4x3', ['alt' => 'Left Image', 'class' => 'about-image', 'extra' => trim(ed_img('profile', $sj_team['id']))]) ?>
             <div class="about-content">
-                <h2 class="infrastructure-text-reveal"<?= ed_field('profile', $sj_team['id'], 'person_name') ?>><?= e($sj_team['person_name']) ?></h2>
+                <h2<?= ed_field('profile', $sj_team['id'], 'person_name') ?>><?= e($sj_team['person_name']) ?></h2>
                 <?php ed_rich('profile', $sj_team['id'], 'message_html', $sj_team['message_html']); ?>
 
               </div>
@@ -55,9 +52,9 @@ $sj_tour = $sj_blocks['staff_tour'] ?? null;
         </div>
         <?php endif; ?>
         <?php if ($sj_tour): ?>
-        <div class="about-section">
+        <div class="about-section sj-reveal">
             <div class="about-content">
-                <h2 class="infrastructure-text-reveal"<?= ed_field('profile', $sj_tour['id'], 'person_name') ?>><?= e($sj_tour['person_name']) ?></h2>
+                <h2<?= ed_field('profile', $sj_tour['id'], 'person_name') ?>><?= e($sj_tour['person_name']) ?></h2>
                 <?php ed_rich('profile', $sj_tour['id'], 'message_html', $sj_tour['message_html']); ?>
             </div>
             <?= img_tag($sj_tour['image'], 'feature_4x3', ['alt' => 'Right Image', 'class' => 'about-image', 'extra' => trim(ed_img('profile', $sj_tour['id']))]) ?>
@@ -68,10 +65,3 @@ $sj_tour = $sj_blocks['staff_tour'] ?? null;
     </section>
     <!-- template end -->
 
-<script>
-// Shipped selectors/threshold, now through the shared helper in /js/site.js
-// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.infra-new-reveal,.infrastructure-text-reveal,.abt-carousel-reveal', 100, true);
-});
-</script>

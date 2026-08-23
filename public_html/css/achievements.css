@@ -1,290 +1,82 @@
-.achievements {
-    background: linear-gradient(to bottom, #ffffff, #e0e0e0);
-    background-image: url('/photos/white-bg1.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+/* achievements.css — Stage J "Global Campus" rewrite (PUBLIC_UI_DESIGN.md).
+   Hero recipe from site.css (shared partial); this sheet styles the heading
+   bands and the paired zig-zag achievement/award cards. */
+
+.achievements { background: var(--sj-paper); }
+
+/* heading bands (standard recipe) */
+.home-text {
+  background: var(--sj-grad-brand);
+  text-align: center;
+  padding: clamp(44px, 6vw, 72px) 16px;
+  word-spacing: 6px;
 }
-/* abt-carousel */
-.abt-carousel .carousel-item::before {
-    
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+.home-text h2 {
+  font-family: var(--sj-font-head);
+  font-size: clamp(26px, 3.6vw, 46px);
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+}
+.home-text span {
+  font-family: var(--sj-font-accent);
+  font-size: clamp(32px, 4.4vw, 55px);
+  font-weight: 700;
+  color: var(--sj-gold);
 }
 
-.abt-carousel .carousel-inner
-{
-height: 550px!important;
-}
-
-.carousel-caption {
-
-top: 20%;
-
-}
-
-.carousel-caption h5 {
-    font-family: "Fjalla One", sans-serif!important;
-text-align: center;
-color: #FFF ;
-font-size: 100px;
-font-weight: 700;
-}
-
-.carousel-caption p {
-    font-family: "LeagueSpartan", sans-serif!important;
-font-size: 18px;
-top: 2rem;
-text-align: center;
-}
-/* anomation */
-.abt-carousel-reveal
-{
-    transition: 1.5s;
-    transform: translateY(90px);
-    opacity: 0;
-}
-
-
-.abt-carousel-reveal.active 
-{
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* N6 (owner-approved 2026-08-15): uniform 16:9 hero — over-tall photos crop
-   (object-fit) instead of growing the page. See home.css note. */
-.abt-carousel .carousel-item img {
-  object-fit: cover;
-}
-@media (min-width: 901px) {
-  .abt-carousel .carousel-item img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-  }
-}
-
-@media(max-width: 900px) {
-.carousel-item img {
-    width: 1500px!important;
-}
-
-.carousel-caption h5 {
-    font-size: 70px;
-    font-weight: 700;
-}
-
-.carousel-caption p {
-    font-size: 15px;
-    top: 2rem;
-}
-
-.slider-btn {
-    margin-top: 30px;
-}
-
-.slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 17px;
-}
-}
-
-@media(max-width: 768px) {
-.carousel-item img {
-    height: 700px;
-    width: 1200px;
-}
-
-.carousel-caption {
-    top: 35%;
-}
-
-.carousel-caption h5 {
-    font-size: 75px;
-    font-weight: 700;
-}
-
-.carousel-caption p {
-    font-size: 12px;
-    top: 2rem;
-}
-
-}
-
-@media(max-width: 600px) {
-.carousel-caption {
-    top: 35%;
-}
-
-.carousel-caption h5 {
-    font-size: 65px;
-    font-weight: 700;
-}
-
-.carousel-caption p {
-    font-size: 12px;
-    top: 1rem;
-}
-
-
-}
-
-@media(max-width: 500px) {
-.carousel-caption {
-    top: 32%;
-}
-
-.carousel-caption h5 {
-    font-size: 55px;
-    font-weight: 700;
-}
-
-.carousel-caption p {
-    font-size: 15px;
-    top: 1rem;
-}
-
-
-}
-
-@media(max-width: 400px) {
-.carousel-caption h5 {
-    font-size: 40px;
-    font-weight: 700;
-}
-
-
-.carousel-caption p {
-    top: 0.5rem;
-}
-}
-/* abt-carousel end */
-.home-text{
-    height: 200px;
-    background-color: #2b4b8a!important;
-    text-align: center;
-    padding-top: 70px;
-    word-spacing: 10px;
-
-}
-.home-text h2{
-    font-family: "Fjalla One", sans-serif!important;
-    font-size: 46px;
-  
-}
-.home-text span{
-    font-family: 'Dancing Script', cursive;
-    font-size: 55px;
-    font-weight: bolder;
-    color: #ecf2ff;
-}
-/* animation
-.span-reveal
-{
-    transition: 2s;
-    transform: translateY(50px);
-    opacity: 0;
-}
-.span-reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-} */
-@media(max-width:768px)
-{
-    .home-text h2{
-
-        font-size: 35px;
-      
-    }
-    .home-text span{
-      
-        font-size: 45px;
-  
-    }
-}
-@media(max-width:500px)
-{
-    .home-text h2{
-
-        font-size: 25px;
-      
-    }
-    .home-text span{
-      
-        font-size: 35px;
-  
-    }
-}
-/* achieve-card start */
-
+/* zig-zag pairs (structure kept; card treatment modernized) */
 .achieve-container {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 1600px;
-    margin: 30px auto;
-    padding: 20px;
-    /* was ../photos/schname.JPG — the uppercase .JPG never existed (bug 9), so
-       this photo layer silently 404'd and only the gradient rendered. Fixed in
-       R3 as a dead-link repair; the photo now shows under the gradient. */
-    background: linear-gradient(rgba(43, 75, 138, 0.7), rgba(26, 53, 93, 0.7) ),url('/photos/schname.jpg') no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1600px;
+  margin: 30px auto;
+  padding: clamp(16px, 3vw, 28px);
+  border-radius: var(--sj-r-card);
+  background: var(--sj-veil), url('/photos/schname.jpg') no-repeat center / cover;
 }
 
- .item {
-    flex: 1 1 calc(50% - 20px);
-    margin: 10px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.item {
+  flex: 1 1 calc(50% - 20px);
+  margin: 10px;
+  background-color: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--sj-shadow-1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform var(--sj-t-med) var(--sj-ease), box-shadow var(--sj-t-med) var(--sj-ease);
 }
+.item:hover { transform: translateY(-4px); box-shadow: var(--sj-shadow-2); }
 
- .item img {
-    width: 100%;
-    height: auto;
-}
+.item img { width: 100%; height: auto; }
 
 .item h3 {
-    font-family: "Fjalla One", sans-serif!important;
-    margin: 10px;
-    font-size: 1.6em;
-    font-weight: 600;
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  margin: 10px 16px 4px;
+  font-size: 1.5em;
+  color: var(--sj-navy-dark);
+  text-align: center;
 }
-
 .item p {
-    font-family: "LeagueSpartan", sans-serif!important;
-    font-size: 0.9em;
-    color: #2b4b8a;
-    text-align: center;
+  font-family: var(--sj-font-body);
+  font-size: 0.95em;
+  color: var(--sj-ink-soft);
+  text-align: center;
+  padding: 0 16px 16px;
 }
 .icon img {
-    width: 50px;
-    height: 50px;
-    margin: 10px;
-    display: block;
+  width: 46px;
+  height: 46px;
+  margin: 14px 10px 6px;
+  display: block;
 }
 
-.reverse .icon,
- .reverse h3,
- .reverse p {
-    order: 1;
-}
-
- .reverse img {
-    order: 2;
-}
+.reverse .icon, .reverse h3, .reverse p { order: 1; }
+.reverse img { order: 2; }
 
 @media (max-width: 650px) {
-    .item {
-        flex: 1 1 100%;
-    }
+  .item { flex: 1 1 100%; }
 }
-
-

@@ -14,6 +14,7 @@ foreach (['president', 'principal', 'history', 'rules'] as $roleKey) {
 \SJ\View\Layout::render('about', [
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'history',
+    'sjNavOverlay'   => true, // Stage J: transparent nav over the hero
     'styles'         => ['about'],
     'showJumbotron'  => true,
     'sj_page'        => $sj_page,

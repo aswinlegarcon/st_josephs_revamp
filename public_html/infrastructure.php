@@ -7,6 +7,7 @@ $sj_page = repo_page('infrastructure');
 \SJ\View\Layout::render('infrastructure', [
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'infrastructure',
+    'sjNavOverlay'   => true, // Stage J: transparent nav over the hero
     'styles'         => ['infrastructure'],
     'showJumbotron'  => true,
     'sj_page'        => $sj_page,

@@ -8,6 +8,7 @@ $sportsData    = ['suffixes' => ['', '2', '3']]; // shipped reveal-class sequenc
 \SJ\View\Layout::render('sports', [
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'sports',
+    'sjNavOverlay'   => true, // Stage J: transparent nav over the hero
     'styles'         => ['sports'],
     'showJumbotron'  => true,
     'sj_page'        => $sj_page,

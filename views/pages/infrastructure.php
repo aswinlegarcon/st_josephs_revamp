@@ -8,22 +8,19 @@
 // from each facility's photo (they lived in css/infrastructure.css before C7,
 // with these exact declarations).
 ?>
-<!-- top carousel -->
-<section class="abt-carousel ">
-<div id="infraHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-  <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add infrastructure slide') : '' ?>>
-    <?php foreach ($sj_hero_slides as $i => $s): ?>
-    <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'Infrastructure slide') ?>>
-      <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => ($i === 0 ? 'First' : ($i === 1 ? 'Second' : 'Third')) . ' slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
-      <div class="carousel-caption text-start<?= $i === 0 ? ' abt-carousel-reveal' : '' ?>">
-          <h5<?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
-          <p<?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-</div>
-</section>
+<!-- top carousel — Stage J: the shared hero partial (shipped id kept) -->
+<?php
+$sjHero = [
+    'id'          => 'infraHeroCarousel',
+    'slides'      => $sj_hero_slides,
+    'variant'     => 'hero',
+    'preset'      => 'hero_16x7',
+    'interval'    => 2000,
+    'page_id'     => $sj_page ? (int)$sj_page['id'] : null,
+    'keyboardNav' => true,
+];
+include dirname(__DIR__) . '/partials/hero.php';
+?>
 
 <!-- infrastructurement cards start -->
 <!-- navigation -->
@@ -35,13 +32,14 @@
 // cannot alter the cascade.
 $sjHeadCss = '';
 foreach ($sj_facilities as $fi => $F) {
-    $sjHeadCss .= '  #bg-' . ($fi + 1) . " {\n  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),\n    url(\""
+    // Stage J: the brand veil (--sj-veil values) replaces the old black scrim.
+    $sjHeadCss .= '  #bg-' . ($fi + 1) . " {\n  background: linear-gradient(rgba(43, 75, 138, .55), rgba(26, 53, 93, .75)),\n    url(\""
         . e($F['image'] ? img_url($F['image'], 'bg_wide') : '')
         . "\") no-repeat center center;\n  background-size: cover;\n}\n";
 }
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light ">
+<nav class="navbar navbar-expand-lg sj-subnav">
     <h3 class="inside-nav-text">Infrastructure</h3>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -87,17 +85,10 @@ foreach ($sj_facilities as $fi => $F) {
   <!-- carousel end -->
 
   <div class="<?= $alt ? 'infra-new-text1' : 'infra-new-text' ?>">
-    <h4 class="infra-new-reveal"<?= ed_field('facility', $F['id'], 'name') ?>><?= e($F['name']) ?></h4>
+    <h4 class="sj-reveal"<?= ed_field('facility', $F['id'], 'name') ?>><?= e($F['name']) ?></h4>
     <?php ed_rich('facility', $F['id'], 'description_html', $F['description_html']); ?>
   </div>
 </section>
 
 <?php endforeach; ?>
 
-<script>
-// Shipped selectors/threshold, now through the shared helper in /js/site.js
-// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.infra-new-reveal,.infrastructure-text-reveal,.abt-carousel-reveal', 150, true);
-});
-</script>

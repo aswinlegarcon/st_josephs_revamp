@@ -66,7 +66,7 @@
 // C9: the album cards render from gallery_albums (order = admin order).
 // Three cards per reveal-section, like the shipped page.
 foreach (array_chunk($sj_albums, 3) as $ri => $chunk): ?>
-<section class="gallery-card gallery-card-reveal">
+<section class="gallery-card sj-reveal">
   <div class="row mt-5">
     <?php foreach ($chunk as $al): ?>
     <div class="col-md-4">
@@ -75,7 +75,7 @@ foreach (array_chunk($sj_albums, 3) as $ri => $chunk): ?>
         <div class="card-body">
           <h3 class="card-title"<?= ed_field('gallery_album', $al['id'], 'title') ?>><?= e($al['title']) ?></h3>
           <p class="card-text"<?= ed_field('gallery_album', $al['id'], 'card_sub') ?>><?= e($al['card_sub']) ?></p>
-          <a href="<?= e(album_url($al['slug'])) ?>" class="btn btn-primary">More</a>
+          <a href="<?= e(album_url($al['slug'])) ?>" class="btn btn-primary" aria-label="Open the <?= e($al['title']) ?> album">More</a>
         </div>
       </div>
     </div>
@@ -84,10 +84,3 @@ foreach (array_chunk($sj_albums, 3) as $ri => $chunk): ?>
 </section>
 <?php endforeach; ?>
 
-<script>
-// Shipped selectors/threshold, now through the shared helper in /js/site.js
-// (R2); site.js loads at the end of the body, hence the DOMContentLoaded wrap.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.gallery-carousel-reveal,.gallery-card-reveal,.gallery-text-reveal,.gallery-card-reveal2,.gallery-card-reveal3,.gallery-card-reveal4,.gallery-card-reveal5', 150, true);
-});
-</script>
