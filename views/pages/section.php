@@ -9,22 +9,19 @@
 $__pp = dirname(__DIR__) . '/partials';
 $sid  = (int)$sj_section['id'];
 ?>
-<!-- top carousel -->
-<section class="<?= $sj_slug === 'kg' ? 'kg-carousel ' : 'abt-carousel ' ?>">
-<div id="<?= e($sj_slug) ?>HeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-  <div class="carousel-inner"<?= $sj_page ? ed_add('hero_slide', ['page_id' => (int)$sj_page['id']], 'Add slide') : '' ?>>
-    <?php foreach ($sj_hero_slides as $i => $s): ?>
-    <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('hero_slide', $s['id'], 'Slide') ?>>
-      <?= img_tag($s['image'], 'hero_16x7', ['class' => 'd-block w-100', 'alt' => 'Slide', 'eager' => $i === 0, 'extra' => trim(ed_img('hero_slide', $s['id']))]) ?>
-      <div class="carousel-caption text-start<?= $i === 0 ? ' ' . e($sj_slug) . '-carousel-reveal' : '' ?>">
-          <h5<?= ed_field('hero_slide', $s['id'], 'caption_title') ?>><?= e($s['caption_title']) ?></h5>
-          <p<?= ed_field('hero_slide', $s['id'], 'caption_text') ?>><?= e($s['caption_text']) ?></p>
-      </div>
-    </div>
-    <?php endforeach; ?>
-  </div>
-</div>
-</section>
+<!-- top carousel — Stage J: the shared hero partial (per-page id kept) -->
+<?php
+$sjHero = [
+    'id'          => $sj_slug . 'HeroCarousel',
+    'slides'      => $sj_hero_slides,
+    'variant'     => 'hero',
+    'preset'      => 'hero_16x7',
+    'interval'    => 2000,
+    'page_id'     => $sj_page ? (int)$sj_page['id'] : null,
+    'keyboardNav' => true,
+];
+include $__pp . '/hero.php';
+?>
 <!-- main strt -->
 
  <section class="infra-new bg-6">
@@ -55,7 +52,7 @@ $sid  = (int)$sj_section['id'];
   <!-- carousel end -->
 
   <div class="infra-new-text">
-    <h4 class="infra-new-reveal"<?= ed_field('school_section', $sid, 'intro_heading') ?>><?= e($sj_section['intro_heading']) ?></h4>
+    <h4 class="sj-reveal"<?= ed_field('school_section', $sid, 'intro_heading') ?>><?= e($sj_section['intro_heading']) ?></h4>
     <?php ed_rich('school_section', $sid, 'intro_html', $sj_section['intro_html']); ?>
 
 <div class="accordion-main" id="accordion">
@@ -106,7 +103,7 @@ $sid  = (int)$sj_section['id'];
             <?php if ($ei % 2 === 0): ?>
             <?= img_tag($ev['image'], 'feature_4x3', ['alt' => 'Left Image', 'class' => 'about-image', 'extra' => trim(ed_img('section_event', $ev['id']))]) ?>
             <div class="about-content">
-                <h2 class="infrastructure-text-reveal"<?= ed_field('section_event', $ev['id'], 'title') ?>><?= e($ev['title']) ?></h2>
+                <h2 class="sj-reveal"<?= ed_field('section_event', $ev['id'], 'title') ?>><?= e($ev['title']) ?></h2>
                 <?php ed_rich('section_event', $ev['id'], 'body_html', $ev['body_html']); ?>
 
               </div>
@@ -114,7 +111,7 @@ $sid  = (int)$sj_section['id'];
         </div>
             <?php else: ?>
             <div class="about-content">
-                <h2 class="infrastructure-text-reveal"<?= ed_field('section_event', $ev['id'], 'title') ?>><?= e($ev['title']) ?></h2>
+                <h2 class="sj-reveal"<?= ed_field('section_event', $ev['id'], 'title') ?>><?= e($ev['title']) ?></h2>
                 <?php ed_rich('section_event', $ev['id'], 'body_html', $ev['body_html']); ?>
             </div>
             <?= img_tag($ev['image'], 'feature_4x3', ['alt' => 'Right Image', 'class' => 'about-image', 'extra' => trim(ed_img('section_event', $ev['id']))]) ?>
@@ -125,13 +122,6 @@ $sid  = (int)$sj_section['id'];
     </section>
     <!-- template end -->
 
-  <script>
-// Shipped per-section reveal (threshold 120), now through the shared helper
-// in /js/site.js (R2); site.js loads later in the body, hence the wrapper.
-window.addEventListener('DOMContentLoaded', function () {
-  sjReveal('.infra-new-reveal,.<?= e($sj_slug) ?>-carousel-reveal,.infrastructure-text-reveal', 120, true);
-});
-  </script>
 <?php if (!empty($sj_show_groups_marks)): ?>
     <?php include $__pp . '/groups.php'; ?>
     <?php include $__pp . '/marks-scroll.php'; ?>

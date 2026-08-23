@@ -13,6 +13,7 @@ if (!$sj_section) {
 \SJ\View\Layout::render('section', [
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'highsec',
+    'sjNavOverlay'   => true, // Stage J: transparent nav over the hero
     'styles'         => ['sections'],
     'showJumbotron'  => true,
     'sj_slug'        => 'highsec',

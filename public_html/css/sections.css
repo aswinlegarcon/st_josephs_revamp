@@ -1,769 +1,327 @@
-/* sections.css - ONE sheet for the four school-section pages (R2).
-   The shipped highschl/highsec/primary/kg.css were the same file cloned with a
-   find-and-replace; this is their union, verified line-by-line:
-   - hero-carousel rules live under .kg-carousel (kg is the only page whose hero
-     wrapper carries a slug class; the other three use .abt-carousel, so their
-     cloned copies of these rules never matched anything - dropped as dead).
-   - the reveal animation keeps all four shipped class names.
-   - real per-page differences (bg-6 photo, kg's 4th-event mobile swap, the
-     accordion font line) are scoped with the body classes the pages already had.
-   Do NOT "fix" the quirks noted below - the render must match the baseline. */
+/* sections.css — Stage J "Global Campus" rewrite (PUBLIC_UI_DESIGN.md).
+   ONE sheet for kg / primary / highschl / highsec. The top hero is the shared
+   hero partial now (geometry/caption in site.css); this sheet styles the
+   events heading band, the photo band with the intro + content carousel +
+   timeline accordion, and the event blocks. Per-page .bg-6 statics kept. */
 
-.kg-carousel .carousel-item::before {
-    
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))!important;
+/* ---------- events heading band (matches the home welcome band) ---------- */
+.home-text {
+  background: var(--sj-grad-brand);
+  text-align: center;
+  padding: clamp(44px, 6vw, 72px) 16px;
+  word-spacing: 6px;
 }
-
-.kg-carousel .carousel-inner
-{
-height: 500px!important;
+.home-text h2 {
+  font-family: var(--sj-font-head);
+  font-size: clamp(26px, 3.6vw, 46px);
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
 }
-
-.kg-carousel .carousel-caption {
-
-top: 20%;
-
+.home-text span {
+  font-family: var(--sj-font-accent);
+  font-size: clamp(32px, 4.4vw, 55px);
+  font-weight: 700;
+  color: var(--sj-gold);
 }
 
-.kg-carousel .carousel-caption h5 {
-    font-family: "Fjalla One", sans-serif!important;
-color: #FFF ;
-font-size: 100px;
-font-weight: 700;
+/* ---------- photo band: intro + content carousel + timeline ---------- */
+.bg-6 {
+  /* F2: /media/static/* are downscaled full-frame copies of /photos originals */
+  background: var(--sj-veil), url('/media/static/high1.jpg') no-repeat center / cover;
 }
+body.highsec .bg-6 { background: var(--sj-veil), url('/media/static/highsec1.jpg') no-repeat center / cover; }
+body.primary .bg-6 { background: var(--sj-veil), url('/media/static/primary1.jpg') no-repeat center / cover; }
+body.kg .bg-6      { background: var(--sj-veil), url('/media/static/kg1.jpg') no-repeat center / cover; }
 
-.kg-carousel .carousel-caption p {
-    font-family: "LeagueSpartan", sans-serif!important;
-font-size: 18px;
-top: 2rem;
-}
-/* anomation */
-.highschl-carousel-reveal,
-.highsec-carousel-reveal,
-.primary-carousel-reveal,
-.kg-carousel-reveal
-{
-    transition: 1.5s;
-    transform: translateY(90px);
-    opacity: 0;
-}
-
-
-.highschl-carousel-reveal.active,
-.highsec-carousel-reveal.active,
-.primary-carousel-reveal.active,
-.kg-carousel-reveal.active 
-{
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* N6 (owner-approved 2026-08-15): uniform 16:9 hero — over-tall photos crop
-   (object-fit) instead of growing the page. See home.css note. */
-.kg-carousel .carousel-item img {
-  object-fit: cover;
-}
-@media (min-width: 901px) {
-  .kg-carousel .carousel-item img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-  }
-}
-
-@media(max-width: 900px) {
-    .kg-carousel .carousel-item img {
-    width: 1500px!important;
-}
-
-.kg-carousel .carousel-caption h5 {
-    font-size: 70px;
-    font-weight: 700;
-}
-
-.kg-carousel .carousel-caption p {
-    font-size: 15px;
-    top: 2rem;
-}
-
-.kg-carousel .slider-btn {
-    margin-top: 30px;
-}
-
-.kg-carousel .slider-btn .btn {
-    padding: 0.5rem 2rem;
-    font-size: 17px;
-}
-}
-
-@media(max-width: 768px) {
-    .kg-carousel .carousel-item img {
-    height: 700px;
-    width: 1200px;
-}
-
-.kg-carousel .carousel-caption {
-    top: 35%;
-}
-
-.kg-carousel .carousel-caption h5 {
-    font-size: 75px;
-    font-weight: 700;
-}
-
-.kg-carousel .carousel-caption p {
-    font-size: 12px;
-    top: 2rem;
-}
-
-}
-
-@media(max-width: 600px) {
-    .kg-carousel .carousel-caption {
-    top: 35%;
-}
-
-.kg-carousel .carousel-caption h5 {
-    font-size: 65px;
-    font-weight: 700;
-}
-
-.kg-carousel .carousel-caption p {
-    font-size: 12px;
-    top: 1rem;
-}
-
-
-}
-
-@media(max-width: 500px) {
-    .kg-carousel .carousel-caption {
-    top: 32%;
-}
-
-.kg-carousel .carousel-caption h5 {
-    font-size: 55px;
-    font-weight: 700;
-}
-
-.kg-carousel .carousel-caption p {
-    font-size: 15px;
-    top: 1rem;
-}
-
-
-}
-
-@media(max-width: 370px) {
-    .kg-carousel .carousel-caption h5 {
-    font-size: 55px;
-    font-weight: 700;
-}
-
-
-.kg-carousel .carousel-caption p {
-    top: 0.5rem;
-}
-}
-/* kg-carousel end */
-.home-text{
-    height: 200px;
-    background-color: #2b4b8a!important;
-    text-align: center;
-    padding-top: 70px;
-    word-spacing: 10px;
-
-}
-.home-text h2{
-    font-family: "Fjalla One", sans-serif!important;
-    font-size: 46px;
-  
-}
-.home-text span{
-    font-family: 'Dancing Script', cursive;
-    font-size: 55px;
-    font-weight: bolder;
-    color: #ecf2ff;
-}
-@media(max-width:768px)
-{
-    .home-text h2{
-
-        font-size: 35px;
-      
-    }
-    .home-text span{
-      
-        font-size: 45px;
-  
-    }
-}
-@media(max-width:500px)
-{
-    .home-text h2{
-
-        font-size: 25px;
-      
-    }
-    .home-text span{
-      
-        font-size: 35px;
-  
-    }
-}
-/* high schl events and exams */
-/* new template */
-
-.newtemp-body{
-   
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    min-height: 100vh;
-    border: 3px solid white;
-    
-}
-
-.about-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 1200px;
-    width: 100%;
-    margin: 20px;
-    border: 3px solid black;
-    box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.6);
-}
-
-.about-section {
-    display: flex;
-    flex-direction: row;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-.about-image {
-    width: 50%;
-    object-fit: cover;
-    border: 3px solid black;
-}
-
-.about-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1;
-}
-
-.about-content h2 {
-    font-family: "Fjalla One", sans-serif!important;
-    font-size: 30px;
-    margin-bottom: 10px;
-}
-
-.about-content p {
-    font-family: "LeagueSpartan", sans-serif!important;
-    font-size: 16px;
-    margin-bottom: 20px;
-}
-.infrastructure-text-reveal {
-    transition: 1.5s;
-    transform: translateX(-20px);
-    opacity: 0;
-}
-
-.infrastructure-text-reveal.active {
-    opacity: 1;
-    transform: translateX(0);
-}
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .about-section {
-        flex-direction: column;
-    }
-
-    .about-section:nth-child(2) .about-content {
-        order: 2;
-    }
-
-    .about-section:nth-child(2) .about-image {
-        order: 1;
-    }
-    /* kg only: shipped kg.css also swaps the 4th event block on mobile */
-    body.kg .about-section:nth-child(4) .about-content {
-        order: 2;
-    }
-    body.kg .about-section:nth-child(4) .about-image {
-        order: 1;
-    }
-
-    .about-image {
-        width: 100%;
-    }
-    .about-content p {
-        text-align: justify;
-    }
-}
-
-/* high schl stds strt */
-.bg-6{
-    /* F2: /media/static/* are downscaled full-frame copies of the /photos
-       originals (same framing under the gradient, ~4x smaller) */
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/high1.jpg') no-repeat;;
-    background-size: cover;
-}
-/* per-page hero background (each shipped sheet hard-coded its own photo).
-   background-size is repeated because the shorthand above would reset it. */
-body.highsec .bg-6{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/highsec1.jpg') no-repeat;;
-    background-size: cover;
-}
-body.primary .bg-6{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/primary1.jpg') no-repeat;;
-    background-size: cover;
-}
-body.kg .bg-6{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),url('/media/static/kg1.jpg') no-repeat;;
-    background-size: cover;
-}
 .infra-new {
-
-    width: 90%;
-    margin: 40px auto;
-    
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-   border: 2px solid #fff;
-    padding: 40px;
-    transition: 1.5s;
+  width: min(1300px, 92%);
+  margin: clamp(32px, 5vw, 56px) auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-radius: var(--sj-r-card);
+  box-shadow: var(--sj-shadow-2);
+  padding: clamp(24px, 4vw, 44px);
 }
 .infra-new-carousel {
-    order: 2; /* Initial order */
-    flex: 1 1 500px;
-    width: 100%;
-    margin-top: 30px!important;
+  order: 2;
+  flex: 1 1 500px;
+  width: 100%;
+  margin-top: 30px !important;
 }
-
 .infra-new-carousel .carousel-inner {
-    width: 100%;
-    height: auto;
-    border-radius: 35px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: auto;
+  border-radius: var(--sj-r-card);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
 }
-
-
 .infra-new-carousel .carousel-image {
-    object-fit: contain!important;
-    width: 100%;
-    height: 800px; /* Adjust this value as needed */
+  object-fit: contain !important;
+  width: 100%;
+  height: 800px;
 }
-
 .infra-new-text {
-    order: 1; /* Initial order */
-    flex: 1 1 50%;
-    margin-left: 20px;
-    margin-right: 20px;
-    text-align: left;
-
+  order: 1;
+  flex: 1 1 50%;
+  margin: 0 20px;
+  text-align: left;
 }
-
 .infra-new-text h4 {
-    font-family: "Fjalla One", sans-serif!important;
-    color: #fff;
-    font-size: 40px;
-    font-weight: 600;
+  font-family: var(--sj-font-head);
+  color: #fff;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 400;
 }
-.infra-new-text p{
-    font-family: "LeagueSpartan", sans-serif!important;
-    color: antiquewhite;
+.infra-new-text h4::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 12px 0 16px;
 }
-.infra-new-text .accordion-main .card{
-    background: linear-gradient(to top, #f0f0f0, #d9d9d9)
-
-}
-.infra-new-text .accordion-main .btn{
-    border: none!important;
-    background: linear-gradient(to left, #2b4b8a, #1a355d)!important;
-    color: #fff;   
-}
-/* shipped kg.css alone omitted this font line ("LeagueSpartan" is a typo the
-   browser cannot resolve, so it falls back to sans-serif; kept verbatim) */
-body.highschl .infra-new-text .accordion-main .btn,
-body.highsec .infra-new-text .accordion-main .btn,
-body.primary .infra-new-text .accordion-main .btn{
-    font-family: "LeagueSpartan", sans-serif!important;
-}
-.infra-new-text .accordion-main .btn:hover{
-    background:firebrick!important;
-    text-decoration: none!important;
-}
-/* animation */
-.infra-new-reveal {
-    transition: 1.5s;
-    transform: translateX(-50px);
-    opacity: 0;
+.infra-new-text p {
+  font-family: var(--sj-font-body);
+  color: rgba(255, 255, 255, .88);
+  line-height: 1.75;
 }
 
-.infra-new-reveal.active {
-    opacity: 1;
-    transform: translateX(0);
+/* timeline accordion shell */
+.infra-new-text .accordion-main .card {
+  background: #fff;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.infra-new-text .accordion-main .btn {
+  border: none !important;
+  background: var(--sj-grad-brand) !important;
+  color: #fff;
+  font-family: var(--sj-font-body);
+  font-weight: 600;
+  border-radius: 0;
+  text-decoration: none !important;
+  transition: filter var(--sj-t-fast) ease;
+}
+.infra-new-text .accordion-main .btn:hover {
+  filter: brightness(1.15);
+  text-decoration: none !important;
 }
 
 @media (max-width: 1300px) {
-    .infra-new {
-        flex-direction: column;
-        align-items: center;
-    }
-    .infra-new-carousel {
-        order: 2; /* Change order on small screens */
-        flex: 1 1 500px;
-        margin: 0;
-    }
-
-    .infra-new-text {
-        order: 1; /* Change order on small screens */
-        flex: 1 1 100%;
-        margin: 0;
-        text-align: left;
-        margin-top: 20px;
-    }
-
-    .infra-new-carousel .carousel-inner {
-        height: auto;
-    }
-    .infra-new-carousel .carousel-image{
-        height: 500px;
-    }
+  .infra-new { flex-direction: column; align-items: center; }
+  .infra-new-carousel { order: 2; flex: 1 1 500px; margin: 0; }
+  .infra-new-text { order: 1; flex: 1 1 100%; margin: 0; text-align: left; margin-top: 20px; }
+  .infra-new-carousel .carousel-inner { height: auto; }
+  .infra-new-carousel .carousel-image { height: 500px; }
 }
-
 @media (max-width: 768px) {
-    .infra-new {
-        flex-direction: column;
-        align-items: center;
-    }
-    .infra-new:hover{
-        transform: none;
-    }
-    .infra-new-carousel {
-        order: 2; /* Change order on small screens */
-        flex: 1 1 100%;
-        margin: 0;
-    }
-
-    .infra-new-text {
-        order: 1; /* Change order on small screens */
-        flex: 1 1 100%;
-        margin: 0;
-        text-align: left;
-        margin-top: 20px;
-    }
-    .infra-new-text p{
-        text-align: justify;
-    }
-    .infra-new-carousel .carousel-inner {
-        height: auto;
-    }
-}
-/* Customize carousel controls */
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: #000 !important;
-    border-radius: 50% !important;
-    padding: 15px;
+  .infra-new { flex-direction: column; align-items: center; }
+  .infra-new-carousel { order: 2; flex: 1 1 100%; margin: 0; }
+  .infra-new-text { order: 1; flex: 1 1 100%; margin: 20px 0 0; text-align: left; }
+  .infra-new-text p { text-align: justify; }
+  .infra-new-carousel .carousel-inner { height: auto; }
 }
 
-/* high schl std end */
-/* ================ The Timeline ================ */
-  
+/* content-carousel controls */
+.infra-new-carousel .carousel-control-prev-icon,
+.infra-new-carousel .carousel-control-next-icon {
+  background-color: var(--sj-navy) !important;
+  border-radius: 50% !important;
+  padding: 15px;
+}
+
+/* ---------- event blocks ---------- */
+.newtemp-body {
+  background: var(--sj-paper);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: var(--sj-sec-pad) 0;
+}
+.about-container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 1200px;
+  width: min(1200px, 92%);
+  margin: 20px;
+}
+.about-section {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  border-radius: var(--sj-r-card);
+  box-shadow: var(--sj-shadow-1);
+  overflow: hidden;
+  transition: transform var(--sj-t-med) var(--sj-ease), box-shadow var(--sj-t-med) var(--sj-ease);
+}
+.about-section:hover { transform: translateY(-4px); box-shadow: var(--sj-shadow-2); }
+.about-image { width: 50%; object-fit: cover; }
+.about-content {
+  padding: clamp(22px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+.about-content h2 {
+  font-family: var(--sj-font-head);
+  font-weight: 400;
+  font-size: clamp(24px, 2.6vw, 32px);
+  color: var(--sj-navy-dark);
+  margin-bottom: 6px;
+}
+.about-content h2::after {
+  content: ""; display: block;
+  width: 36px; height: 3px; border-radius: 2px;
+  background: var(--sj-gold); margin-top: 10px;
+}
+.about-content p {
+  font-family: var(--sj-font-body);
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: var(--sj-ink-soft);
+  margin: 14px 0 0;
+}
+@media (max-width: 768px) {
+  .about-section { flex-direction: column; }
+  .about-section:nth-child(2) .about-content { order: 2; }
+  .about-section:nth-child(2) .about-image { order: 1; }
+  body.kg .about-section:nth-child(4) .about-content { order: 2; }
+  body.kg .about-section:nth-child(4) .about-image { order: 1; }
+  .about-image { width: 100%; }
+  .about-content p { text-align: justify; }
+}
+
+/* ================ The Timeline (structure kept; brand accents) ================ */
 .timeline {
-    position: relative;
-    width: 660px;
-    margin: 0 auto;
-    margin-top: 20px;
-    padding: 1em 0;
-    list-style-type: none;
-  }
-  
-  .timeline:before {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    content: ' ';
-    display: block;
-    width: 6px;
-    height: 100%;
-    margin-left: -3px;
-    background: rgb(80,80,80);
-    background: -moz-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(30,87,153,1)), color-stop(100%,rgba(125,185,232,1)));
-    background: -webkit-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
-    background: -o-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
-    background: -ms-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
-    background: linear-gradient(to bottom, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
-    
-    z-index: 5;
-  }
-  
-  .timeline li {
-    padding: 1em 0;
-  }
-  
-  .timeline li:after {
-    content: "";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
-  }
-  
-  .direction-l {
-    position: relative;
-    width: 300px;
-    float: left;
-    text-align: right;
-  }
-  
-  .direction-r {
-    position: relative;
-    width: 300px;
-    float: right;
-  }
-  
-  .flag-wrapper {
-    position: relative;
-    display: inline-block;
-    
-    text-align: center;
-  }
-  
-  .flag {
-    position: relative;
-    display: inline;
-    background: rgba(255, 255, 255, 0.933);
-    padding: 6px 10px;
-    border-radius: 5px;
-    font-weight: 600;
-    text-align: center;
-  }
-  
-  .direction-l .flag {
-    -webkit-box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-    -moz-box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-    box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-  }
-  
-  .direction-r .flag {
-    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-    box-shadow: 1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
-  }
-  
+  position: relative;
+  width: 660px;
+  margin: 20px auto 0;
+  padding: 1em 0;
+  list-style-type: none;
+}
+.timeline:before {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  content: ' ';
+  display: block;
+  width: 6px;
+  height: 100%;
+  margin-left: -3px;
+  background: linear-gradient(to bottom, rgba(43, 75, 138, 0) 0%, var(--sj-navy) 8%, var(--sj-navy) 92%, rgba(43, 75, 138, 0) 100%);
+  z-index: 5;
+}
+.timeline li { padding: 1em 0; }
+.timeline li:after { content: ""; display: block; height: 0; clear: both; visibility: hidden; }
+.direction-l { position: relative; width: 300px; float: left; text-align: right; }
+.direction-r { position: relative; width: 300px; float: right; }
+.flag-wrapper { position: relative; display: inline-block; text-align: center; }
+.flag {
+  position: relative;
+  display: inline;
+  background: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: var(--sj-font-body);
+  font-weight: 700;
+  color: var(--sj-navy-dark);
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+}
+.direction-l .flag:before,
+.direction-r .flag:before {
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  content: ' ';
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin-top: -10px;
+  background: #fff;
+  border-radius: 10px;
+  border: 4px solid var(--sj-gold);
+  z-index: 10;
+}
+.direction-r .flag:before { left: -40px; }
+.direction-l .flag:after {
+  content: "";
+  left: 100%; top: 50%; height: 0; width: 0; margin-top: -8px;
+  border: solid transparent; border-left-color: #f8f8f8; border-width: 8px;
+  pointer-events: none;
+}
+.direction-r .flag:after {
+  content: "";
+  right: 100%; top: 50%; height: 0; width: 0; margin-top: -8px;
+  border: solid transparent; border-right-color: #f8f8f8; border-width: 8px;
+  pointer-events: none;
+}
+.time-wrapper {
+  display: inline;
+  line-height: 1em;
+  font-size: 0.66666em;
+  color: var(--sj-gold-ink);
+  vertical-align: middle;
+}
+.direction-l .time-wrapper { float: left; }
+.direction-r .time-wrapper { float: right; }
+.time {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--sj-gold-soft);
+  font-weight: 700;
+}
+.desc {
+  margin: 1em 0.75em 0 0;
+  font-size: 0.77777em;
+  font-style: italic;
+  line-height: 1.5em;
+  color: var(--sj-ink);
+}
+.direction-r .desc { margin: 1em 0 0 0.75em; }
+
+@media screen and (max-width: 660px) {
+  .timeline { width: 100%; padding: 4em 0 1em 0; }
+  .timeline li { padding: 2em 0; }
+  .direction-l, .direction-r { float: none; width: 100%; text-align: center; }
+  .flag-wrapper { text-align: center; }
+  .flag { background: #fff; z-index: 15; }
   .direction-l .flag:before,
   .direction-r .flag:before {
-    position: absolute;
-    top: 50%;
-    right: -40px;
-    content: ' ';
-    display: block;
-    width: 12px;
-    height: 12px;
-    margin-top: -10px;
-    background: #fff;
-    border-radius: 10px;
-    border: 4px solid rgb(255,80,80);
+    top: -30px; left: 50%;
+    content: ' '; display: block;
+    width: 12px; height: 12px; margin-left: -9px;
+    background: #fff; border-radius: 10px;
+    border: 4px solid var(--sj-gold);
     z-index: 10;
   }
-  
-  .direction-r .flag:before {
-    left: -40px;
-  }
-  
-  .direction-l .flag:after {
-    content: "";
-    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
-    left: 100%;
-    top: 50%;
-    height: 0;
-    width: 0;
-    margin-top: -8px;
-    border: solid transparent;
-    border-left-color: rgb(248,248,248);
-    border-width: 8px;
-    pointer-events: none;
-  }
-  
-  .direction-r .flag:after {
-    content: "";
-    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
-    right: 100%;
-    top: 50%;
-    height: 0;
-    width: 0;
-    margin-top: -8px;
-    border: solid transparent;
-    border-right-color: rgb(248,248,248);
-    border-width: 8px;
-    pointer-events: none;
-  }
-  
-  .time-wrapper {
-    display: inline;
-    
-    line-height: 1em;
-    font-size: 0.66666em;
-    color: rgb(250,80,80);
-    vertical-align: middle;
-  }
-  
-  .direction-l .time-wrapper {
-    float: left;
-  }
-  
-  .direction-r .time-wrapper {
-    float: right;
-  }
-  
-  .time {
-    display: inline-block;
-    padding: 4px 6px;
-    background: rgb(248,248,248);
-  }
-  
-  .desc {
-    margin: 1em 0.75em 0 0;
-    
-    font-size: 0.77777em;
-    font-style: italic;
-    line-height: 1.5em;
-  }
-  
-  .direction-r .desc {
-    margin: 1em 0 0 0.75em;
-  }
-  
-  /* ================ Timeline Media Queries ================ */
-  
-  @media screen and (max-width: 660px) {
-  
-  .timeline {
-       width: 100%;
-      padding: 4em 0 1em 0;
-  }
-  
-  .timeline li {
-      padding: 2em 0;
-  }
-  
-  .direction-l,
-  .direction-r {
-      float: none;
-      width: 100%;
-  
-      text-align: center;
-  }
-  
-  .flag-wrapper {
-      text-align: center;
-  }
-  
-  .flag {
-      background: rgb(255,255,255);
-      z-index: 15;
-  }
-  
-  .direction-l .flag:before,
-  .direction-r .flag:before {
-    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
-    top: -30px;
-      left: 50%;
-      content: ' ';
-      display: block;
-      width: 12px;
-      height: 12px;
-      margin-left: -9px;
-      background: #fff;
-      border-radius: 10px;
-      border: 4px solid rgb(255,80,80);
-      z-index: 10;
-  }
-  
   .direction-l .flag:after,
   .direction-r .flag:after {
-      content: "";
-    /* shipped: "position: (slug)solute" - a broken find-replace of the word absolute; invalid, so browsers ignored it */
-      left: 50%;
-      top: -8px;
-      height: 0;
-      width: 0;
-      margin-left: -8px;
-      border: solid transparent;
-      border-bottom-color: rgb(255,255,255);
-      border-width: 8px;
-      pointer-events: none;
+    content: "";
+    left: 50%; top: -8px; height: 0; width: 0; margin-left: -8px;
+    border: solid transparent; border-bottom-color: #fff; border-width: 8px;
+    pointer-events: none;
   }
-  
-  .time-wrapper {
-      display: block;
-      position: relative;
-      margin: 4px 0 0 0;
-      z-index: 14;
-  }
-  
-  .direction-l .time-wrapper {
-      float: none;
-  }
-  
-  .direction-r .time-wrapper {
-      float: none;
-  }
-  
+  .time-wrapper { display: block; position: relative; margin: 4px 0 0 0; z-index: 14; }
+  .direction-l .time-wrapper, .direction-r .time-wrapper { float: none; }
   .desc {
-      position: relative;
-      margin: 1em 0 0 0;
-      padding: 1em;
-      background: rgb(245,245,245);
-      -webkit-box-shadow: 0 0 1px rgba(0,0,0,0.20);
-      -moz-box-shadow: 0 0 1px rgba(0,0,0,0.20);
-      box-shadow: 0 0 1px rgba(0,0,0,0.20);
-      
+    position: relative;
+    margin: 1em 0 0 0;
+    padding: 1em;
+    background: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .2);
     z-index: 15;
   }
-  
-  .direction-l .desc,
-  .direction-r .desc {
-      position: relative;
-      margin: 1em 1em 0 1em;
-      padding: 1em;
-      
-    z-index: 15;
-  }
-  
-  }
-  
-  @media screen and (min-width:400px) {
-  
-  .direction-l .desc,
-  .direction-r .desc {
-      margin: 1em 4em 0 4em;
-  }
+  .direction-l .desc, .direction-r .desc { position: relative; margin: 1em 1em 0 1em; padding: 1em; z-index: 15; }
 }
-  @media screen and ( max-width:660px) {
-  
-    .direction-l .desc,
-    .direction-r .desc {
-        margin: 1em 4em 0 4em;
-    }
-  
-  }
-
- /* Timeline Ends */
+@media screen and (min-width: 400px) {
+  .direction-l .desc, .direction-r .desc { margin: 1em 4em 0 4em; }
+}
+@media screen and (max-width: 660px) {
+  .direction-l .desc, .direction-r .desc { margin: 1em 4em 0 4em; }
+}

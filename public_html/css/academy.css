@@ -1,55 +1,43 @@
-/* Shared styles for the 18 academy-family pages (tamil / maths / science / ... /
-   band / ncc / artandexpo). Extracted VERBATIM from the original per-page inline
-   <style> — which was byte-identical across every one of those pages except the
-   per-page `.bg-1` hero image (that stays inline in each view). Loaded once and
-   cached; this only removes 18x duplication, the rendered result is unchanged. */
+/* Shared styles for the academy-family pages — Stage J "Global Campus"
+   rewrite (PUBLIC_UI_DESIGN.md). One sheet for all academies (18 legacy +
+   admin-created); the per-page .bg-1 photo stays a head <style> from the
+   template. Reveals use the shared one-time .sj-reveal system. */
 
+/* title banner */
 .back-bar {
   width: 100%;
-  background: linear-gradient(to left, #2b4b8a, #1a355d);
-  padding-top: 80px;
-  padding-bottom: 80px;
+  background: var(--sj-grad-brand);
+  border-bottom: 4px solid var(--sj-gold);
+  padding: clamp(56px, 8vw, 96px) 0;
 }
 .back-bar .back-text h4 {
-  font-family: "Fjalla One", sans-serif !important;
+  font-family: var(--sj-font-head);
   text-align: center;
-  padding-left: 20px;
-  font-size: 55px;
-  font-weight: 600;
-  color: white;
+  font-size: clamp(32px, 4.4vw, 56px);
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+}
+.back-bar .back-text h4::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 14px auto 0;
 }
 .back-bar .back-text p {
-  font-family: "LeagueSpartan", sans-serif !important;
+  font-family: var(--sj-font-accent);
   text-align: center;
-  padding-left: 20px;
-  font-size: 25px;
-  color: white;
-  font-style: italic;
-}
-.back-bar-reveal {
-  transition: 2s;
-  transform: translateY(80px);
-  opacity: 0;
-}
-.back-bar-reveal.active {
-  transition: 2s;
-  transform: translateY(0);
-  opacity: 1;
-}
-@media (max-width: 600px) {
-  .back-bar .back-text h4 { font-size: 40px; }
-  .back-bar .back-text p { font-size: 15px; }
+  font-size: clamp(19px, 2.4vw, 30px);
+  color: var(--sj-gold);
+  margin: 12px 0 0;
 }
 
-/* content */
+/* content band (photo behind, veiled by the per-page .bg-1 head style) */
 .infra-new {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  border: 2px solid #fff;
-  padding: 40px;
-  transition: 1.5s;
+  padding: clamp(28px, 5vw, 56px);
 }
 .infra-new-carousel {
   order: 2;
@@ -59,8 +47,8 @@
 .infra-new-carousel .carousel-inner {
   width: 100%;
   height: auto;
-  border-radius: 35px;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.7);
+  border-radius: var(--sj-r-card);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
 }
 .infra-new-carousel .carousel-image {
   object-fit: contain !important;
@@ -70,48 +58,43 @@
 .infra-new-text {
   order: 1;
   flex: 1 1 50%;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 0 20px;
   text-align: left;
 }
 .infra-new-text h4 {
-  font-family: "Fjalla One", sans-serif !important;
+  font-family: var(--sj-font-head);
   color: #fff;
-  font-size: 50px;
-  font-weight: 600;
+  font-size: clamp(28px, 3.4vw, 46px);
+  font-weight: 400;
+}
+.infra-new-text h4::after {
+  content: ""; display: block;
+  width: 44px; height: 4px; border-radius: 2px;
+  background: var(--sj-gold); margin: 12px 0 16px;
 }
 .infra-new-text p {
-  font-family: "LeagueSpartan", sans-serif !important;
-  color: antiquewhite;
-  font-size: 22px;
-}
-.infra-new-reveal {
-  transition: 1.5s;
-  transform: translateX(-50px);
-  opacity: 0;
-}
-.infra-new-reveal.active {
-  opacity: 1;
-  transform: translateX(0);
+  font-family: var(--sj-font-body);
+  color: rgba(255, 255, 255, .9);
+  font-size: clamp(15.5px, 1.3vw, 18px);
+  line-height: 1.8;
 }
 @media (max-width: 1320px) {
   .infra-new { flex-direction: column; align-items: center; }
   .infra-new-carousel { order: 2; flex: 1 1 100%; margin: 0; }
-  .infra-new-text { order: 1; flex: 1 1 100%; margin: 0; text-align: left; margin-top: 20px; }
+  .infra-new-text { order: 1; flex: 1 1 100%; margin: 20px 0 0; text-align: left; }
   .infra-new-carousel .carousel-inner { height: auto; }
 }
 @media (max-width: 768px) {
   .infra-new { flex-direction: column; align-items: center; }
-  .infra-new:hover { transform: none; }
   .infra-new-carousel { order: 2; flex: 1 1 100%; margin: 0; }
-  .infra-new-text { order: 1; flex: 1 1 100%; margin: 0; text-align: left; margin-top: 20px; }
+  .infra-new-text { order: 1; flex: 1 1 100%; margin: 20px 0 0; text-align: left; }
   .infra-new-carousel .carousel-inner { height: auto; }
 }
 
-/* Custom carousel controls (black circular prev/next icons) */
+/* content-carousel controls */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-color: #000 !important;
+  background-color: var(--sj-navy) !important;
   border-radius: 50% !important;
   padding: 15px;
 }

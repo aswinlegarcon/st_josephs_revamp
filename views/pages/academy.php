@@ -16,7 +16,7 @@ $sjHeadCss = "  .bg-1 { background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 
 ?>
 
 <section class="back-bar">
-  <div class="back-text back-bar-reveal">
+  <div class="back-text sj-reveal">
     <h4<?= ed_field('academy', $sj_academy['id'], 'banner_title') ?>><?= e($sj_academy['banner_title']) ?></h4>
     <p<?= ed_field('academy', $sj_academy['id'], 'banner_subtitle') ?>><?= e($sj_academy['banner_subtitle']) ?></p>
   </div>
@@ -51,7 +51,7 @@ $sjHeadCss = "  .bg-1 { background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 
   <!-- carousel end -->
 
   <div class="infra-new-text">
-    <h4 class="infra-new-reveal"<?= ed_field('academy', $sj_academy['id'], 'content_heading') ?>><?= e($sj_academy['content_heading']) ?></h4>
+    <h4 class="sj-reveal"<?= ed_field('academy', $sj_academy['id'], 'content_heading') ?>><?= e($sj_academy['content_heading']) ?></h4>
     <?php ed_rich('academy', $sj_academy['id'], 'body_html', $sj_academy['body_html']); ?>
   </div>
 </section>
