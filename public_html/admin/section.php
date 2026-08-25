@@ -143,7 +143,7 @@ case 'hero':
     $slides = repo_hero_slides((int)$page['id'], true);
     $live = count(array_filter($slides, static fn ($x) => !empty($x['is_active'])));
     ob_start(); ?>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$page['id']], 'Add hero slide') ?>><?= sj_icon('plus', 15) ?> Add hero slide</button>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('hero_slide', ['page_id' => (int)$page['id']], 'Add hero slide', null, $slides ? end($slides) : null) ?>><?= sj_icon('plus', 15) ?> Add hero slide</button>
     <?php
     panel_page_head('image', 'Hero Carousel',
         'Each card below is a live miniature of its slide — the caption sits exactly where visitors see it. '
@@ -256,7 +256,7 @@ case 'ticker':
 case 'updates':
     $rows = repo_update_slides(true);
     ob_start(); ?>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('update_slide', [], 'Add update slide') ?>><?= sj_icon('plus', 15) ?> Add update slide</button>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('update_slide', [], 'Add update slide', null, $rows ? end($rows) : null) ?>><?= sj_icon('plus', 15) ?> Add update slide</button>
     <?php
     panel_page_head('monitor', 'New Updates', 'Slides of the "New Updates" video carousel on the Home page. Images are auto-cropped to 16:9 — each card below previews its slide.',
         [[count($rows), 'slides']], ob_get_clean());
@@ -297,7 +297,7 @@ case 'marks':
         <b><?= sj_icon('calendar', 16) ?> <?= e($y['year']) ?></b>
         <?php if (!$y['is_active']): ?><span class="sj-badge">Hidden</span><?php endif; ?>
         <div class="sj-row-actions">
-          <button class="sj-btn sj-btn-ghost sj-btn-sm" <?= panel_add_attr('mark_entry', ['year_id' => (int)$y['id']], 'Add topper — ' . $y['year']) ?>><?= sj_icon('plus', 15) ?> Add topper</button>
+          <button class="sj-btn sj-btn-ghost sj-btn-sm" <?= panel_add_attr('mark_entry', ['year_id' => (int)$y['id']], 'Add topper — ' . $y['year'], null, $entries ? end($entries) : null) ?>><?= sj_icon('plus', 15) ?> Add topper</button>
           <button class="sj-ico" title="<?= $y['is_active'] ? 'Hide year' : 'Show year' ?>" data-act="toggle" data-active="<?= $y['is_active'] ? 1 : 0 ?>"><?= $y['is_active'] ? sj_icon('eye', 16) : sj_icon('eye-off', 16) ?></button>
           <button class="sj-ico danger" title="Delete year (removes all its toppers)" data-act="del" data-confirm="Delete year <?= e($y['year']) ?> and ALL its toppers?"><?= sj_icon('trash', 16) ?></button>
         </div>
@@ -386,7 +386,7 @@ case 'aboutpage':
       } ?>
     </div>
     <?php ob_start(); ?>
-      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('rules_timing', [], 'Add timings row') ?>><?= sj_icon('plus', 14) ?> Add row</button>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('rules_timing', [], 'Add timings row', null, ($rtRows = repo_rules_timings()) ? end($rtRows) : null) ?>><?= sj_icon('plus', 14) ?> Add row</button>
     <?php $addBtn = ob_get_clean(); ?>
     <h3 class="sj-form-legend">School timings (Rules block) <?= $addBtn ?></h3>
     <div class="sj-list" data-list="rules_timing">
@@ -429,21 +429,41 @@ case 'staffspage':
       } ?>
     </div>
 
-    <h3 class="sj-form-legend">Content blocks</h3>
+    <h3 class="sj-form-legend">Top block</h3>
     <div class="sj-list">
-      <?php foreach (['staff_love' => 'We Love our Staffs (top block)', 'staff_team' => 'The Staffs', 'staff_tour' => 'The Staff Tour'] as $roleKey => $label) {
-          $b = repo_profile($roleKey);
-          if (!$b) { continue; }
+      <?php $b = repo_profile('staff_love');
+      if ($b) {
           panel_row([
               'entity' => 'profile', 'id' => $b['id'],
               'thumb'  => $b['image'] ? img_url($b['image'], 'feature_4x3') : null,
-              'title'  => $label,
+              'title'  => 'We Love our Staffs (top block)',
               'sub'    => $b['person_name'],
           ]);
       } ?>
     </div>
-    <p class="sj-hint">The photos beside the top block are the images of "The Staffs" and
-       "The Staff Tour" — change those blocks' images to change all of them.</p>
+
+    <?php // K7: the photo+text blocks are a creatable list now — new cards
+          // alternate image left/right automatically on the site.
+    $staffBlocks = repo_staff_blocks(true);
+    ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('staff_block', [], 'Add staff block', null, $staffBlocks ? end($staffBlocks) : null) ?>><?= sj_icon('plus', 14) ?> Add block</button>
+    <?php $addBlk = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Staff blocks <?= $addBlk ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="staff_block">
+      <?php foreach ($staffBlocks as $B) {
+          panel_preview_card([
+              'entity' => 'staff_block', 'id' => $B['id'],
+              'variant' => 'card', 'aspect' => '4x3',
+              'img'    => $B['image'] ? img_url($B['image'], 'feature_4x3') : null,
+              'title'  => $B['title'],
+              'sub'    => mb_substr(trim(strip_tags($B['body_html'])), 0, 90) . '…',
+              'active' => (bool)$B['is_active'], 'canMove' => true,
+          ]);
+      }
+      if (!$staffBlocks) { panel_empty('Add the first staff block.', 'users'); } ?>
+    </div>
+    <p class="sj-hint">Blocks alternate photo-left / photo-right automatically. The two photos
+       beside the top block are the first two blocks' photos.</p>
     <?php
     break;
 
@@ -494,6 +514,31 @@ case 'sections':
         'KG, Primary, High School and Higher Secondary — each tab edits that page\'s banner, intro, timeline and event blocks.',
         [[count($allSections), 'sections'], [count($secSlides), $S['name'] . ' slides']]);
     ?>
+    <?php // K7 (owner request): the Academics PAGE's own banner is edited here,
+          // above the four section tabs — one common edit area for that page.
+    $acadPage   = repo_page('academics');
+    $acadSlides = $acadPage ? repo_hero_slides((int)$acadPage['id'], true) : [];
+    if ($acadPage):
+        ob_start(); ?>
+      <button class="sj-btn sj-btn-primary sj-btn-sm" <?= panel_add_attr('hero_slide', ['page_id' => (int)$acadPage['id']], 'Add academics slide', null, $acadSlides ? end($acadSlides) : null) ?>><?= sj_icon('plus', 14) ?> Add slide</button>
+    <?php $acadAdd = ob_get_clean(); ?>
+    <h3 class="sj-form-legend">Academics page — top banner <?= $acadAdd ?></h3>
+    <div class="sj-list sj-cardgrid" data-list="hero_slide">
+      <?php foreach ($acadSlides as $sl) {
+          panel_preview_card([
+              'entity' => 'hero_slide', 'id' => $sl['id'],
+              'variant' => 'hero', 'aspect' => '16x9',
+              'img'       => $sl['image'] ? img_url($sl['image'], 'hero_16x7') : null,
+              'cap_title' => $sl['caption_title'], 'cap_text' => $sl['caption_text'],
+              'title'     => $sl['caption_title'] ?: '(no caption)',
+              'active'    => (bool)$sl['is_active'], 'canMove' => true,
+          ]);
+      }
+      if (!$acadSlides) { panel_empty('Add the first Academics banner slide.'); } ?>
+    </div>
+    <?php endif; ?>
+
+    <h3 class="sj-form-legend">The four school sections</h3>
     <div class="sj-tabs">
       <?php foreach ($allSections as $sRow): ?>
       <a class="sj-btn <?= $sRow['slug'] === $cur ? 'sj-btn-primary' : 'sj-btn-ghost' ?>"
@@ -863,6 +908,14 @@ case 'settings':
             'jumbotron_heading' => ['Heading', ''],
             'jumbotron_sub'     => ['Sub-line', ''],
             'jumbotron_btn'     => ['Button label', ''],
+        ],
+        'Home motto block' => [
+            'motto_heading' => ['Heading', ''],
+            'motto_sub'     => ['Sub-line', ''],
+            'motto1_title'  => ['Card 1 — title', ''],
+            'motto1_body'   => ['Card 1 — text', ''],
+            'motto2_title'  => ['Card 2 — title', ''],
+            'motto2_body'   => ['Card 2 — text', ''],
         ],
         'About page — rules & diary' => [
             'diary_text' => ['Diary line', 'The sentence before the Download link in the Rules block.'],

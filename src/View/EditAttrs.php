@@ -47,8 +47,10 @@ final class EditAttrs
 
     /** "+ Add" affordance on a list container. $preset = column values fixed at
      *  creation. $currentCount (K2): pass the rendered row count so entities
-     *  with a registry max_count hide the button once the section is full. */
-    public static function add(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null): string
+     *  with a registry max_count hide the button once the section is full.
+     *  $last (K7): pass the LAST rendered row — its text/url/enum values
+     *  pre-fill the Add form as an editable recommendation. */
+    public static function add(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null, ?array $last = null): string
     {
         if (!Auth::isEdit()) {
             return '';
@@ -60,7 +62,8 @@ final class EditAttrs
         if ($currentCount !== null && !empty($reg['max_count']) && $currentCount >= (int)$reg['max_count']) {
             return ''; // section is full — no Add affordance (item.php enforces too)
         }
-        $fields = [];
+        $fields  = [];
+        $lastOut = [];
         foreach ($reg['fields'] as $name => $def) {
             $fields[] = [
                 'name'     => $name,
@@ -71,8 +74,15 @@ final class EditAttrs
                 'required' => !empty($def['required']),
                 'multiline' => !empty($def['multiline']),
             ];
+            if ($last !== null && isset($last[$name]) && $last[$name] !== ''
+                && \in_array($def['type'], ['text', 'url', 'enum'], true) && empty($def['create_only'])) {
+                $lastOut[$name] = (string)$last[$name];
+            }
         }
         $payload = ['entity' => $entity, 'preset' => $preset, 'label' => $label, 'fields' => $fields];
+        if ($lastOut) {
+            $payload['last'] = $lastOut;
+        }
         return " data-edit-add='" . \str_replace("'", '&#39;', \json_encode($payload, \JSON_UNESCAPED_SLASHES)) . "'";
     }
 

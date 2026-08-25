@@ -36,7 +36,7 @@ include dirname(__DIR__) . '/partials/hero.php';
             // orderable, creatable in the panel AND via the site overlay). ?>
       <table class="school-timings">
         <tr><th>Timing</th><th>  Activity</th></tr>
-        <tbody<?= ed_add('rules_timing', [], 'Add timings row') ?>>
+        <tbody<?= ed_add('rules_timing', [], 'Add timings row', null, !empty($sj_rules_timings) ? end($sj_rules_timings) : null) ?>>
         <?php foreach ($sj_rules_timings ?? [] as $rt): ?>
         <tr<?= ed_item('rules_timing', $rt['id'], 'Timings row') ?>><td<?= ed_field('rules_timing', $rt['id'], 'timing') ?>><?= e($rt['timing']) ?></td><td<?= ed_field('rules_timing', $rt['id'], 'activity') ?>><?= e($rt['activity']) ?></td></tr>
         <?php endforeach; ?>

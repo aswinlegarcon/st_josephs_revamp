@@ -19,6 +19,7 @@
       openForm({
         title: meta.label || 'Add',
         fields: meta.fields,
+        values: meta.last || {}, // K7: previous item's text pre-fills as an editable recommendation
         submitLabel: 'Add',
         onSubmit: function (data) {
           return api('item.php', { action: 'create', entity: meta.entity, data: data, preset: meta.preset || {} })

@@ -129,7 +129,7 @@ html { overflow-x: hidden; }
   color: var(--sj-ink-soft);
   line-height: 1.7;
   padding: 0 6px;
-  text-align: center;
+  text-align: justify; /* K7: body copy justifies site-wide */
 }
 @media (max-width: 800px) { .motto-row { flex-direction: column; } }
 
@@ -160,6 +160,7 @@ html { overflow-x: hidden; }
   max-width: 72ch;
   margin: 0 auto;
   padding: 20px;
+  text-align: justify; /* K7 */
 }
 .card-deck {
   display: flex;

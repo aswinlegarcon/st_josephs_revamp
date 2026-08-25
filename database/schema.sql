@@ -279,6 +279,17 @@ CREATE TABLE IF NOT EXISTS timeline_entries (
   CONSTRAINT fk_tl_sec FOREIGN KEY (section_id) REFERENCES school_sections(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- K7 (migration 010): the Staffs page's creatable photo+text blocks.
+CREATE TABLE IF NOT EXISTS staff_blocks (
+  id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title     VARCHAR(120) NOT NULL,
+  body_html TEXT NOT NULL,
+  image_id  INT UNSIGNED NULL,
+  position  INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  CONSTRAINT fk_staffblk_img FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- K4 (migration 009): the About page's "School timings" rows (rules block).
 CREATE TABLE IF NOT EXISTS rules_timings (
   id       INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -312,6 +323,7 @@ CREATE TABLE IF NOT EXISTS academies (
   body_html       MEDIUMTEXT   NOT NULL,
   card_image_id   INT UNSIGNED NULL,
   bg_image_id     INT UNSIGNED NULL,
+  fancy_gold      TINYINT(1) NOT NULL DEFAULT 1, -- K7 (migration 010): large gold write-up highlights on/off
   position        SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   is_active       TINYINT(1) NOT NULL DEFAULT 1,
   created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

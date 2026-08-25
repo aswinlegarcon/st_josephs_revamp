@@ -29,7 +29,7 @@ $sjHId      = $sjH['id'] ?? 'sjHero';
       <button type="button" data-bs-target="#<?= e($sjHId) ?>" data-bs-slide-to="<?= $i ?>"<?= $i === 0 ? ' class="active" aria-current="true"' : '' ?> aria-label="Slide <?= $i + 1 ?>"></button>
       <?php endforeach; ?>
     </div>
-    <div class="carousel-inner"<?= !empty($sjH['page_id']) ? ed_add('hero_slide', ['page_id' => (int)$sjH['page_id']], 'Add slide') : '' ?>>
+    <div class="carousel-inner"<?= !empty($sjH['page_id']) ? ed_add('hero_slide', ['page_id' => (int)$sjH['page_id']], 'Add slide', null, $sjHSlides ? end($sjHSlides) : null) : '' ?>>
       <?php foreach ($sjHSlides as $i => $s): ?>
       <div class="carousel-item<?= $i === 0 ? ' active' : '' ?><?= isset($s['is_active']) && empty($s['is_active']) ? ' sj-inactive' : '' ?>"<?= isset($s['id']) ? ed_item('hero_slide', $s['id'], 'Hero slide') : '' ?>>
         <?= img_tag($s['image'], $sjHPreset, [

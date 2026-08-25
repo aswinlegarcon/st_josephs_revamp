@@ -49,8 +49,11 @@ function panel_sections(): array
 
 /** data-panel-add attribute: registry-driven field metadata for the Add modal.
  *  $currentCount (K2): pass the screen's row count so entities with a registry
- *  max_count lose the Add button once the section is full. */
-function panel_add_attr(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null): string
+ *  max_count lose the Add button once the section is full.
+ *  $last (K7): pass the LAST existing row — its text/url/enum values pre-fill
+ *  the Add form as an editable recommendation (new items usually repeat most
+ *  of the previous one). Images/bools/slugs are never copied. */
+function panel_add_attr(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null, ?array $last = null): string
 {
     $reg = sj_registry_entity($entity);
     if ($reg === null || empty($reg['creatable'])) {
@@ -60,6 +63,7 @@ function panel_add_attr(string $entity, array $preset = [], string $label = 'Add
         return ''; // section is full — item.php enforces the same cap server-side
     }
     $fields = [];
+    $lastOut = [];
     foreach ($reg['fields'] as $name => $def) {
         $fields[] = [
             'name'     => $name,
@@ -70,8 +74,15 @@ function panel_add_attr(string $entity, array $preset = [], string $label = 'Add
             'required' => !empty($def['required']),
             'multiline' => !empty($def['multiline']),
         ];
+        if ($last !== null && isset($last[$name]) && $last[$name] !== ''
+            && in_array($def['type'], ['text', 'url', 'enum'], true) && empty($def['create_only'])) {
+            $lastOut[$name] = (string)$last[$name];
+        }
     }
     $payload = ['entity' => $entity, 'preset' => $preset, 'label' => $label, 'fields' => $fields];
+    if ($lastOut) {
+        $payload['last'] = $lastOut;
+    }
     return " data-panel-add='" . str_replace("'", '&#39;', json_encode($payload, JSON_UNESCAPED_SLASHES)) . "'";
 }
 

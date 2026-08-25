@@ -36,6 +36,7 @@
   font-size: 15.5px;
   line-height: 1.8;
   color: var(--sj-ink-soft);
+  text-align: justify; /* K7 */
 }
 @media (max-width: 900px) {
   .infrastructure-container { flex-direction: column; }
@@ -97,8 +98,8 @@
 }
 @media (max-width: 768px) {
   .about-section { flex-direction: column; }
-  .about-section:nth-child(2) .about-content { order: 2; }
-  .about-section:nth-child(2) .about-image { order: 1; }
-  .about-image { width: 100%; }
+  /* K7: any number of blocks — every card stacks photo-first on phones */
+  .about-section .about-image { order: 1; width: 100%; }
+  .about-section .about-content { order: 2; }
   .about-content p { text-align: justify; }
 }

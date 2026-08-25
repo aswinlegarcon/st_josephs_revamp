@@ -570,6 +570,13 @@ $settings = [
     // J2: floating WhatsApp button — digits with country code; empty = hidden.
     // (A dedicated key: the school landline above can't receive WhatsApp.)
     'whatsapp_number'       => '',
+    // K7: Home "Our Motto" block (was hardcoded in the card partial).
+    'motto_heading'         => 'Our Motto',
+    'motto_sub'             => "Motto of our School is ''DISCIPLINE AND KNOWLEDGE''",
+    'motto1_title'          => 'Discipline',
+    'motto1_body'           => 'Discipline is systematic instruction intended to train a person activity, exercise, or a regimen that develops or improves a skill.',
+    'motto2_title'          => 'Knowledge',
+    'motto2_body'           => 'Knowledge is facts, information, and skills acquired through experience or education; the theoretical or practical understanding of a subject',
     // K4: About rules block — diary line + download target (were hardcoded).
     'diary_text'            => 'To see more about our rules and regulations, then click on Download --',
     'diary_url'             => '/files/diary.pdf',
@@ -618,6 +625,62 @@ if ($k4Count === 0) {
     $out[] = 'rules timings: 5 shipped rows seeded';
 } else {
     $out[] = "rules timings: kept ($k4Count rows)";
+}
+
+/* ---------- K7: staff blocks + academy highlight + academics hero (migration 010) ----------
+   Dev convenience: apply the additive DDL when the running DB predates 010
+   (prod applies database/migrations/010 via mPanel). All seeds are
+   empty-only / INSERT IGNORE — admin edits always win. */
+$pdo->exec("CREATE TABLE IF NOT EXISTS staff_blocks (
+  id        INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title     VARCHAR(120) NOT NULL,
+  body_html TEXT NOT NULL,
+  image_id  INT UNSIGNED NULL,
+  position  INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  CONSTRAINT fk_staffblk_img FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+if (!$pdo->query("SHOW COLUMNS FROM academies LIKE 'fancy_gold'")->fetch()) {
+    $pdo->exec("ALTER TABLE academies ADD COLUMN fancy_gold TINYINT(1) NOT NULL DEFAULT 1");
+    $out[] = 'academies.fancy_gold: column added';
+}
+// Staffs blocks: copy the two shipped profile blocks once (the profiles rows
+// stay untouched; the Staffs page renders staff_blocks from now on).
+if ((int)$pdo->query('SELECT COUNT(*) FROM staff_blocks')->fetchColumn() === 0) {
+    $k7Src = $pdo->query("SELECT person_name, message_html, image_id, role_key FROM profiles
+                          WHERE role_key IN ('staff_team','staff_tour')
+                          ORDER BY FIELD(role_key,'staff_team','staff_tour')")->fetchAll();
+    $k7Ins = $pdo->prepare('INSERT INTO staff_blocks (title, body_html, image_id, position) VALUES (?,?,?,?)');
+    foreach ($k7Src as $k7i => $k7b) {
+        $k7Ins->execute([$k7b['person_name'], $k7b['message_html'], $k7b['image_id'], $k7i + 1]);
+    }
+    $out[] = 'staff blocks: ' . count($k7Src) . ' copied from the shipped profiles';
+} else {
+    $out[] = 'staff blocks: kept (' . $pdo->query('SELECT COUNT(*) FROM staff_blocks')->fetchColumn() . ')';
+}
+// Academics page hero: a pages row + the three shipped slides (the static
+// markup showed kg1/high1/highsec1 with one identical caption). The images
+// are the ORIGINAL /photos rows (they carry F2 renditions).
+$pdo->prepare('INSERT IGNORE INTO pages (slug, title, heading_html) VALUES (?,?,?)')
+    ->execute(['academics', 'Academics', '']);
+$k7PageId = (int)$pdo->query("SELECT id FROM pages WHERE slug = 'academics'")->fetchColumn();
+$k7Have = (int)$pdo->query("SELECT COUNT(*) FROM hero_slides WHERE page_id = {$k7PageId}")->fetchColumn();
+if ($k7PageId && $k7Have === 0) {
+    $k7Cap = 'Embrace the challenges of learning, for they are stepping stones towards your academic success.';
+    $k7InsSlide = $pdo->prepare('INSERT INTO hero_slides (page_id, caption_title, caption_text, image_id, position) VALUES (?,?,?,?,?)');
+    $k7N = 0;
+    foreach (['/photos/kg1.jpg', '/photos/high1.jpg', '/photos/highsec1.jpg'] as $k7pos => $k7path) {
+        $k7Img = $pdo->prepare('SELECT id FROM images WHERE legacy_path = ?');
+        $k7Img->execute([$k7path]);
+        $k7ImgId = (int)$k7Img->fetchColumn();
+        if ($k7ImgId) {
+            $k7InsSlide->execute([$k7PageId, 'Academics', $k7Cap, $k7ImgId, $k7pos + 1]);
+            $k7N++;
+        }
+    }
+    $out[] = "academics hero: page row + {$k7N} slides seeded";
+} else {
+    $out[] = "academics hero: kept ({$k7Have} slides)";
 }
 
 /* ---------- SEO defaults (F3, migration 007) ----------

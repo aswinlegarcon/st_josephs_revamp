@@ -9,8 +9,10 @@ $sj_blocks = [];
 foreach (['staff_love', 'staff_team', 'staff_tour'] as $roleKey) {
     $sj_blocks[$roleKey] = repo_profile($roleKey);
 }
+$sj_staff_blocks = repo_staff_blocks(is_edit()); // K7: the creatable photo+text blocks
 
 \SJ\View\Layout::render('staffs', [
+    'sj_staff_blocks' => $sj_staff_blocks,
     'title'          => "St.Joseph's MHSS, Ondipudur",
     'bodyClass'      => 'infrastructure',
     'sjNavOverlay'   => true, // Stage J: transparent nav over the hero

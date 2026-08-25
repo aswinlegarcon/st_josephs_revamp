@@ -203,9 +203,9 @@ function ed_item(string $entity, $id, string $label = ''): string
     return EditAttrs::item($entity, $id, $label);
 }
 
-function ed_add(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null): string
+function ed_add(string $entity, array $preset = [], string $label = 'Add', ?int $currentCount = null, ?array $last = null): string
 {
-    return EditAttrs::add($entity, $preset, $label, $currentCount);
+    return EditAttrs::add($entity, $preset, $label, $currentCount, $last);
 }
 
 function ed_rich(string $entity, $id, string $field, ?string $html): void
@@ -337,6 +337,11 @@ function repo_section(string $slug): ?array
 function repo_sections(): array
 {
     return Repo::sections();
+}
+
+function repo_staff_blocks(bool $includeInactive = false): array
+{
+    return \SJ\Content\Repo::staffBlocks($includeInactive);
 }
 
 function repo_rules_timings(): array

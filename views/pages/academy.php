@@ -51,7 +51,8 @@ $sjHeadCss = "  .bg-1 { background: linear-gradient(rgba(43, 75, 138, .55), rgba
   </section>
   <!-- carousel end -->
 
-  <div class="infra-new-text">
+  <?php // K7: fancy_gold=0 neutralizes the legacy "large gold" write-up spans ?>
+  <div class="infra-new-text<?= empty($sj_academy['fancy_gold']) ? ' sj-hl-off' : '' ?>">
     <h4 class="sj-reveal"<?= ed_field('academy', $sj_academy['id'], 'content_heading') ?>><?= e($sj_academy['content_heading']) ?></h4>
     <?php ed_rich('academy', $sj_academy['id'], 'body_html', $sj_academy['body_html']); ?>
   </div>

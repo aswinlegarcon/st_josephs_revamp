@@ -25,7 +25,7 @@
       <?php endforeach; ?>
     </div>
 
-    <div class="carousel-inner"<?= ed_add('update_slide', [], 'Add update slide') ?>>
+    <div class="carousel-inner"<?= ed_add('update_slide', [], 'Add update slide', null, $sj_updates ? end($sj_updates) : null) ?>>
 
       <?php foreach ($sj_updates as $i => $u): ?>
       <div class="carousel-item update-carousel-item<?= $i === 0 ? ' active' : '' ?><?= empty($u['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('update_slide', $u['id'], 'Update slide') ?>>

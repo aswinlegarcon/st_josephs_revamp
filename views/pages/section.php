@@ -67,7 +67,7 @@ include $__pp . '/hero.php';
 
                 <div id="collapseOne" class="collapse" data-bs-parent="#accordion">
                 <div class="card-body">
-                <ul class="timeline"<?= ed_add('timeline_entry', ['section_id' => $sid], 'Add timeline month') ?>>
+                <ul class="timeline"<?= ed_add('timeline_entry', ['section_id' => $sid], 'Add timeline month', null, $sj_timeline ? end($sj_timeline) : null) ?>>
                     <?php foreach ($sj_timeline as $ti => $t): ?>
                                 <li<?= ed_item('timeline_entry', $t['id'], 'Timeline: ' . $t['month_label']) ?>>
                                     <div class="<?= $ti % 2 === 0 ? 'direction-r' : 'direction-l' ?>">
@@ -97,7 +97,7 @@ include $__pp . '/hero.php';
 </div>
 <!-- new template -->
 <section class="newtemp-body">
-<div class="about-container"<?= ed_add('section_event', ['section_id' => $sid], 'Add event block') ?>>
+<div class="about-container"<?= ed_add('section_event', ['section_id' => $sid], 'Add event block', null, $sj_events ? end($sj_events) : null) ?>>
         <?php foreach ($sj_events as $ei => $ev): ?>
         <div class="about-section"<?= ed_item('section_event', $ev['id'], 'Event: ' . $ev['title']) ?>>
             <?php if ($ei % 2 === 0): ?>

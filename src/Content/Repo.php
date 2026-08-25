@@ -143,6 +143,14 @@ final class Repo
         return $st->fetchAll();
     }
 
+    /** Staffs-page photo+text blocks, with images, ordered — one query (K7). */
+    public static function staffBlocks(bool $includeInactive = false): array
+    {
+        $sql = 'SELECT b.*, ' . self::IMG_SELECT . ' FROM staff_blocks b LEFT JOIN images i ON i.id = b.image_id'
+             . ($includeInactive ? '' : ' WHERE b.is_active = 1') . ' ORDER BY b.position, b.id';
+        return \array_map([self::class, 'foldImage'], db()->query($sql)->fetchAll());
+    }
+
     /** School-timings rows of the About rules block, ordered (K4). */
     public static function rulesTimings(): array
     {

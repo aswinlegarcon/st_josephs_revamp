@@ -79,6 +79,20 @@
   color: rgba(255, 255, 255, .9);
   font-size: clamp(15.5px, 1.3vw, 18px);
   line-height: 1.8;
+  text-align: justify; /* K7 */
+}
+/* K7: on this navy band the toolbar's gold highlight uses the REAL site gold
+   (the ink shade #8a6d00 is for white backgrounds only — tokens rule). */
+.infra-new-text .hl-gold { color: var(--sj-gold); }
+/* K7: per-academy switch (fancy_gold = 0) — neutralize the legacy seeded
+   "large gold" spans (they carry pre-sanitizer inline styles, hence the
+   !important) AND toolbar golds, so the write-up reads as plain body text. */
+.sj-hl-off p span,
+.sj-hl-off .hl-gold {
+  color: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  font-family: inherit !important;
 }
 @media (max-width: 1320px) {
   .infra-new { flex-direction: column; align-items: center; }

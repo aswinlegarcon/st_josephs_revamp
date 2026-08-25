@@ -28,6 +28,13 @@ $SETTING_KEYS = [
     // K4: About rules block — diary line + download target
     'diary_text'            => [200, 'text'],
     'diary_url'             => [200, 'text'],
+    // K7: Home "Our Motto" block
+    'motto_heading'         => [80,  'text'],
+    'motto_sub'             => [200, 'text'],
+    'motto1_title'          => [60,  'text'],
+    'motto1_body'           => [400, 'text'],
+    'motto2_title'          => [60,  'text'],
+    'motto2_body'           => [400, 'text'],
     // J3: Home stat band (value = number + optional suffix, e.g. "2200+")
     'home_stat1_value'      => [12,  'text'],
     'home_stat1_label'      => [40,  'text'],

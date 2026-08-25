@@ -124,6 +124,7 @@ final class Registry
                     'card_subtitle'   => ['type' => 'text', 'max' => 120, 'label' => 'Co-curriculum card subtitle'],
                     'card_image_id'   => ['type' => 'image', 'preset' => 'card_4x3',  'label' => 'Card photo', 'required' => true],
                     'bg_image_id'     => ['type' => 'image', 'preset' => 'bg_wide',   'label' => 'Page background photo', 'required' => true],
+                    'fancy_gold'      => ['type' => 'bool', 'label' => 'Large gold highlight text in the write-up'], // K7
                     'is_active'       => ['type' => 'bool', 'label' => 'Visible on the co-curriculum grid'],
                 ],
             ],
@@ -177,6 +178,17 @@ final class Registry
                 'fields' => [
                     'year_label' => ['type' => 'text', 'max' => 20, 'label' => 'Year label (e.g. 2025)'],
                     'is_active'  => ['type' => 'bool', 'label' => 'Visible on site'],
+                ],
+            ],
+            // K7: the Staffs page's photo+text blocks — creatable; the template
+            // alternates image left/right by position, like the shipped pair.
+            'staff_block' => [
+                'table' => 'staff_blocks', 'orderable' => true, 'creatable' => true, 'deletable' => true,
+                'fields' => [
+                    'title'     => ['type' => 'text', 'max' => 120, 'label' => 'Block title'],
+                    'body_html' => ['type' => 'html', 'max' => 65000, 'label' => 'Text'],
+                    'image_id'  => ['type' => 'image', 'preset' => 'feature_4x3', 'label' => 'Photo', 'required' => true],
+                    'is_active' => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],
             ],
             // K4: the About rules block's "School timings" table rows.

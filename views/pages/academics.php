@@ -1,12 +1,26 @@
-<?php // Academics page body — Stage J. The top carousel is static content
-// (three optimized section photos, no hero_slide rows) so it keeps its own
-// markup but wears the shared .sj-hero classes for identical geometry/veil. ?>
+<?php // Academics page body — K7: the top carousel is hero_slide-backed
+// (editable in the panel's School Sections screen and via the site overlay);
+// the shipped static markup remains ONLY as a fallback for pre-010 DBs. ?>
 <!-- top carousel -->
+<?php if (!empty($sj_hero_slides)): ?>
+<?php
+$sjHero = [
+    'id'          => 'academicsHeroCarousel',
+    'slides'      => $sj_hero_slides,
+    'variant'     => 'banner',
+    'preset'      => 'hero_16x7',
+    'interval'    => 2000,
+    'page_id'     => $sj_page ? (int)$sj_page['id'] : null,
+    'keyboardNav' => true,
+];
+include dirname(__DIR__) . '/partials/hero.php';
+?>
+<?php else: ?>
 <section class="sj-hero sj-hero--banner sj-reveal">
   <div id="academicsHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000" data-sj-kbnav>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img class="d-block w-100" src="/media/static/kg1.jpg" alt="First slide" fetchpriority="high"><?php /* N5: optimized copy (1.3 MB → 236 KB); same frame, aspect preserved */ ?>
+        <img class="d-block w-100" src="/media/static/kg1.jpg" alt="First slide" fetchpriority="high">
         <div class="carousel-caption sj-hero-cap">
           <h5 class="sj-hero-title">Academics</h5>
           <p class="sj-hero-flourish">Embrace the challenges of learning, for they are stepping stones towards your academic success.</p>
@@ -29,6 +43,7 @@
     </div>
   </div>
 </section>
+<?php endif; ?>
 
 <!-- heading band -->
 <div class="home-text">
