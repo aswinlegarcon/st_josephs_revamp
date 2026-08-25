@@ -60,11 +60,14 @@ foreach ($sj_facilities as $fi => $F) {
 <section id="bg-<?= $n ?>" class="<?= $alt ? 'infra-new1' : 'infra-new' ?> bg-<?= $n ?><?= empty($F['is_active']) ? ' sj-inactive' : '' ?>"<?= ed_item('facility', $F['id'], $F['name']) ?>>
   <section class="<?= $alt ? 'infra-new-carousel1' : 'infra-new-carousel' ?>">
     <div id="infraCarousel<?= $n ?>" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
-      <ol class="carousel-indicators">
+      <?php // K8: BS5 indicator dialect (was a BS4 <ol>/<li>, which rendered
+            // real list markers "1. 2. 3." since BS5 dropped list-style:none —
+            // and <li> can't take keyboard focus). Buttons are focusable. ?>
+      <div class="carousel-indicators">
         <?php foreach ($F['carousel'] as $ci => $cimg): ?>
-        <li data-bs-target="#infraCarousel<?= $n ?>" data-bs-slide-to="<?= $ci ?>"<?= $ci === 0 ? ' class="active"' : '' ?>></li>
+        <button type="button" data-bs-target="#infraCarousel<?= $n ?>" data-bs-slide-to="<?= $ci ?>"<?= $ci === 0 ? ' class="active" aria-current="true"' : '' ?> aria-label="Slide <?= $ci + 1 ?>"></button>
         <?php endforeach; ?>
-      </ol>
+      </div>
       <div class="carousel-inner">
         <?php foreach ($F['carousel'] as $ci => $cimg): ?>
         <div class="carousel-item<?= $ci === 0 ? ' active' : '' ?>">

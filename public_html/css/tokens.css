@@ -61,3 +61,11 @@
    z-index; restoring the exact BS4 value here (tokens.css loads on every page)
    keeps all captions on top. Stage J heroes depend on this too. */
 .carousel-caption { z-index: 10; }
+
+/* K8 fix — the SAME class of BS4→BS5 drift. Bootstrap 4 shipped
+   `.carousel-indicators { list-style: none }` because its indicators were an
+   <ol><li>; BS5 moved to <div><button> and dropped the reset, so any surviving
+   <ol> markup renders real list markers ("1. 2. 3." under the bars). The
+   markup is now BS5 everywhere; this keeps the reset as a belt-and-braces
+   guard for legacy/pasted carousel markup. */
+.carousel-indicators { list-style: none; }
