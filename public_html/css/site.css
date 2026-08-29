@@ -298,14 +298,23 @@ body { margin: 0; color: var(--sj-ink); }
 .sj-nav-inner { min-height: 74px; padding: 5px 22px; }
 .sj-nav-spacer { height: calc(var(--sj-nav-h) + 2px); } /* +2: nav border + rounding — measured */
 
-.sj-nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.sj-nav-brand img { width: 46px; height: 55px; }
-/* K9: the shipped st.png wordmark (400×70) sits right of the crest — the
-   higher-specificity selector frees it from the crest sizing above. */
-.sj-nav-brand .sj-nav-wordmark { width: auto; height: 36px; display: block; }
+.sj-nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; padding: 0; margin: 0; }
+/* K10: bigger crest (sized to still clear the 74px main bar — the brand's
+   default Bootstrap padding is stripped above so the bar height holds) */
+.sj-nav-brand img { width: 52px; height: 62px; }
+/* K9/K10: the st.png wordmark (400×70) with the address line stacked under it;
+   the higher-specificity selector frees the wordmark from the crest sizing. */
+.sj-nav-name { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.sj-nav-brand .sj-nav-wordmark { width: auto; height: 30px; display: block; }
+.sj-nav-name small {
+  font-family: var(--sj-font-body); font-size: 10.5px; font-weight: 700;
+  letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--sj-ink-soft); line-height: 1;
+}
 @media (max-width: 576px) {
-  .sj-nav-brand img { width: 38px; height: 46px; }
-  .sj-nav-brand .sj-nav-wordmark { width: auto; height: 26px; }
+  .sj-nav-brand img { width: 42px; height: 50px; }
+  .sj-nav-brand .sj-nav-wordmark { width: auto; height: 22px; }
+  .sj-nav-name small { font-size: 8.5px; letter-spacing: 1px; }
 }
 
 .sj-nav-desk { align-items: center; gap: 2px; margin-left: auto; }
@@ -361,6 +370,7 @@ body { margin: 0; color: var(--sj-ink); }
 .sj-nav--overlay:not(.sj-scrolled) .sj-nav-wordmark {
   filter: brightness(0) invert(1) drop-shadow(0 1px 6px rgba(0, 0, 0, .35));
 }
+.sj-nav--overlay:not(.sj-scrolled) .sj-nav-name small { color: rgba(255, 255, 255, .85); }
 .sj-nav--overlay:not(.sj-scrolled) .nav-link { color: #fff; }
 .sj-nav--overlay:not(.sj-scrolled) .nav-link:hover,
 .sj-nav--overlay:not(.sj-scrolled) .nav-link.show { color: var(--sj-gold); }

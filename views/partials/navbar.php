@@ -67,8 +67,11 @@ $sjNavStripMail  = repo_setting('contact_email', '');
   <div class="container-fluid sj-nav-inner">
     <a class="navbar-brand sj-nav-brand" href="/index.php">
       <img src="/photos/logo-main.png" alt="St.Joseph's crest">
-      <?php // K9 (owner): the shipped st.png wordmark replaces the text name ?>
-      <img class="sj-nav-wordmark" src="/photos/st.png" alt="St.Joseph's Matric Higher Secondary School, Ondipudur, Coimbatore &ndash; 641016">
+      <?php // K9/K10 (owner): st.png wordmark with the address line under it ?>
+      <span class="sj-nav-name">
+        <img class="sj-nav-wordmark" src="/photos/st.png" alt="St.Joseph's Matric Higher Secondary School">
+        <small>Ondipudur, Coimbatore &ndash; 641016</small>
+      </span>
     </a>
 
     <div class="sj-nav-desk d-none d-lg-flex">
@@ -104,7 +107,10 @@ $sjNavStripMail  = repo_setting('contact_email', '');
   <div class="offcanvas-header">
     <span class="sj-nav-brand">
       <img src="/photos/logo-main.png" alt="">
-      <img class="sj-nav-wordmark" src="/photos/st.png" alt="St.Joseph's Matric Higher Secondary School">
+      <span class="sj-nav-name">
+        <img class="sj-nav-wordmark" src="/photos/st.png" alt="St.Joseph's Matric Higher Secondary School">
+        <small>Ondipudur, Coimbatore &ndash; 641016</small>
+      </span>
     </span>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close menu"></button>
   </div>

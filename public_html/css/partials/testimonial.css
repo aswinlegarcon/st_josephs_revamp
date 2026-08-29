@@ -69,7 +69,9 @@
   border: 0;
   border-radius: var(--sj-r-card);
   box-shadow: var(--sj-shadow-1);
-  background: var(--sj-veil), var(--sj-tm-bg) center / cover no-repeat;
+  /* K10 (owner): anchor the photo to its TOP — centered cover showed only the
+     middle band of tall photos on the shorter slider cards. */
+  background: var(--sj-veil), var(--sj-tm-bg) top center / cover no-repeat;
   background-color: var(--sj-navy-dark); /* paint when no photo resolves */
   color: #fff;
   overflow: hidden;
