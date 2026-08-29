@@ -1,0 +1,16 @@
+# Windows-safety (K10 docs): checkout must keep LF endings everywhere.
+# Git for Windows defaults to core.autocrlf=true, which would rewrite run.sh
+# (bash chokes on CRLF: "$'\r': command not found"), database/*.sql (mounted
+# straight into MySQL's init hook) and every PHP/CSS/JS file on checkout.
+* text=auto eol=lf
+
+# Binary assets — never touch line endings.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.woff2 binary
+*.docx binary
