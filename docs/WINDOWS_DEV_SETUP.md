@@ -62,10 +62,15 @@ that MySQL auto-loads on first boot. `autocrlf input` + the repo's
 > git rm -r --cached . -q && git checkout -- . && git status
 > ```
 
-**Where to clone:** any normal path works (e.g. `C:\Users\you\projects\`).
-If the site feels slow in dev, cloning inside the WSL file system instead
-(`\\wsl$\Ubuntu\home\you\...`, working from a WSL terminal) makes Docker's
-file mounts several times faster — optional, not required.
+**Where to clone:** any normal path works (e.g. `C:\Users\you\projects\` or
+`D:\`). If the site feels slow in dev, cloning inside the WSL file system
+instead (`\\wsl$\Ubuntu\home\you\...`, working from a WSL terminal) makes
+Docker's file mounts several times faster — optional, not required.
+
+**Clone — don't copy a zip** of someone else's working folder. A zip drags
+along that machine's gitignored `.env` / `config/config.php` and whatever
+half-state it was in; a clone is clean, and `run.sh` creates those two
+files fresh.
 
 ---
 
@@ -94,6 +99,17 @@ What it does on Windows, exactly as on Linux:
 The `chmod 777` line in `run.sh` is a Linux-ism that safely does nothing on
 Windows — Docker Desktop mounts are already writable for the container, so
 image uploads work without it.
+
+**Typing container commands by hand in Git Bash?** Git Bash rewrites
+arguments that look like Unix paths (`/var/www/...` becomes
+`C:/Program Files/Git/var/www/...`). `run.sh` disables this itself, but a
+command you type yourself needs the same guard:
+
+```bash
+MSYS_NO_PATHCONV=1 docker compose exec -T web php /var/www/database/seed.php
+```
+
+(PowerShell does no such rewriting — the fallback below works as-is.)
 
 Day-to-day commands (all from Git Bash in the project folder):
 
@@ -128,6 +144,8 @@ docker compose exec -T web php /var/www/database/seed.php
 | Symptom | Cause → fix |
 |---|---|
 | `./run.sh: line N: $'\r': command not found` | CRLF endings from a clone made before section 3. Run the "already cloned" fix above. |
+| `Could not open input file: C:/Program Files/Git/var/www/database/seed.php` | Git Bash rewrote the container path (see the note in section 4). Pull the latest repo — `run.sh` now exports `MSYS_NO_PATHCONV=1` itself; for hand-typed commands, prefix them with `MSYS_NO_PATHCONV=1 `. |
+| Login `admin` / `admin123` is rejected on a fresh machine | The seeder never ran (it's what creates that user — usually the symptom right after the path error above). Fix the cause, then just run `./run.sh` again; seeding is idempotent. |
 | `error during connect: ... dockerDesktopLinuxEngine` | Docker Desktop isn't running. Start it, wait for the whale, retry. |
 | `Bind for 0.0.0.0:8090 failed: port is already allocated` | Another app owns port 8090 (or 3307 for the DB). Find it with `netstat -ano \| findstr 8090` and stop it, or change the **left** side of the port mapping in `docker-compose.yml` (e.g. `"8091:80"`) — then browse to that port instead. |
 | WSL 2 install loop / "virtualization not enabled" | Enable Intel VT-x / AMD-V in BIOS, and in Windows Features turn on "Virtual Machine Platform" + "Windows Subsystem for Linux", reboot. |

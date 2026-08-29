@@ -6,6 +6,13 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# Git Bash on Windows (MSYS) rewrites absolute POSIX arguments before docker
+# sees them — /var/www/database/seed.php becomes C:/Program Files/Git/var/…,
+# so the seeder dies with "Could not open input file". These switches disable
+# that conversion for this script; they are inert on Linux, macOS and WSL.
+export MSYS_NO_PATHCONV=1
+export MSYS2_ARG_CONV_EXCL='*'
+
 case "${1:-up}" in
   stop)
     docker compose down
