@@ -300,19 +300,12 @@ body { margin: 0; color: var(--sj-ink); }
 
 .sj-nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
 .sj-nav-brand img { width: 46px; height: 55px; }
-.sj-nav-name { display: flex; flex-direction: column; line-height: 1.05; }
-.sj-nav-name b {
-  font-family: var(--sj-font-head); font-weight: 400; font-size: 20px;
-  letter-spacing: .3px; color: var(--sj-navy-dark);
-}
-.sj-nav-name small {
-  font-family: var(--sj-font-body); font-size: 11px; font-weight: 600;
-  letter-spacing: .4px; color: var(--sj-ink-soft); margin-top: 3px;
-}
+/* K9: the shipped st.png wordmark (400×70) sits right of the crest — the
+   higher-specificity selector frees it from the crest sizing above. */
+.sj-nav-brand .sj-nav-wordmark { width: auto; height: 36px; display: block; }
 @media (max-width: 576px) {
   .sj-nav-brand img { width: 38px; height: 46px; }
-  .sj-nav-name b { font-size: 17px; }
-  .sj-nav-name small { font-size: 10px; }
+  .sj-nav-brand .sj-nav-wordmark { width: auto; height: 26px; }
 }
 
 .sj-nav-desk { align-items: center; gap: 2px; margin-left: auto; }
@@ -363,8 +356,11 @@ body { margin: 0; color: var(--sj-ink); }
 /* overlay state: the MAIN bar starts transparent over the page hero (the
    strip stays solid navy) and settles to white after 40px (sjNavScroll). */
 .sj-nav--overlay:not(.sj-scrolled) .sj-nav { background: transparent; border-bottom-color: transparent; }
-.sj-nav--overlay:not(.sj-scrolled) .sj-nav-name b { color: #fff; }
-.sj-nav--overlay:not(.sj-scrolled) .sj-nav-name small { color: rgba(255, 255, 255, .78); }
+/* K9: over a photo the navy wordmark would vanish — render it as a clean
+   white silhouette until the bar settles to solid white. */
+.sj-nav--overlay:not(.sj-scrolled) .sj-nav-wordmark {
+  filter: brightness(0) invert(1) drop-shadow(0 1px 6px rgba(0, 0, 0, .35));
+}
 .sj-nav--overlay:not(.sj-scrolled) .nav-link { color: #fff; }
 .sj-nav--overlay:not(.sj-scrolled) .nav-link:hover,
 .sj-nav--overlay:not(.sj-scrolled) .nav-link.show { color: var(--sj-gold); }

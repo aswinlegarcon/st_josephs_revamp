@@ -471,14 +471,10 @@ case 'staffspage':
 case 'testimonials':
     $rows = repo_testimonials(true);
     ob_start(); ?>
-      <?php if (panel_add_attr('testimonial', [], 'Add testimonial', count($rows)) !== ''): ?>
-      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('testimonial', [], 'Add testimonial', count($rows)) ?>><?= sj_icon('plus', 15) ?> Add testimonial</button>
-      <?php else: ?>
-      <span class="sj-chip">Section full — 3 of 3 cards</span>
-      <?php endif; ?>
+      <button class="sj-btn sj-btn-primary" <?= panel_add_attr('testimonial', [], 'Add testimonial') ?>><?= sj_icon('plus', 15) ?> Add testimonial</button>
     <?php
     panel_page_head('quote', 'Testimonials',
-        'Each card below is rendered exactly like the site — navy veil, gold name, white rule. Order here = order on the site.',
+        'Each card below is rendered exactly like the site — navy veil, gold name, white rule. The site shows them as a slider (three at a time, auto-advancing), so add as many as you like; order here = order on the site.',
         [[count($rows), 'cards']], ob_get_clean());
     ?>
     <div class="sj-list sj-cardgrid" data-list="testimonial">

@@ -164,13 +164,92 @@ function sjHeroKeys() {
   });
 }
 
+// Testimonial slider (K9): three cards visible ≥901px, one below; the track
+// moves ONE card per step (never a whole page of three), wraps around, and
+// auto-advances every 3s. Auto-play pauses on hover/focus, skips hidden tabs,
+// respects reduced motion, and stays OFF in admin edit mode (an auto-moving
+// track under a contenteditable would fight the editor). Arrows hide
+// themselves whenever every card already fits in the viewport.
+function sjTestimonialSlider() {
+  var slider = document.querySelector('.tm-slider');
+  if (!slider) return;
+  var track = slider.querySelector('.tm-track');
+  var prev = slider.querySelector('.tm-nav--prev');
+  var next = slider.querySelector('.tm-nav--next');
+  if (!track || !prev || !next) return;
+  var cards = track.querySelectorAll('.card');
+  if (cards.length === 0) { prev.hidden = true; next.hidden = true; return; }
+
+  var index = 0;
+  var timer = null;
+
+  function visible() {
+    return window.matchMedia('(min-width: 901px)').matches ? 3 : 1;
+  }
+  function stepPx() { // card width + track gap, measured from the real layout
+    return cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : 0;
+  }
+  function maxIndex() { return Math.max(0, cards.length - visible()); }
+
+  function apply() {
+    var m = maxIndex();
+    if (index > m) index = m;
+    track.style.transform = 'translateX(' + (-index * stepPx()) + 'px)';
+    prev.hidden = m === 0;
+    next.hidden = m === 0;
+  }
+  function go(delta) {
+    var m = maxIndex();
+    if (m === 0) return;
+    index = (index + delta + m + 1) % (m + 1); // one step, wrapping both ways
+    apply();
+  }
+
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
+  function start() {
+    stop();
+    if (!sjMotionOK()) return;
+    if (document.body.classList.contains('sj-edit-mode')) return;
+    if (maxIndex() === 0) return;
+    timer = setInterval(function () {
+      if (!document.hidden) go(1);
+    }, 3000);
+  }
+
+  prev.addEventListener('click', function () { go(-1); start(); });
+  next.addEventListener('click', function () { go(1); start(); });
+  slider.addEventListener('pointerenter', stop);
+  slider.addEventListener('pointerleave', start);
+  slider.addEventListener('focusin', stop);
+  slider.addEventListener('focusout', start);
+  window.addEventListener('resize', function () { apply(); start(); });
+  // Breakpoint flips can happen WITHOUT a resize event (webview viewport
+  // settling, zoom, orientation races) — re-evaluate on the media query too.
+  var mq = window.matchMedia('(min-width: 901px)');
+  if (mq.addEventListener) {
+    mq.addEventListener('change', function () { apply(); start(); });
+  }
+
+  apply();
+  start();
+}
+
 // Auto-wire the Stage J pieces present on the page. Counters are scoped to
 // [data-sj-counters] containers (J3+ markup) so the legacy inline counter
 // script on the un-migrated Home page is never double-driven.
-document.addEventListener('DOMContentLoaded', function () {
+// K9: readyState-safe boot — a DOMContentLoaded listener registered AFTER the
+// document is already interactive never fires (late-executed scripts, webview
+// re-navigation), which would silently skip every wire below.
+function sjBoot() {
   sjRevealIO('.sj-reveal');
   sjCounters('[data-sj-counters] .counter[data-target]');
   sjNavScroll();
   sjMegaHover();
   sjHeroKeys();
-});
+  sjTestimonialSlider();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', sjBoot);
+} else {
+  sjBoot();
+}

@@ -17,7 +17,7 @@ date_default_timezone_set('Asia/Kolkata');
 // the old `?v=time()` (which re-downloaded every asset on every request).
 // Combined with the long-cache .htaccess rules, repeat visits re-fetch nothing.
 if (!defined('SJ_ASSET_VER')) {
-    define('SJ_ASSET_VER', '20260825.2'); // K8: infrastructure carousel indicators — BS5 dialect, no list markers
+    define('SJ_ASSET_VER', '20260825.5'); // K9: testimonial slider + readyState-safe boot + st.png wordmark
 }
 
 // Composer autoloader: SJ\* classes plus src/helpers.php (the historic global

@@ -7,7 +7,15 @@
 <link rel="stylesheet" href="/css/partials/testimonial.css?v=<?php echo SJ_ASSET_VER; ?>">
     <div class="testimonial-container">
         <h1 class="sj-reveal">Students Testimonial</h1>
-        <div class="testimonial"<?= ed_add('testimonial', [], 'Add testimonial', count($sj_testimonials)) ?>>
+        <?php // K9: one-by-one slider — three cards visible on desktop, one on
+              // phones; arrows + a 3s auto-advance live in site.js
+              // (sjTestimonialSlider). The card recipe is untouched: the
+              // .testimonial class stays on the TRACK so every existing
+              // `.testimonial .card` rule keeps applying. ?>
+        <div class="tm-slider"<?= ed_add('testimonial', [], 'Add testimonial') ?>>
+          <button type="button" class="tm-nav tm-nav--prev" aria-label="Previous testimonial"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <div class="tm-viewport">
+            <div class="testimonial tm-track">
             <?php foreach ($sj_testimonials as $ti => $t): ?>
             <?php // N2/J3: a chosen photo only sets the --sj-tm-bg custom property —
                   // the veil + sizing recipe lives ONCE in testimonial.css (the
@@ -20,5 +28,8 @@
                 <?php ed_rich('testimonial', $t['id'], 'body_html', $t['body_html']); ?>
             </div>
             <?php endforeach; ?>
+            </div>
+          </div>
+          <button type="button" class="tm-nav tm-nav--next" aria-label="Next testimonial"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
         </div>
     </div>

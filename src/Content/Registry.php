@@ -200,10 +200,9 @@ final class Registry
                 ],
             ],
             'testimonial' => [
+                // K9: the K2-era max_count=3 cap is GONE — the home section is a
+                // one-by-one slider now, so any number of testimonials works.
                 'table' => 'testimonials', 'orderable' => true, 'creatable' => true, 'deletable' => true,
-                // K2 (owner decision): the home layout fits exactly three cards —
-                // both Add buttons hide at the cap and item.php refuses a 4th.
-                'max_count' => 3,
                 'fields' => [
                     'name_html'   => ['type' => 'html', 'max' => 200,   'label' => 'Student name & tag'],
                     'body_html'   => ['type' => 'html', 'max' => 65000, 'label' => 'Testimonial'],

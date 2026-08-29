@@ -22,19 +22,48 @@
   background: var(--sj-gold); margin: 14px auto 0;
 }
 
-.testimonial {
+/* K9: slider chassis — arrows in the side gutters, a clipping viewport, and
+   the .testimonial class ON the track so the card recipe below is untouched.
+   site.js (sjTestimonialSlider) moves the track one card at a time and
+   auto-advances every 3s (paused on hover/focus, off under reduced motion). */
+.tm-slider { position: relative; margin-top: 40px; padding: 0 58px; }
+.tm-viewport { overflow: hidden; }
+.tm-track {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
   gap: 26px;
-  flex-wrap: wrap;
-  margin-top: 40px;
+  transition: transform .6s var(--sj-ease);
+  will-change: transform;
 }
+.tm-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sj-grad-brand);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: var(--sj-shadow-1);
+  transition: background var(--sj-t-fast) ease, color var(--sj-t-fast) ease,
+              transform var(--sj-t-fast) ease;
+}
+.tm-nav:hover { background: var(--sj-gold); color: var(--sj-navy-dark); transform: translateY(-50%) scale(1.06); }
+.tm-nav:focus-visible { outline: 3px solid var(--sj-gold); outline-offset: 2px; }
+.tm-nav--prev { left: 0; }
+.tm-nav--next { right: 0; }
+.tm-nav[hidden] { display: none; }
 
 .testimonial .card {
   --sj-tm-bg: none;
   position: relative;
-  width: 30%;
-  min-width: 280px;
+  flex: 0 0 calc((100% - 52px) / 3); /* three visible; 52px = two track gaps */
+  min-width: 0;
   padding: 56px 26px 30px;
   text-align: left;
   border: 0;
@@ -78,6 +107,8 @@
 }
 
 @media (max-width: 900px) {
-  .testimonial { flex-direction: column; align-items: center; }
-  .testimonial .card { width: min(480px, 100%); }
+  /* one card per view — the slider slides instead of stacking */
+  .tm-slider { padding: 0 48px; }
+  .testimonial .card { flex: 0 0 100%; }
+  .tm-nav { width: 38px; height: 38px; font-size: 13px; }
 }
