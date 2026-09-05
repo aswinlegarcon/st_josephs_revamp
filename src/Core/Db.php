@@ -69,9 +69,12 @@ final class Db
                 \fwrite(\STDERR, 'Database connection failed: ' . $e->getMessage() . "\n");
                 exit(1);
             }
+            // SEC-16: no path/SQL/host/credential detail in the response —
+            // the real cause goes to the private PHP error_log only.
+            \error_log('Database connection failed: ' . $e->getMessage());
             \http_response_code(503);
             \header('Content-Type: text/plain; charset=utf-8');
-            exit("Database is not reachable. Start the stack with ./run.sh and try again.\n");
+            exit("Service temporarily unavailable. Please try again shortly.\n");
         }
 
         return self::$pdo;

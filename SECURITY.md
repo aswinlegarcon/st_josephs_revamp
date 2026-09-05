@@ -103,9 +103,11 @@ Subsumed by SEC-13: no `X-Frame-Options`/`frame-ancestors` → admin is framable
 **Agent verification:** list every new route; assert none mutates on GET; confirm the edit-mode toggle is POST.
 
 ### SEC-16 Verbose error disclosure — A05
-**Where:** `db.php` prints a dev-flavored message on connection failure; API endpoints lack a global try/catch, so an unexpected `PDOException` becomes a fatal — safe only if `display_errors=Off` (set in the Dockerfile only; prod mPanel php.ini is unconfigured).
-**Status: 🟡**
-**Mitigation:** prod-neutral DB error text; top-level `set_exception_handler`/try-catch in `_bootstrap.php` returning generic 500 JSON and logging the real error privately; enforce `display_errors=Off`, `log_errors=On`, private `error_log` via mPanel.
+**Where:** `db.php` printed a dev-flavored message on connection failure; API endpoints lacked a global try/catch, so an unexpected `PDOException` became a fatal — safe only if `display_errors=Off` (set in the Dockerfile only; prod mPanel php.ini is unconfigured).
+**Status: ✅ in code (2026-09-05); prod ini = a mandatory DEPLOY.md §0 step.**
+- `src/Core/Db.php` connection failure → generic 503 `Service temporarily unavailable…`; the real `PDOException` message goes to the private `error_log()` only. Drilled live: DB stopped → visitor saw only the generic text; `getaddrinfo` detail appeared in the web error log.
+- `admin/api/_bootstrap.php` registers a top-level `set_exception_handler` (before session boot) → any uncaught `Throwable` returns `{"ok":false,"error":"Server error"}` HTTP 500; endpoint name + message + file:line go to `error_log()`. Drilled live with a planted `RuntimeException` carrying fake SQLSTATE/path bait — none of it reached the response.
+- Prod: `display_errors=Off`, `log_errors=On`, `error_log=/home/<account>/logs/php-error.log` via a server-side `public_html/.user.ini` (DEPLOY.md §0.7 — not in the repo; dev keeps the Dockerfile settings).
 **Agent verification:** force a DB error in a test branch → response contains no path/SQL/stack trace; the real error lands in the private log.
 
 ### SEC-17 Direct file serving from /media — A01/A05

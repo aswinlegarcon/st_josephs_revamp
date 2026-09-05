@@ -1,6 +1,20 @@
 <?php
 // Shared guard for every admin API endpoint: session + CSRF + JSON I/O + validation.
 require dirname(__DIR__, 2) . '/bootstrap.php';
+
+// SEC-16: any uncaught Throwable in an API request becomes a generic JSON 500;
+// the real cause (message + location) goes to the private PHP error_log only.
+set_exception_handler(function (Throwable $e): void {
+    error_log('API error [' . basename($_SERVER['SCRIPT_NAME'] ?? 'api') . ']: '
+        . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json; charset=utf-8');
+    }
+    echo json_encode(['ok' => false, 'error' => 'Server error']);
+    exit;
+});
+
 sj_session_boot(true);
 
 header('Content-Type: application/json; charset=utf-8');

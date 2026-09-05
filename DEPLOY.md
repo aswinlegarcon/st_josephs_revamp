@@ -42,6 +42,24 @@
    prod. The production admin password is set by the forced-change flow on first login.
 6. **Permissions:** directories `755`, PHP files `644`, `config/config.php` `600`,
    `public_html/media/` `755` (prod PHP runs as the account user — **never 777**).
+7. **PHP error logging (SEC-16):** shared-host php.ini is unconfigured, so pin it
+   yourself. Create `~/logs/` (above the webroot), then a **server-side**
+   `~/public_html/.user.ini` (like the admin gate, deliberately not in the repo):
+
+   ```ini
+   display_errors = Off
+   log_errors = On
+   error_log = /home/<account>/logs/php-error.log
+   ```
+
+   `.user.ini` is re-read by PHP about every 5 minutes (`user_ini.cache_ttl`) —
+   allow that before judging it. Verify: `php -i | grep -E 'display_errors|error_log'`
+   over SSH (or a temporary fatal on a scratch URL), and confirm the root
+   `.htaccess` keeps `/.user.ini` unreachable over HTTP (dotfiles → 404). From
+   then on every `error_log()` call (DB failures, API 500s) and every PHP fatal
+   appends to `~/logs/php-error.log`; watch it live with
+   `tail -f ~/logs/php-error.log`. The web server's own access/error logs stay
+   in mPanel (**Error Log** / raw logs) — those are the host's, not PHP's.
 
 ## 1. Every release
 
