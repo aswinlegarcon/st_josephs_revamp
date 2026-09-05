@@ -9,8 +9,14 @@
 
 1. **PHP version:** in mPanel, select **PHP 8.3**. Confirm extensions **gd**, **pdo_mysql**,
    **exif** are enabled.
-2. **Database:** create the MySQL database + user in mPanel. Import `database/schema.sql`
-   via mPanel's DB tool (phpMyAdmin). This creates every table.
+2. **Database:** create the database + user in mPanel. mPanel provisions **MariaDB**,
+   which is a drop-in for everything this app uses (same wire protocol, `pdo_mysql`
+   connects unchanged) — with ONE rule: **every table must be pinned to
+   `COLLATE=utf8mb4_unicode_ci`**. MariaDB has no `utf8mb4_0900_*` collations, so a
+   MySQL-8 dump containing them fails to import (audited + fixed 2026-09-05; keep any
+   new `CREATE TABLE` pinned). On first ship the schema arrives inside the content
+   dump (§0.5); for a schema-only install import `database/schema.sql` via mPanel's
+   DB tool (phpMyAdmin).
 3. **Secrets — `config/config.php` ABOVE the webroot:** the account home looks like
    `~/ (home) → public_html/ (webroot)`. Create `~/config/config.php` (a **sibling** of
    `public_html`, NOT inside it) by copying `config/config.sample.php` and filling in the

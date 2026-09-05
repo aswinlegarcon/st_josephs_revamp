@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS staff_blocks (
   position  INT NOT NULL DEFAULT 0,
   is_active TINYINT(1) NOT NULL DEFAULT 1,
   CONSTRAINT fk_staffblk_img FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- K4 (migration 009): the About page's "School timings" rows (rules block).
 CREATE TABLE IF NOT EXISTS rules_timings (
@@ -296,7 +296,7 @@ CREATE TABLE IF NOT EXISTS rules_timings (
   timing   VARCHAR(60)  NOT NULL,
   activity VARCHAR(120) NOT NULL,
   position INT NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS section_events (
   id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,

@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS rules_timings (
   timing   VARCHAR(60)  NOT NULL,
   activity VARCHAR(120) NOT NULL,
   position INT NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

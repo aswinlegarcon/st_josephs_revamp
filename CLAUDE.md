@@ -5,7 +5,7 @@ Repo rules for any AI agent working in this codebase. Read this before editing.
 ## Project
 
 - **What:** a 42-page school website (St. Joseph's MHSS, Ondipudur), migrated from flat PHP to a MySQL-backed CMS with an admin panel (complete), now undergoing the owner-commissioned **Stage J public redesign** ("Global Campus" — `PUBLIC_UI_DESIGN.md`).
-- **Stack:** PHP 8.3, MySQL 8, PDO. **No framework** — structured plain PHP with Composer PSR-4 (`SJ\` → `src/`). GD for images. Bootstrap 5.3.3 self-hosted (target state).
+- **Stack:** PHP 8.3, MySQL 8 (dev Docker) / **MariaDB (prod mPanel)** — same protocol via PDO, but every `CREATE TABLE` must pin `COLLATE=utf8mb4_unicode_ci` (MariaDB has no `utf8mb4_0900_*`). **No framework** — structured plain PHP with Composer PSR-4 (`SJ\` → `src/`). GD for images. Bootstrap 5.3.3 self-hosted (target state).
 - **Dev workflow:** Docker. `./run.sh` builds/starts the stack, waits for DB, runs the seeder, and prints URLs (public `:8090/`, admin `:8090/admin/`). `./run.sh stop` / `./run.sh reset`. There is **no PHP/MySQL on the host** — always work through Docker.
 - **Prod:** MilesWeb shared hosting (mPanel + SSH; no Docker/Composer on the server). Deploy = file upload or rsync/scp per `DEPLOY.md`; `vendor/` is committed. Docker never runs in prod.
 
