@@ -915,7 +915,7 @@ case 'settings':
         ],
         'About page — rules & diary' => [
             'diary_text' => ['Diary line', 'The sentence before the Download link in the Rules block.'],
-            'diary_url'  => ['Diary file/link', 'Where the Download link points (e.g. /files/diary.pdf).'],
+            'diary_url'  => ['Diary file', 'Press "Upload diary (PDF)" and pick the file — this link fills in and goes live by itself. (Advanced: you can also paste a link here and press Save.)'],
         ],
         'Home stat band (the four animated counters)' => [
             'home_stat1_value' => ['Stat 1 — value', 'A number plus optional suffix, e.g. 80+ or 100%'],
@@ -947,6 +947,10 @@ case 'settings':
           <label class="sj-field">
             <span><?= e($label) ?></span>
             <input type="text" name="<?= e($key) ?>" value="<?= e(repo_setting($key, '')) ?>">
+            <?php if ($key === 'diary_url'): // K11: upload a PDF instead of typing a path ?>
+              <input type="file" id="sj-diary-file" accept="application/pdf,.pdf" hidden>
+              <button type="button" class="sj-btn" id="sj-diary-btn"><?= sj_icon('upload', 14) ?> Upload diary (PDF)</button>
+            <?php endif; ?>
             <?php if ($hint): ?><small><?= e($hint) ?></small><?php endif; ?>
           </label>
         <?php endforeach; ?>

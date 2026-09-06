@@ -16,6 +16,7 @@ $routes = [
     'image'    => 'image.php',    // POST  {action:meta|usage|delete, image_id} — media library ops (M4)
     'stats'    => 'stats.php',    // GET   dashboard vitals (N7)
     'admins'   => 'admins.php',   // POST  {action:list|create|reset|unlock|role|delete} — owners only (N7)
+    'diary'    => 'diary.php',    // POST  multipart — replace the school-diary PDF + update diary_url (K11)
 ];
 
 $r = (string)($_GET['r'] ?? '');
