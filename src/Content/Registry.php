@@ -36,7 +36,7 @@ final class Registry
                     'caption_title' => ['type' => 'text', 'max' => 120, 'label' => 'Caption title'],
                     'caption_text'  => ['type' => 'text', 'max' => 255, 'label' => 'Caption text'],
                     'button_label'  => ['type' => 'text', 'max' => 40,  'label' => 'Button label', 'nullable' => true],
-                    'button_url'    => ['type' => 'url',  'max' => 255, 'label' => 'Button link',  'nullable' => true],
+                    'button_url'    => ['type' => 'pagelink', 'max' => 255, 'label' => 'Button link', 'nullable' => true],
                     'image_id'      => ['type' => 'image', 'preset' => 'hero_16x7', 'label' => 'Slide image', 'required' => true],
                     'is_active'     => ['type' => 'bool', 'label' => 'Visible on site'],
                 ],

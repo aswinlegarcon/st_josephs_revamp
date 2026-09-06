@@ -406,6 +406,14 @@ input.sj-search:focus { outline: none; border-color: var(--blue); box-shadow: va
   cursor: pointer; box-shadow: var(--e0); transition: box-shadow var(--t-med) ease, transform var(--t-med) ease, border-color var(--t-med) ease;
 }
 .sj-pick:hover { box-shadow: var(--e2); transform: translateY(-2px); border-color: var(--gold-ink); }
+/* K12: multi-select "chosen" state — a gold ring + check badge so the admin
+   sees which library images are queued for adding. */
+.sj-pick-sel { border-color: var(--gold-ink); box-shadow: 0 0 0 3px var(--gold-ink) inset; }
+.sj-pick-sel::after {
+  content: "\2713"; position: absolute; top: 6px; right: 6px; z-index: 2;
+  width: 22px; height: 22px; border-radius: 50%; background: var(--gold-ink); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;
+}
 .sj-pick img { width: 100%; height: 104px; object-fit: cover; display: block; transition: transform var(--t-med) ease; }
 .sj-pick:hover img { transform: scale(1.04); }
 .sj-pick span { display: block; padding: 7px 9px; font-size: 11.5px; color: var(--mut); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

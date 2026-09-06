@@ -120,6 +120,20 @@ function api_validate_field(string $entity, string $field, array $def, $value)
                 api_fail("Field '$field' too long");
             }
             return $v;
+        case 'pagelink':
+            // K12: must be one of the real site pages (the form offers a dropdown).
+            // Empty is handled above (nullable → null). Legacy values without a
+            // leading slash (e.g. "about.php") normalise to the canonical URL.
+            $v = trim((string)$value);
+            $allowed = sj_page_link_values();
+            if (in_array($v, $allowed, true)) {
+                return $v;
+            }
+            $base = '/' . ltrim($v, '/');
+            if (in_array($base, $allowed, true)) {
+                return $base; // normalise legacy "about.php" → "/about.php"
+            }
+            api_fail("Field '$field': choose one of the listed pages");
         case 'int':
             if (!is_numeric($value)) {
                 api_fail("Field '$field' must be a number");

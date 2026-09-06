@@ -69,13 +69,15 @@ final class EditAttrs
                 'name'     => $name,
                 'label'    => $def['label'] ?? \ucfirst(\str_replace('_', ' ', $name)),
                 'type'     => $def['type'],
-                'options'  => $def['values'] ?? null,
+                // K12: 'pagelink' ships the real page list as grouped {value,label}
+                // options so the form renders a dropdown, not a text box.
+                'options'  => $def['type'] === 'pagelink' ? \sj_page_link_options() : ($def['values'] ?? null),
                 'preset'   => $def['preset'] ?? null,
                 'required' => !empty($def['required']),
                 'multiline' => !empty($def['multiline']),
             ];
             if ($last !== null && isset($last[$name]) && $last[$name] !== ''
-                && \in_array($def['type'], ['text', 'url', 'enum'], true) && empty($def['create_only'])) {
+                && \in_array($def['type'], ['text', 'url', 'enum', 'pagelink'], true) && empty($def['create_only'])) {
                 $lastOut[$name] = (string)$last[$name];
             }
         }

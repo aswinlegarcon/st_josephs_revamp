@@ -235,7 +235,12 @@
   function pickImage(preset, opts) {
     opts = opts || {};
     return new Promise(function (resolve, reject) {
-      var M = openModal(opts.title || 'Choose an image');
+      // K12: opts.multi lets the Library tab select SEVERAL images at once
+      // (click to toggle, then "Add selected"). Single-pick callers are
+      // unchanged — they never pass multi, so a tile click resolves at once.
+      var multi = !!opts.multi;
+      var selected = []; // {id, thumb} — multi mode only
+      var M = openModal(opts.title || (multi ? 'Add photos' : 'Choose an image'));
       var tabs = el('div', 'sj-tabs');
       var tLib = el('button', 'on', icon('image', 14) + ' Library');
       var tUp = el('button', '', icon('upload', 14) + ' Upload new');
@@ -246,6 +251,29 @@
       M.body.appendChild(pane);
       var settled = false;
       function done(img) { settled = true; M.close(); resolve(img); }
+
+      function selIndex(id) {
+        for (var i = 0; i < selected.length; i++) { if (selected[i].id === id) return i; }
+        return -1;
+      }
+      var addSelBtn = null;
+      function updateSelBtn() {
+        if (!addSelBtn) return;
+        addSelBtn.textContent = 'Add selected (' + selected.length + ')';
+        addSelBtn.disabled = selected.length === 0;
+      }
+      if (multi) {
+        var hint = el('span', 'sj-hint', 'Tap images to select — you can pick several.');
+        hint.style.marginRight = 'auto';
+        addSelBtn = el('button', 'sj-btn sj-btn-primary', 'Add selected (0)');
+        addSelBtn.type = 'button'; addSelBtn.disabled = true;
+        addSelBtn.addEventListener('click', function () {
+          if (!selected.length) return;
+          settled = true; M.close(); resolve(selected.slice());
+        });
+        M.foot.appendChild(hint);
+        M.foot.appendChild(addSelBtn);
+      }
       // Any close path (X, backdrop, Escape) that isn't a pick = cancel.
       M.onClose = function () {
         if (!settled) { settled = true; reject(new Error('cancel')); }
@@ -273,7 +301,14 @@
                 var b = el('button', 'sj-pick');
                 b.type = 'button';
                 b.innerHTML = '<img loading="lazy" src="' + esc(it.thumb) + '"><span>' + esc(it.label) + '</span>';
-                b.addEventListener('click', function () { done({ id: it.id, thumb: it.thumb }); });
+                if (multi && selIndex(it.id) >= 0) b.classList.add('sj-pick-sel');
+                b.addEventListener('click', function () {
+                  if (!multi) { done({ id: it.id, thumb: it.thumb }); return; }
+                  var i = selIndex(it.id);
+                  if (i >= 0) { selected.splice(i, 1); b.classList.remove('sj-pick-sel'); }
+                  else { selected.push({ id: it.id, thumb: it.thumb }); b.classList.add('sj-pick-sel'); }
+                  updateSelBtn();
+                });
                 grid.appendChild(b);
               });
               more.style.display = j.hasMore ? '' : 'none';
@@ -308,6 +343,11 @@
         var file = document.createElement('input');
         file.type = 'file'; file.accept = 'image/jpeg,image/png,image/webp';
         pane.appendChild(file);
+        // K12: naming guidance — name the file clearly BEFORE choosing it, so it
+        // is easy to find later in the Library search.
+        pane.appendChild(el('small', 'sj-hint',
+          'Tip: give the file a clear name before uploading — e.g. annual-day-2026.jpg or science-lab.jpg ' +
+          '(lowercase letters, numbers and dashes; no spaces). You can search the Library by this name later.'));
         pane.appendChild(el('label', '', 'Description (optional)'));
         var alt = document.createElement('input'); alt.type = 'text';
         pane.appendChild(alt);
@@ -353,8 +393,15 @@
             .then(function (r) { return r.json(); })
             .then(function (j) {
               if (!j.ok) throw new Error(j.error || 'Upload failed');
-              toast('Uploaded');
-              done({ id: j.image_id, thumb: j.url });
+              if (multi) {
+                selected.push({ id: j.image_id, thumb: j.url });
+                updateSelBtn();
+                toast('Uploaded — added to selection');
+                showLibrary(); // back to the grid so they can keep selecting
+              } else {
+                toast('Uploaded');
+                done({ id: j.image_id, thumb: j.url });
+              }
             })
             .catch(function (e) { toast(e.message, true); go.disabled = false; go.textContent = 'Upload'; });
         });
@@ -401,6 +448,30 @@
       });
       wrapper.appendChild(sel);
       getter = function () { return sel.value; };
+    } else if (f.type === 'pagelink') {
+      // K12: real-pages dropdown (grouped) so a button can't point nowhere.
+      var psel = document.createElement('select');
+      var cur = value == null ? '' : String(value);
+      var found = false;
+      (f.options || []).forEach(function (grp) {
+        var og = document.createElement('optgroup');
+        og.label = grp.group || '';
+        (grp.items || []).forEach(function (it) {
+          var op = el('option', '', esc(it.label));
+          op.value = it.value;
+          if (cur === String(it.value)) { op.selected = true; found = true; }
+          og.appendChild(op);
+        });
+        psel.appendChild(og);
+      });
+      if (!found && cur !== '') {
+        // preserve a legacy/custom value that isn't in the list
+        var oc = el('option', '', esc(cur + '  (current)'));
+        oc.value = cur; oc.selected = true;
+        psel.insertBefore(oc, psel.firstChild);
+      }
+      wrapper.appendChild(psel);
+      getter = function () { return psel.value; };
     } else if (f.type === 'image') {
       var holder = el('div', 'sj-imgfield');
       var img = thumb ? el('img') : el('div', 'sj-noimg', 'no image');
@@ -429,7 +500,20 @@
       var input = document.createElement('input');
       input.type = f.type === 'int' ? 'number' : 'text';
       input.value = value == null ? '' : value;
-      wrapper.appendChild(input);
+      if (f.type === 'slug') {
+        // K12: a slug becomes the page's web address (…/<slug>.php), so show
+        // exactly how to name it. Live-sanitise as they type.
+        input.placeholder = 'e.g. science-academy';
+        input.addEventListener('input', function () {
+          input.value = input.value.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+/, '');
+        });
+        wrapper.appendChild(input);
+        wrapper.appendChild(el('small', 'sj-hint',
+          'This becomes the page address (e.g. “science-academy” → /science-academy.php). ' +
+          'Lowercase letters, numbers and dashes only — no spaces. It cannot be changed later.'));
+      } else {
+        wrapper.appendChild(input);
+      }
       getter = function () { return input.value; };
     }
     return { node: wrapper, get: getter, field: f };

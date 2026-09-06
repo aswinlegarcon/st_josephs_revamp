@@ -36,7 +36,7 @@ switch ($action) {
                 'name'      => $name,
                 'label'     => $def['label'] ?? ucfirst(str_replace('_', ' ', $name)),
                 'type'      => $def['type'],
-                'options'   => $def['values'] ?? null,
+                'options'   => $def['type'] === 'pagelink' ? sj_page_link_options() : ($def['values'] ?? null),
                 'preset'    => $def['preset'] ?? null,
                 'required'  => !empty($def['required']),
                 'multiline' => !empty($def['multiline']),

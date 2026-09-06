@@ -170,12 +170,18 @@
    */
   function openPhotos(cfg) {
     var M = openModal(cfg.label || 'Manage photos');
+    // K12: the page behind this modal (preview cards / the public page) only
+    // reflects link changes after a reload. Track whether anything changed and
+    // reload on ANY close path (Done / X / backdrop / Esc) so the admin never
+    // has to refresh by hand. onClose fires for every close route (openModal).
+    var changed = false;
+    M.onClose = function () { if (changed) location.reload(); };
     var grid = el('div', 'sj-photogrid');
     M.body.appendChild(grid);
-    var add = el('button', 'sj-btn sj-btn-primary', SJUI.icon('plus', 14) + ' Add photo'); add.type = 'button';
+    var add = el('button', 'sj-btn sj-btn-primary', SJUI.icon('plus', 14) + ' Add photos'); add.type = 'button';
     var done = el('button', 'sj-btn sj-btn-ghost', 'Done'); done.type = 'button';
     M.foot.appendChild(add); M.foot.appendChild(done);
-    done.addEventListener('click', function () { M.close(); if (cfg.onClose) cfg.onClose(); });
+    done.addEventListener('click', function () { M.close(); });
 
     var base = { owner_type: cfg.owner_type, owner_id: +cfg.owner_id, role: cfg.role || 'carousel' };
 
@@ -190,7 +196,7 @@
           var rm = el('button', 'sj-photo-x', '×'); rm.type = 'button'; rm.title = 'Remove from this collection';
           rm.addEventListener('click', function () {
             api('link.php', Object.assign({ action: 'detach', link_id: l.link_id }, base))
-              .then(function () { toast('Removed'); refresh(); })
+              .then(function () { changed = true; toast('Removed'); refresh(); })
               .catch(function (err) { toast(err.message, true); });
           });
           t.appendChild(rm);
@@ -201,10 +207,21 @@
     }
 
     add.addEventListener('click', function () {
-      pickImage(cfg.preset || null).then(function (p) {
-        api('link.php', Object.assign({ action: 'attach', image_id: p.id }, base))
-          .then(function () { toast('Added'); refresh(); })
-          .catch(function (err) { toast(err.message, true); });
+      // K12: multi-select — pick many images, attach them all in order.
+      pickImage(cfg.preset || null, { multi: true }).then(function (picked) {
+        var list = Array.isArray(picked) ? picked : (picked ? [picked] : []);
+        if (!list.length) return;
+        var chain = Promise.resolve();
+        list.forEach(function (p) {
+          chain = chain.then(function () {
+            return api('link.php', Object.assign({ action: 'attach', image_id: p.id }, base));
+          });
+        });
+        chain.then(function () {
+          changed = true;
+          toast(list.length + (list.length > 1 ? ' photos added' : ' photo added'));
+          refresh();
+        }).catch(function (err) { toast(err.message, true); refresh(); });
       }).catch(function () {});
     });
 
@@ -233,7 +250,7 @@
       var ids = Array.prototype.slice.call(grid.querySelectorAll('.sj-phototile'))
         .map(function (n) { return +n.getAttribute('data-link'); });
       api('link.php', Object.assign({ action: 'reorder', link_ids: ids }, base))
-        .then(function () { toast('Order saved'); })
+        .then(function () { changed = true; toast('Order saved'); })
         .catch(function (err) { toast(err.message, true); refresh(); });
     });
 

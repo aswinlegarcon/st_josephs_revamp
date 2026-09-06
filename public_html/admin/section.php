@@ -950,6 +950,7 @@ case 'settings':
             <?php if ($key === 'diary_url'): // K11: upload a PDF instead of typing a path ?>
               <input type="file" id="sj-diary-file" accept="application/pdf,.pdf" hidden>
               <button type="button" class="sj-btn" id="sj-diary-btn"><?= sj_icon('upload', 14) ?> Upload diary (PDF)</button>
+              <small class="sj-hint">Choose a PDF (name it clearly first, e.g. <b>school-diary-2026.pdf</b>). Visitors always download it as “SchoolDiary.pdf”.</small>
             <?php endif; ?>
             <?php if ($hint): ?><small><?= e($hint) ?></small><?php endif; ?>
           </label>

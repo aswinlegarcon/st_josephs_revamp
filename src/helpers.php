@@ -282,6 +282,71 @@ function bg_style(?array $img, string $presetKey): string
     return MediaHtml::bgStyle($img, $presetKey);
 }
 
+/**
+ * K12: the list of real, navigable site pages — used to render the hero-slide
+ * "Button link" as a DROPDOWN (type 'pagelink') instead of a free text box, so
+ * an admin can't point a button at a page that doesn't exist. Grouped for a
+ * tidy <optgroup> menu; the main pages are stable controllers, academies +
+ * albums come from the DB so newly-added ones appear automatically.
+ * Cached per request. Returns [['group'=>.., 'items'=>[['value'=>url,'label'=>..],..]],..].
+ */
+function sj_page_link_options(): array
+{
+    static $cache = null;
+    if ($cache !== null) {
+        return $cache;
+    }
+    $main = [
+        ['value' => '',                    'label' => '— No button —'],
+        ['value' => '/index.php',          'label' => 'Home'],
+        ['value' => '/about.php',          'label' => 'About Us'],
+        ['value' => '/academics.php',      'label' => 'Academics'],
+        ['value' => '/staffs.php',         'label' => 'Our Staff'],
+        ['value' => '/co-curriculum.php',  'label' => 'Co-Curriculum'],
+        ['value' => '/sports.php',         'label' => 'Sports'],
+        ['value' => '/infrastructure.php', 'label' => 'Infrastructure'],
+        ['value' => '/achievements.php',   'label' => 'Achievements'],
+        ['value' => '/gallery.php',        'label' => 'Gallery'],
+        ['value' => '/index.php#contact',  'label' => 'Contact (home page section)'],
+    ];
+    $sections = [
+        ['value' => '/kg.php',       'label' => 'Kindergarten'],
+        ['value' => '/primary.php',  'label' => 'Primary School'],
+        ['value' => '/highschl.php', 'label' => 'High School'],
+        ['value' => '/highsec.php',  'label' => 'Higher Secondary'],
+    ];
+    $academies = [];
+    $albums = [];
+    try {
+        foreach (db()->query('SELECT slug, card_title FROM academies WHERE is_active = 1 ORDER BY position, id') as $r) {
+            $academies[] = ['value' => '/' . $r['slug'] . '.php', 'label' => $r['card_title']];
+        }
+    } catch (\Throwable $e) { /* table may not exist in a partial DB — main pages still work */ }
+    try {
+        foreach (db()->query('SELECT slug, COALESCE(NULLIF(heading, ""), title) AS label FROM gallery_albums ORDER BY position, id') as $r) {
+            $albums[] = ['value' => '/' . $r['slug'] . '.php', 'label' => $r['label']];
+        }
+    } catch (\Throwable $e) { /* ditto */ }
+
+    $cache = [['group' => 'Main pages', 'items' => $main]];
+    if ($sections)  { $cache[] = ['group' => 'School sections', 'items' => $sections]; }
+    if ($academies) { $cache[] = ['group' => 'Academies',       'items' => $academies]; }
+    if ($albums)    { $cache[] = ['group' => 'Gallery albums',   'items' => $albums]; }
+    return $cache;
+}
+
+/** Flat set of every allowed page-link URL (API validation of type 'pagelink'). */
+function sj_page_link_values(): array
+{
+    $out = [];
+    foreach (sj_page_link_options() as $grp) {
+        foreach ($grp['items'] as $it) {
+            $out[] = $it['value'];
+        }
+    }
+    return $out;
+}
+
 // ---------------------------------------------------------------------------
 // repositories (SJ\Content\Repo)
 // ---------------------------------------------------------------------------
