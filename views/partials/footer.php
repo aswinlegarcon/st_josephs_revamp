@@ -56,7 +56,7 @@ $sj_f_copy    = repo_setting('footer_copyright', "© 2024 St.Joseph's MHSS, Ondi
 
     <div class="footer-bottom">
       <p class="left-p">Crafted by</p>
-      <a href="mailto:aswinkirubanantham@gmail.com" class="footer-logo">
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=aswinkirubanantham@gmail.com" target="_blank" rel="noopener" class="footer-logo">
         <p class="left">Aswin Kirubanantham</p>
       </a>
       <p class="right"><?= e($sj_f_copy) ?></p>
