@@ -240,6 +240,27 @@ function sjTestimonialSlider() {
 // K9: readyState-safe boot — a DOMContentLoaded listener registered AFTER the
 // document is already interactive never fires (late-executed scripts, webview
 // re-navigation), which would silently skip every wire below.
+// Footer credit (K13): the developer's address is NEVER written into the page
+// source — the local part and the REVERSED domain sit in data-* attributes with
+// no "@" anywhere, so email harvesters scraping the static HTML find nothing to
+// match. The real address is assembled only at click/Enter time and handed to
+// Gmail's compose window. No-JS clients simply get an inert credit label.
+function sjCreditMail() {
+  document.querySelectorAll('.sj-credit-mail').forEach(function (el) {
+    function open() {
+      var u = el.getAttribute('data-u') || '';
+      var d = (el.getAttribute('data-d') || '').split('').reverse().join('');
+      if (!u || !d) return;
+      var url = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(u + '@' + d);
+      window.open(url, '_blank', 'noopener');
+    }
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+    el.style.cursor = 'pointer';
+  });
+}
 function sjBoot() {
   sjRevealIO('.sj-reveal');
   sjCounters('[data-sj-counters] .counter[data-target]');
@@ -247,6 +268,7 @@ function sjBoot() {
   sjMegaHover();
   sjHeroKeys();
   sjTestimonialSlider();
+  sjCreditMail();
 }
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', sjBoot);
