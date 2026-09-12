@@ -225,6 +225,13 @@ a `vh` fallback line immediately before the `svh` line.
   preset).
 - **Updates carousel** ≤768: `height: min(380px, 56svh)`, caption centered,
   ≥44px button + indicator hit areas (420px stays for 769–900).
+- **Toppers marquee** ≤576: the year title (`position:absolute; left:50%`, no
+  width, no background) shrank to the card's right half and wrapped to 3 lines
+  on phones, and transparent it let the scrolling entries show THROUGH it. Fix:
+  full-width **opaque** navy header band (`left:0; right:0; top:0; transform:none;
+  white-space:nowrap; background:var(--sj-navy-dark)`), scroll window dropped to
+  `top:52px` and inner `top:0` so it starts cleanly below the band. Card 340px.
+  (Shared partial — also improves the highsec page.)
 - **Testimonials** ≤576: full-width card, arrows become a centered 44px pair
   BELOW the card (`top:auto; bottom:0; left/right: calc(50% ∓ 56px)`; `:hover`
   transform reset). Side arrows stay ≥577. JS untouched (901-gated `visible()`).

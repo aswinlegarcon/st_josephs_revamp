@@ -117,5 +117,19 @@
 @media (max-width: 576px) {
     .sec-marks-scroll { padding: 18px 10px; }
     .sec-marks-scroll h2 { font-size: clamp(24px, 7vw, 28px); }
-    .carousel-marks { height: 320px; }
+    .carousel-marks { height: 340px; }
+    /* K13-fix: the year title was position:absolute at left:50% with no width,
+       so on a narrow card it shrank to the right half and wrapped to 3 lines;
+       having no background, the scrolling entries showed THROUGH it ("text goes
+       under the bar, not hidden"). Make it a full-width OPAQUE header band on
+       one line, and start the scroll window right below it with no residual top
+       offset — so nothing overlaps the bar and nothing peeks above the window. */
+    .carousel-marks h2 {
+        left: 0; right: 0; top: 0;
+        transform: none; text-align: center; white-space: nowrap;
+        margin: 0; padding: 13px 8px; font-size: 20px;
+        background: var(--sj-navy-dark);
+    }
+    .carousel-marks .carousel-inner-container { top: 52px; }
+    .carousel-marks .marks-carousel-inner { top: 0; }
 }
