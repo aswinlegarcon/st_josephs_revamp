@@ -114,3 +114,16 @@
   .testimonial .card { flex: 0 0 100%; }
   .tm-nav { width: 38px; height: 38px; font-size: 13px; }
 }
+
+/* ===== K13 mobile — small phones: the 2×48px side gutters were 27% of a
+   360px screen. Card goes full-width; the arrows become a centered 44px
+   pair BELOW the card (hover transform reset so they stay put). ===== */
+@media (max-width: 576px) {
+  .tm-slider { padding: 0 0 64px; }
+  .tm-nav { top: auto; bottom: 0; transform: none; width: 44px; height: 44px; font-size: 15px; }
+  .tm-nav:hover { transform: none; }
+  .tm-nav--prev { left: calc(50% - 56px); }
+  .tm-nav--next { right: calc(50% - 56px); }
+  .testimonial .card { padding: 44px 20px 26px; }
+  .testimonial-container > h1 { font-size: clamp(24px, 7vw, 30px); }
+}

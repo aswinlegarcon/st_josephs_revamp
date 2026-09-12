@@ -96,3 +96,21 @@
   .update-slider-btn { margin-top: 12px; }
   .update-slider-btn .btn { padding: 9px 18px; font-size: 13px; }
 }
+
+/* ===== K13 mobile — phone tier; the 420px box stays for 769–900 and the
+   16:9 box ≥901 is untouched. Appended LAST on purpose: the ≤600 caption/btn
+   rules above and the 420px height tie on specificity and lose by order. */
+@media (max-width: 768px) {
+  .update-carousel-item img { height: min(380px, 56vh); height: min(380px, 56svh); }
+  .update-carousel-caption { top: 50%; transform: translateY(-50%); bottom: auto; left: 8%; right: 8%; }
+  .update-carousel-caption h4 { font-size: clamp(24px, 6.5vw, 34px); }
+  .update-carousel-caption p { font-size: 13px; }
+  .update-text h3 { font-size: clamp(24px, 4.5vw, 30px); }
+  .update-slider-btn .btn { padding: 12px 20px; font-size: 13.5px; } /* ≥44px target */
+  /* 32px-tall indicator tap areas — background-clip re-declared because the
+     base rule's background: shorthand resets it (same trap as the hero). */
+  .update-carousel .carousel-indicators [data-bs-target] {
+    border: 0; border-block: 14px solid transparent;
+    background-clip: padding-box; margin-left: 5px; margin-right: 5px;
+  }
+}

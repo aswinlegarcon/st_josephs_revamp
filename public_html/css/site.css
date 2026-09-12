@@ -440,6 +440,43 @@ body { margin: 0; color: var(--sj-ink); }
 }
 @media print { .sj-fab, .sj-nav, .scroll-btn { display: none !important; } }
 
+/* ---------- K13 mobile (Home) — phone-tier rules; ≥992px untouched ---------- */
+/* Hero: compact swipeable box. svh line follows its vh fallback; no px floor so
+   short-landscape phones keep shrinking. Swipe is Bootstrap-native on touch,
+   so the arrows and the scroll cue (redundant once content peeks) go away. */
+@media (max-width: 768px) {
+  .sj-hero--hero .carousel-item img { height: min(560px, 62vh); height: min(560px, 62svh); }
+  /* caption centers in the area visible under the 64px overlay nav (K5 convention;
+     three-class selector out-specifies the generic caption rules, as the banner does) */
+  .sj-hero.sj-hero--hero .carousel-caption {
+    top: calc(50% + 32px); transform: translateY(-50%); bottom: auto;
+    left: 7%; right: 7%;
+  }
+  .sj-hero--hero .sj-hero-title { font-size: clamp(26px, 7vw, 40px); }
+  .sj-hero--hero .sj-hero-flourish { font-size: 13px; letter-spacing: .8px; margin-top: 8px; }
+  .sj-hero--hero .sj-hero-btnwrap { margin-top: 16px; }
+  .sj-hero--hero .carousel-control-prev,
+  .sj-hero--hero .carousel-control-next { display: none; }
+  .sj-hero--hero .sj-hero-cue { display: none; }
+  /* real 32px-tall tap targets: 4px visible bar + transparent border-block.
+     background-clip MUST be re-declared — the base rule's `background:`
+     shorthand (and .active's) resets it to border-box, which would paint
+     the whole 32px block. Ties the .active rule at (0,3,0): source order
+     wins, so this block stays late in the sheet. */
+  .sj-hero--hero .carousel-indicators [data-bs-target] {
+    width: 30px; margin-left: 5px; margin-right: 5px;
+    border: 0; border-block: 14px solid transparent;
+    background-clip: padding-box;
+  }
+  .sj-nav .navbar-toggler { min-width: 44px; min-height: 44px; }
+}
+@media (max-width: 576px) {
+  .sj-fab-cta { display: inline-flex; align-items: center; min-height: 44px; }
+}
+@media (max-width: 400px) {
+  .sj-drawer { width: min(320px, 88vw); }
+}
+
 /* ---------- global reduced-motion kill-switch (keep LAST) ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

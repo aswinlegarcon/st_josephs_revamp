@@ -110,3 +110,12 @@
     .carousel-marks .marks-carousel-item span { font-size: 16px; }
     .carousel-marks h2 { font-size: 22px; }
 }
+
+/* ===== K13 mobile — small phones. The marquee needs a FIXED window (the
+   seamless -50% loop), so we only tighten it. NOTE: this partial is shared
+   with the highsec section page — the same improvement renders there too. */
+@media (max-width: 576px) {
+    .sec-marks-scroll { padding: 18px 10px; }
+    .sec-marks-scroll h2 { font-size: clamp(24px, 7vw, 28px); }
+    .carousel-marks { height: 320px; }
+}

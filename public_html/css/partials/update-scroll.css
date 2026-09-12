@@ -50,3 +50,10 @@
     100% { transform: translateX(50%); }
   }
 }
+
+/* ===== K13 mobile — small phones: tighter single-line ticker ===== */
+@media (max-width: 576px) {
+  .top-bar-update { padding: 6px 0; }
+  .update-link { font-size: 13.5px; margin-right: 22px; }
+  .new-update-blinker { font-size: 20px; }
+}

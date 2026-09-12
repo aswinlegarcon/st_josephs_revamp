@@ -178,12 +178,66 @@ durations and scroll-behavior.
    `max_count` in the registry (testimonial = 3). Both Add affordances hide at
    the cap and `item.php` create refuses authoritatively.
 
-## 7. Breakpoints
+## 7. Breakpoints & mobile (K13)
 
 New code uses the Bootstrap ladder: 576 / 768 / 992 / 1200. The single
 load-bearing exception is the hero geometry boundary at **901px** (≥901
 aspect-ratio, <901 fixed heights) — it lives ONLY in the shared hero rules in
 site.css. Legacy sheets' ad-hoc ladders die as each sheet is rewritten.
+
+**7.1 The ≥992 guarantee.** Desktop (≥992px) is the pixel-identical contract:
+mobile work must never change it. K13's landing-page mobile redesign lands
+entirely at **768 / 576 (+ a 400 micro-tier)**; `clamp()` covers 360–430
+fluidly between them. Existing ad-hoc points (700/800/900/991) survive until
+each sheet is rewritten — new work does NOT consolidate them, because the 901
+hero boundary and the shipped 769–900 tablet band are already tuned.
+
+**7.2 Mobile type ramp (360–430 sweet spot, continuous at 769).** Maxes equal
+the shipped desktop floors so nothing jumps crossing 768↔769: hero title
+`clamp(26px,7vw,40px)`; section titles `clamp(24px,4.5vw,30px)`; sub-heads
+`clamp(20px,5.2vw,24px)`; stat number `clamp(30px,5.5vw,34px)`; welcome
+`clamp(22px,5.5vw,28px)`; body ~15px/1.7; small 12.5–13.5px.
+
+**7.3 Ergonomics.** Tap targets ≥44px (nav toggler, FAB pill, carousel
+buttons, testimonial arrows, submit). Carousel indicators get a real 32px-tall
+hit area via `border-block: 14px solid transparent` + **`background-clip:
+padding-box`** — the base indicator rule's `background:` shorthand (and
+`.active`'s) resets the clip to border-box, so any block that adds the
+transparent border MUST re-declare `padding-box` AND stay last in its sheet
+(equal specificity → source order decides). Viewport-height units always ship
+a `vh` fallback line immediately before the `svh` line.
+
+**7.4 Home mobile recipes (K13).**
+- **Hero** ≤768: `height: min(560px, 62svh)` (vh fallback first); caption
+  centered in the visible area `top: calc(50% + 32px)` (half the 64px mobile
+  nav — keep in sync if nav heights change, same rule as the banner caption);
+  arrows + scroll cue hidden (swipe is native); 32px indicator hit areas.
+- **Campus cards** ≤991: `.card-deck .card-img-top { aspect-ratio: 3/4;
+  height: auto; }` — `height:auto` is mandatory (it defeats both the desktop
+  `height:100%` and the legacy `width=200 height=500` attrs; without it
+  `aspect-ratio` is ignored). ≤768 each card `width: min(420px,100%)`.
+- **Stat band** ≤991: `.fun-facts .container` → `display:grid;
+  grid-template-columns:1fr 1fr` (2×2) with `rgba(255,255,255,.14)` hairline
+  dividers (row-1 `border-bottom`, odd cells `border-right`).
+- **What's-Unique** ≤768: image always above text via `order:-1` on
+  **both** `> .newtemp-about-image` and `> picture` (uploads are
+  `<picture>`-wrapped); image pinned `aspect-ratio:4/3` (= the `feature_4x3`
+  preset).
+- **Updates carousel** ≤768: `height: min(380px, 56svh)`, caption centered,
+  ≥44px button + indicator hit areas (420px stays for 769–900).
+- **Testimonials** ≤576: full-width card, arrows become a centered 44px pair
+  BELOW the card (`top:auto; bottom:0; left/right: calc(50% ∓ 56px)`; `:hover`
+  transform reset). Side arrows stay ≥577. JS untouched (901-gated `visible()`).
+- **Contact** ≤991: `#contact { scroll-margin-top: calc(var(--sj-nav-h)+12px) }`.
+  ≤576: reCAPTCHA layout box pinned `234×60` (the inline `scale(.77)` shrinks
+  the visual to ~180 but not the layout box — pin it so it stops overflowing);
+  submit full-width min-48px; ≤400 card padding shaved for 320px screens.
+- **Rhythm** ≤576: `body.index { --sj-sec-pad: clamp(44px,11vw,64px) }`
+  (home-only; `body.index` scope keeps it off other pages).
+
+**7.5 Admin lockstep.** The `.sj-prev-*` preview cards render at fixed widths;
+K13 is viewport-scoped geometry/spacing only (no veil/font/aspect/colour recipe
+changes) → **outside the lockstep contract; panel.css unchanged.**
 
 ## 8. Rollout map (PHASES.md Stage J)
 

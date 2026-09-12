@@ -446,3 +446,59 @@ html { overflow-x: hidden; }
   .inputBox { width: 100%; }
   .map { min-height: 300px; }
 }
+
+/* ===== K13 mobile (Home) — phone-tier rules; ≥992px untouched ===== */
+@media (max-width: 991px) {
+  /* FAB "Admissions" jump lands with the section title clear of the fixed nav */
+  #contact { scroll-margin-top: calc(var(--sj-nav-h) + 12px); }
+  /* Campus cards: one shared photo box. 3:4 ≈ the photos' natural 657×900,
+     and height:auto simultaneously defeats the desktop height:100% (indefinite
+     parent) and the legacy width=200/height=500 attr ratio — zero CLS.
+     Scoped under .card-deck: bare .card1/2/3 also match testimonial cards. */
+  .card-deck .card-img-top { aspect-ratio: 3 / 4; height: auto; }
+  /* Stat band (had no mobile rules): equal 2×2 cells with hairline dividers —
+     also fixes the 3+1 flex wrap the 720px container produced at 769–800. */
+  .fun-facts .container { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .fun-facts .single-fact { margin: 0; min-width: 0; padding: 22px 10px; }
+  .fun-facts .single-fact:nth-child(-n+2) { border-bottom: 1px solid rgba(255, 255, 255, .14); }
+  .fun-facts .single-fact:nth-child(odd)  { border-right:  1px solid rgba(255, 255, 255, .14); }
+}
+@media (max-width: 768px) {
+  .home-text { padding: 40px 18px; word-spacing: 2px; }
+  .home-text h2, .home-text span { font-size: clamp(22px, 5.5vw, 28px); line-height: 1.35; }
+  .about-content h2 { font-size: clamp(24px, 6vw, 30px); }
+  /* mobile type ramp — maxes equal the shipped floors, so no jump at 769px */
+  .motto h1, .products h1, .contactus .title h2 { font-size: clamp(24px, 4.5vw, 30px); }
+  .motto-row { margin-top: 22px; }
+  .card-deck .card1, .card-deck .card2, .card-deck .card3 { width: min(420px, 100%); }
+  .products > p { font-size: 14.5px; padding: 16px; }
+  .fun-facts .single-fact i { font-size: 24px; margin-bottom: 10px; }
+  .fun-facts .single-fact .number { font-size: clamp(30px, 5.5vw, 34px); }
+  .fun-facts .single-fact p { font-size: 12.5px; letter-spacing: .5px; }
+  .new-temp-text h2 { font-size: clamp(24px, 4.5vw, 30px); }
+  /* What's-Unique: image ALWAYS above text when stacked. The DOM alternates
+     image/content per row (admin-editing contract — untouched); order:-1 must
+     also hit the <picture> wrapper non-legacy uploads render as. 4:3 = the
+     feature_4x3 preset, so pipeline images crop zero. */
+  .newtemp-about-section > .newtemp-about-image,
+  .newtemp-about-section > picture { order: -1; width: 100%; }
+  .newtemp-about-image { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; height: auto; }
+  .newtemp-about-content h2 { font-size: clamp(20px, 5.2vw, 24px); }
+}
+@media (max-width: 576px) {
+  body.index { --sj-sec-pad: clamp(44px, 11vw, 64px); } /* home-only rhythm tighten */
+  .containers { padding: 36px 0; }
+  .about-section .about-image { width: min(280px, 76%); }
+  .motto { padding: 30px 18px; }
+  .motto-col { padding: 22px 18px; }
+  .inputBox input, .inputBox textarea { padding: 12px; }
+  .inputBox textarea { min-height: 160px; }
+  .inputBox input[type="submit"] { width: 100%; max-width: none; min-height: 48px; }
+  .contactus { padding-left: 14px; padding-right: 14px; }
+  /* transforms don't shrink layout boxes: the scale(.77) widget still occupied
+     304px and overflowed narrow cards — pin the box to the visual (304×.77). */
+  .contactus .g-recaptcha { width: 234px; height: 60px; }
+}
+@media (max-width: 400px) {
+  .contactus .contact { padding: 20px 14px; } /* 320px viewports: inner ≥ the 234px widget */
+}
